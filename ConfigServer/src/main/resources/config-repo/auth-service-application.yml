@@ -1,0 +1,15 @@
+server:
+  port: 7071
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 123456789
+    url: jdbc:postgresql://localhost:5432/AuthServiceDB
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+

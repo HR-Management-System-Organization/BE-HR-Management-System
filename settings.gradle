@@ -1,0 +1,7 @@
+rootProject.name = 'HR_Management_System'
+include 'Api_Gateway_Service'
+include 'AuthMicroService'
+include 'UserMicroService'
+include 'ConfigServer'
+include 'MailService'
+include 'Git-ConfigServer'
