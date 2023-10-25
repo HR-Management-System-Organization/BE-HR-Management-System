@@ -12,8 +12,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 public class MailModel implements Serializable {
-    private String token;
-    private String activationCode;
+    private String text;
     private String email;
-    private String username; // gerekli değil
+    private String subject; // gerekli değil
 }

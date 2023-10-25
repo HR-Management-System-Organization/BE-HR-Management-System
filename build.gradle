@@ -40,6 +40,7 @@ allprojects {
     }
     dependencies {
         implementation libs.springBootWeb
+
         implementation libs.lombok
         annotationProcessor libs.lombok
         implementation libs.mapstruct
@@ -47,11 +48,14 @@ allprojects {
         implementation libs.openapi
         implementation libs.springBootValidation
         implementation libs.javaJwt
+        implementation libs.springBootstarter
+        implementation libs.springBootstartercache
         implementation libs.springCloudOpenFeign
-        implementation libs.springCloudZipkin
-        implementation libs.springCloudSleuth
+
+      //  implementation libs.springCloudZipkin
+      //  implementation libs.springCloudSleuth
         implementation libs.springBootRabbitMq
-        implementation libs.springBootRedis
+       // implementation libs.springBootRedis
     }
 }
 

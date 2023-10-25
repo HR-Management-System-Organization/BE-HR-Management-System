@@ -5,12 +5,18 @@ import com.hrproject.dto.request.UserSaveRequestDto;
 import com.hrproject.exception.ErrorType;
 import com.hrproject.exception.UserManagerException;
 import com.hrproject.mapper.IUserMapper;
+import com.hrproject.rabbitmq.model.RegisterModel;
 import com.hrproject.repository.IUserRepository;
 import com.hrproject.repository.entity.UserProfile;
+import com.hrproject.repository.enums.ERole;
 import com.hrproject.repository.enums.EStatus;
 import com.hrproject.utility.JwtTokenManager;
 import com.hrproject.utility.ServiceManager;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserService extends ServiceManager<UserProfile,Long> { //extends ServiceManager<UserProfile, String> {
@@ -27,6 +33,12 @@ public class UserService extends ServiceManager<UserProfile,Long> { //extends Se
         this.userRepository = userRepository;
         this.jwtTokenManager = jwtTokenManager;
         this.userMapper = userMapper;
+    }
+
+    public void createNewUserWithRabbitmq(RegisterModel model){
+        UserProfile userProfile=userMapper.toUserProfile(model);
+        save(userProfile);
+
     }
 
     public UserProfile savedto(UserSaveRequestDto dto){
@@ -47,21 +59,34 @@ public class UserService extends ServiceManager<UserProfile,Long> { //extends Se
 
 
     }
-    public String activation(String tokken){
-        if (jwtTokenManager.verifyToken(tokken)){
-            if (jwtTokenManager.verifyactivationcode(tokken).get()){
-                if (userRepository.findById(jwtTokenManager.getAuthIdFromToken(tokken).get()).isPresent()){
 
-                    UserProfile userProfile=userRepository.findById(jwtTokenManager.getAuthIdFromToken(tokken).get()).get();
-                    if (jwtTokenManager.verifyactivationcode(tokken).get()){
-                        userProfile.setStatus(EStatus.ACTIVE);
-                        userRepository.save(userProfile);
-                        return "succesfull";
-                    }
 
-                }
-            }
+
+    public List<UserProfile> findalluser(UserProfile userProfile){
+        if (userProfile.getRole().equals(ERole.MANAGER)||userProfile.getRole().equals(ERole.ADMIN)){
+            return userRepository.findAll();
         }
-        return "unsuccesfull";
+        else throw new UserManagerException(ErrorType.NO_PERMISION);
     }
+
+    public String delete(Long id){
+        try {
+            delete(id);
+
+            return "Basarali";
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void activation(String username){
+        if (userRepository.findByUsername(username).isEmpty()){
+            throw new UserManagerException(ErrorType.USER_NOT_FOUND);
+        }else {
+            UserProfile userProfile=userRepository.findByUsername(username).get();
+            userProfile.setStatus(EStatus.ACTIVE);
+            update(userProfile);
+        }
+    }
+
 }

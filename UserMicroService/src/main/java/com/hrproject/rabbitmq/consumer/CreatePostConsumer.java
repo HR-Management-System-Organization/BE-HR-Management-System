@@ -18,7 +18,7 @@ public class CreatePostConsumer {
 
     private final UserService userService;
 
-    @RabbitListener(queues = "post-queue")
+    /*@RabbitListener(queues = "post-queue")
     public Object createPost(CreatePostModel createPostModel) { // authId
 
             Optional<UserProfile> userProfile = userService.findByUserWithAuthId(createPostModel.getAuthId());
@@ -30,5 +30,5 @@ public class CreatePostConsumer {
                 .build();
 
         return userProfileResponseDto;
-    }
+    }*/
 }

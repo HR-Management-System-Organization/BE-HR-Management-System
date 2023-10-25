@@ -20,14 +20,7 @@ import static com.hrproject.constant.EndPoints.*;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-    @PostMapping("/activationcode")
-    public ResponseEntity<String> activationcode(@RequestParam String tokken){
-        String sonuc=userService.activation(tokken);
-        String https="http://127.0.0.1:5500/"+sonuc+".html";
-        return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", https)  // Yönlendirilecek sayfanın URL'sini belirtin
-                .build();
-    }
+
 
     @PostMapping(LOGIN)
     public ResponseEntity<String> dologin(@RequestBody UserLoginDto dto){
