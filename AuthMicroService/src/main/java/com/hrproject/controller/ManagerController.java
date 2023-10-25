@@ -33,10 +33,7 @@ public class ManagerController {
         return ResponseEntity.ok(authService.updateAuth(dto));
     }
 
-    @DeleteMapping(EndPoints.DELETE_BY_ID)
-    public ResponseEntity<String> deleteById(@RequestParam String token){
-        return   ResponseEntity.ok(authService.deleteAuth(token));
-    }
+
 
 
 

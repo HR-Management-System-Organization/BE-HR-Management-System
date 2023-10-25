@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 public class RegisterProducer {
 
     private final RabbitTemplate rabbitTemplate;
-    @Value("${rabbitmq.auth-exchange}")
+    @Value("auth-exchange")
     private String exchange;
-    @Value("${rabbitmq.register-binding-key}")
+    @Value("register-key")
     private String bindingKey;
 
     public  void sendNewUser(RegisterModel model){

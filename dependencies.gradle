@@ -34,7 +34,16 @@ ext {
             springCloudStarterGateway       : "org.springframework.cloud:spring-cloud-starter-gateway:$versions.springCloud",
             springCloudCircuitBreaker       : "org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j:$versions.circuitBreaker",
             springCloudCircuitBreakerReactor: "org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j:$versions.circuitBreaker",
-            springCloudZipkin               : "org.springframework.cloud:spring-cloud-sleuth-zipkin:$versions.springCloud",
+           springCloudZipkin               : "org.springframework.cloud:spring-cloud-sleuth-zipkin:$versions.springCloud",
             springCloudSleuth               : "org.springframework.cloud:spring-cloud-starter-sleuth:$versions.springCloud",
+            springBootstarter: "org.springframework.boot:spring-boot-starter:$versions.springBoot",
+            springBootstartercache: "org.springframework.boot:spring-boot-starter:$versions.springBoot",
+
+
+
+
+
+
+
     ]
 }

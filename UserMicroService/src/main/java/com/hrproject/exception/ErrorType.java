@@ -22,6 +22,7 @@ public enum ErrorType {
 
     UNEXPECTED_ERROR(HttpStatus.BAD_REQUEST, 4213, "Beklenmeyen Bir Hata Oluştu!"),
     DOLOGIN_USERNAMEORPASSWORD_NOTEXISTS(HttpStatus.BAD_REQUEST,1006,"Kullanıcı adı veya şifre hatalı."),
+    NO_PERMISION(HttpStatus.BAD_REQUEST, 4317, "Rolun bu istek icin yetersiz"),
 
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, 4214, "Geçersiz Token!"),
 
@@ -30,6 +31,7 @@ public enum ErrorType {
     USER_NOT_CREATED(HttpStatus.BAD_REQUEST, 4216, "Kullanıcı Oluşturulamadı!"),
 
     STATUS_NOT_FOUND(HttpStatus.BAD_REQUEST, 4217, "Böyle Bir Kullanıcı Durumu Bulunamadı!");
+
 
 
     HttpStatus httpStatus;

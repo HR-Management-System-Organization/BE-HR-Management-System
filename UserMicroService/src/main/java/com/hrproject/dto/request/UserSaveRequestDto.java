@@ -1,5 +1,6 @@
 package com.hrproject.dto.request;
 
+import com.hrproject.repository.enums.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,4 +19,6 @@ public class UserSaveRequestDto {
     private String email;
 
     private String password;
+
+    private ERole role;
 }

@@ -20,6 +20,10 @@ public enum ErrorType {
     LOGIN_ERROR(4117, "Kullanıcı adı veya şifre hatalı!!!",HttpStatus.BAD_REQUEST),
     INVALID_TOKEN(4118, "Geçersiz Token !!!",HttpStatus.BAD_REQUEST),
     TOKEN_NOT_CREATED(4119, "Token Oluşturulamadı !!!",HttpStatus.BAD_REQUEST),
+    INVALID_ACTION(4900,"Kullanıcı istenilen statüye geçirilemedi.",HttpStatus.BAD_REQUEST),
+    PASSWORD_DUPLICATE(5000,"Şifre son kullanılan şifreyle aynıdır.",HttpStatus.BAD_REQUEST),
+    COMPANY_NOT_FOUND(5010, "Böyle bir şirket bulunamadı", HttpStatus.NOT_FOUND),
+    DUPLICATE_USER(5200, "Bu kullanıcı zaten kayıtlı", HttpStatus.BAD_REQUEST),
 
 
     ;

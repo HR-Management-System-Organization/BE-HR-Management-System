@@ -11,8 +11,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ActivationModel implements Serializable {
-    String Username;
-
-
+public class MailModel implements Serializable {
+    private String text;
+    private String email;
+    private String subject;
 }

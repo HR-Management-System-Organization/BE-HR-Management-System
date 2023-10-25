@@ -8,9 +8,10 @@ import com.hrproject.dto.request.RegisterRequestDto;
 import com.hrproject.dto.response.RegisterResponseDto;
 import com.hrproject.exception.AuthManagerException;
 import com.hrproject.exception.ErrorType;
-import com.hrproject.manager.IUserManager;
+
 import com.hrproject.mapper.IAuthMapper;
 import com.hrproject.rabbitmq.model.MailModel;
+import com.hrproject.rabbitmq.model.RegisterModel;
 import com.hrproject.rabbitmq.producer.ActivationProducer;
 import com.hrproject.rabbitmq.producer.MailProducer;
 import com.hrproject.rabbitmq.producer.RegisterProducer;
@@ -35,7 +36,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
     private final JwtTokenManager jwtTokenManager;
 
-    private final IUserManager userManager;
+
 
     private final RegisterProducer registerProducer;
 
@@ -44,11 +45,11 @@ public class AuthService extends ServiceManager<Auth, Long> {
     private final MailProducer mailProducer;
 
 
-    public AuthService(IAuthRepository authRepository, JwtTokenManager jwtTokenManager, IUserManager userManager, RegisterProducer registerProducer, ActivationProducer activationProducer, MailProducer mailProducer) {
+    public AuthService(IAuthRepository authRepository, JwtTokenManager jwtTokenManager, RegisterProducer registerProducer, ActivationProducer activationProducer, MailProducer mailProducer) {
         super(authRepository);
         this.authRepository = authRepository;
         this.jwtTokenManager = jwtTokenManager;
-        this.userManager = userManager;
+
         this.registerProducer = registerProducer;
         this.activationProducer = activationProducer;
         this.mailProducer = mailProducer;
@@ -56,6 +57,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
     @Transactional
     public RegisterResponseDto registerWithRabbitMq(RegisterRequestDto dto) {
+        System.out.println("burdasin");
         Auth auth = IAuthMapper.INSTANCE.toAuth(dto);
         auth.setActivationCode(CodeGenerator.generateCode());
         if (authRepository.existsByUsername(dto.getUsername())) {
@@ -68,13 +70,17 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
         //register token olusturma
         RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
-        String token = jwtTokenManager.createToken(auth.getId())
+        String token = jwtTokenManager.createToken(auth.getId(), auth.getActivationCode())
                 .orElseThrow(() -> new AuthManagerException(ErrorType.INVALID_TOKEN));
 
         responseDto.setToken(token);
+        String link = "http://localhost:7071/api/v1/auth/activation?token=" + token;
         // mail atma işlemi için mail servis ile haberleşilecek
-        MailModel mailModel = IAuthMapper.INSTANCE.toMailModel(auth);
-        mailModel.setToken(token);
+        MailModel mailModel = MailModel.builder()
+                .email(dto.getEmail())
+                .subject("Aktivasyon Linki")
+                .text("Aktivasyon kodu ->  " + link)
+                .build();
 
         mailProducer.sendMail(mailModel);
         return responseDto;
@@ -98,9 +104,15 @@ public class AuthService extends ServiceManager<Auth, Long> {
                 .orElseThrow(() -> new AuthManagerException(ErrorType.INVALID_TOKEN));
 
         responseDto.setToken(token);
+        String link = "http://localhost:7071/activationcode?token=" + token;
         // mail atma işlemi için mail servis ile haberleşilecek
-        MailModel mailModel = IAuthMapper.INSTANCE.toMailModel(auth);
-        mailModel.setToken(token);
+        MailModel mailModel = MailModel.builder()
+                .email(dto.getEmail())
+                .subject("Aktivasyon Linki")
+                .text("Aktivasyon kodu ->  " + link)
+                .build();
+
+
 
         mailProducer.sendMail(mailModel);
         return responseDto;
@@ -137,24 +149,35 @@ public class AuthService extends ServiceManager<Auth, Long> {
         return "Guncelleme başarılı";
     }
 
-    @Transactional
-    public String deleteAuth(String token) {
-        Optional<Long> id = jwtTokenManager.getIdFromToken(token);
-        if (id.isEmpty()) {
+
+
+    public String activation(String token) {
+        if (!jwtTokenManager.verifyToken(token))
             throw new AuthManagerException(ErrorType.INVALID_TOKEN);
-        }
-        Optional<Auth> auth = findById(id.get());
-        if (auth.isEmpty()) {
+        if (jwtTokenManager.getActivationCode(token).isEmpty())
+            throw new AuthManagerException(ErrorType.INVALID_TOKEN);
+        if (jwtTokenManager.getIdFromToken(token).isEmpty())
+            throw new AuthManagerException(ErrorType.INVALID_TOKEN);
+        if (authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).isEmpty())
             throw new AuthManagerException(ErrorType.USER_NOT_FOUND);
+        if (!authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get().equals(jwtTokenManager.getIdFromToken(token)))
+            throw new AuthManagerException(ErrorType.USER_NOT_FOUND);
+        Auth userProfile = authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
+        if (userProfile.getActivationCode().equals(jwtTokenManager.getActivationCode(token).get())) {
+            try {
+                userProfile.setStatus(EStatus.ACTIVE);
+                RegisterModel registerModel=IAuthMapper.INSTANCE.toRegisterModel(userProfile);
+                activationProducer.activateStatus(userProfile.getUsername());
+                return update(userProfile).getStatus().toString();
+            } catch (Exception e) {
+                throw new AuthManagerException(ErrorType.INTERNAL_ERROR_SERVER);
+            }
         }
-        if (auth.get().getStatus().equals(EStatus.DELETED)) {
-            throw new AuthManagerException(ErrorType.USER_NOT_FOUND, "Hesap zaten silinmiş");
-        }
-        auth.get().setStatus(EStatus.DELETED);
-        update(auth.get());
-        userManager.deleteById("Bearer " + token);
-        return id + "id li kullanıcı başarıyla slindi";
+        return "Başarısız";
+
     }
+
+
 
 
 }

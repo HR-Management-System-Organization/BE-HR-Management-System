@@ -1,27 +1,25 @@
 server:
   port: 7075
 spring:
+  rabbitmq:
+    auth-exchange: auth-exchange
+    register-binding-key: register-key
+    register-queue: register-queue
+    activation-binding-key: activation-key
+    activation-queue: queue-activation
+
+    host: localhost
+    port: 5672
+    username: user
+    password: user
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${java9mail}
-    password: ${java9mailpassword}
+    username: alperensertoglu1@gmail.com
+    password: sqvq amax jldi nnso
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-
-rabbitmq:
-  mail-queue: mailQueue
-
-
-logging:
-  level:
-    root: info
-  file:
-    name: elastic.log
-  logback:
-    rollingpolicy:
-      max-file-size: 100MB

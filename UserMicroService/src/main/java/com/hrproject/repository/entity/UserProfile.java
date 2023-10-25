@@ -1,5 +1,6 @@
 package com.hrproject.repository.entity;
 
+import com.hrproject.repository.enums.ERole;
 import com.hrproject.repository.enums.EStatus;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -29,6 +30,8 @@ public class UserProfile extends BaseEntity {
     private String password;;
 
     private String phone;
+
+    private ERole role;
 
 
     private String address;

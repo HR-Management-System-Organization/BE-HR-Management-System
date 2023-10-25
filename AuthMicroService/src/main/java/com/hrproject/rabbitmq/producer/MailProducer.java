@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 public class MailProducer {
 
     private final RabbitTemplate rabbitTemplate;
-    @Value("${rabbitmq.auth-exchange}")
+    @Value("auth-exchange")
     private String exchange;
-    @Value("${rabbitmq.mail-binding-key}")
+    @Value("mail-binding-key")
     private String bindingKey;
 
 

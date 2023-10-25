@@ -1,25 +1,22 @@
 package com.hrproject.controller;
 
 
-import com.hrproject.constant.EndPoints;
-import com.hrproject.dto.request.ActivateRequestDto;
-import com.hrproject.dto.request.AuthUpdateRequestDto;
+
 import com.hrproject.dto.request.LoginRequestDto;
+
 import com.hrproject.dto.request.RegisterRequestDto;
 import com.hrproject.dto.response.RegisterResponseDto;
-import com.hrproject.repository.entity.Auth;
 import com.hrproject.service.AuthService;
 import com.hrproject.utility.JwtTokenManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.*;
 
+
 import javax.validation.Valid;
-import java.util.List;
 
 import static com.hrproject.constant.EndPoints.*;
 
@@ -29,12 +26,26 @@ import static com.hrproject.constant.EndPoints.*;
 public class AuthController {
     private final AuthService authService;
     private final JwtTokenManager jwtTokenManager;
-    private final CacheManager cacheManager;
+
 
 
     @PostMapping(LOGIN)
     public ResponseEntity<String> login(@RequestBody LoginRequestDto dto){
         return ResponseEntity.ok(authService.login(dto));
+    }
+
+    @PostMapping("/activation")
+    public ResponseEntity<String> activation(String token){
+        return ResponseEntity.ok(authService.activation(token));
+    }
+
+
+    @PostMapping(REGISTER + "_with_rabbitmq")
+    public ResponseEntity<RegisterResponseDto> registerWithRabbitMq(@RequestBody @Valid RegisterRequestDto dto) {
+
+        System.out.println("burdasin1");
+
+        return ResponseEntity.ok(authService.registerWithRabbitMq(dto));
     }
 
 
