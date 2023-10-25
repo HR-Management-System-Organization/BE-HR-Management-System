@@ -1,17 +1,10 @@
 package com.hrproject.controller;
 
-
 import com.hrproject.constant.EndPoints;
-import com.hrproject.dto.request.ActivateRequestDto;
 import com.hrproject.dto.request.AuthUpdateRequestDto;
-import com.hrproject.dto.request.LoginRequestDto;
-import com.hrproject.dto.request.RegisterRequestDto;
-import com.hrproject.dto.response.RegisterResponseDto;
 import com.hrproject.repository.entity.Auth;
 import com.hrproject.service.AuthService;
-import com.hrproject.utility.JwtTokenManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
@@ -21,21 +14,30 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.hrproject.constant.EndPoints.*;
-
 @RestController
-@RequestMapping(AUTH)
+@RequestMapping("/manager")
+@PreAuthorize("hasAuthority('MANAGER')")
 @RequiredArgsConstructor
-public class AuthController {
+public class ManagerController {
+
+
     private final AuthService authService;
-    private final JwtTokenManager jwtTokenManager;
-    private final CacheManager cacheManager;
 
-
-    @PostMapping(LOGIN)
-    public ResponseEntity<String> login(@RequestBody LoginRequestDto dto){
-        return ResponseEntity.ok(authService.login(dto));
+    @GetMapping("/find_all")
+    public ResponseEntity<List<Auth>> findAll(){
+        return ResponseEntity.ok(authService.findAll());
     }
+
+    @PutMapping(EndPoints.UPDATE)
+    public ResponseEntity< String> updateAuth(@RequestBody AuthUpdateRequestDto dto , @RequestHeader("Authorization")String token){
+        return ResponseEntity.ok(authService.updateAuth(dto));
+    }
+
+    @DeleteMapping(EndPoints.DELETE_BY_ID)
+    public ResponseEntity<String> deleteById(@RequestParam String token){
+        return   ResponseEntity.ok(authService.deleteAuth(token));
+    }
+
 
 
 
