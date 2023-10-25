@@ -1,6 +1,7 @@
 package com.hrproject.mapper;
 
 
+import com.hrproject.dto.request.RegisterGuestRequestDto;
 import com.hrproject.dto.request.RegisterRequestDto;
 import com.hrproject.dto.request.UserSaveRequestDto;
 import com.hrproject.dto.response.RegisterResponseDto;
@@ -18,6 +19,7 @@ public interface IAuthMapper {//////?
     IAuthMapper INSTANCE = Mappers.getMapper(IAuthMapper.class);
     Auth toAuth(RegisterRequestDto dto);
     RegisterResponseDto toRegisterResponseDto(Auth auth);
+    Auth toAuth(RegisterGuestRequestDto dto);
 
     @Mapping(source = "id",target = "authId")
     UserSaveRequestDto toUserSaveRequestDto(Auth auth);

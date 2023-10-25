@@ -27,6 +27,7 @@ public class Auth extends BaseEntity{
     private String taxNumber;
     private String email;
     private String activationCode;
+    private String companyName;
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private ERole role = ERole.GUEST;
