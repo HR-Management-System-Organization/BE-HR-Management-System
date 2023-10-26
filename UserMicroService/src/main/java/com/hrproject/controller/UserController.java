@@ -12,6 +12,7 @@ import static com.hrproject.constant.EndPoints.USER;
 @RestController
 @RequestMapping(USER)
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     private final UserService userService;

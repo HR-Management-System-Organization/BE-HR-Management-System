@@ -12,6 +12,7 @@
         <introspection-scope>
           <node kind="database">
             <name qname="AuthServiceDB" />
+            <name qname="CompanyServiceDB" />
             <name qname="UserServiceDB" />
             <node kind="schema" qname="public" />
           </node>
