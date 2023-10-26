@@ -18,6 +18,7 @@ public class UserServiceSecurityConfig {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             // "/api/v1/user/find_all"
+            "/api/v1/user/**"
     };
     private final JwtTokenFilter jwtTokenFilter;
 
