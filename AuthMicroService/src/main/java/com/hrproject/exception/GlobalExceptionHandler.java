@@ -21,43 +21,38 @@ import java.util.List;
 public class GlobalExceptionHandler {
 
 
-
-
-
-
-
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorMessage> handleRunTimeException(RuntimeException ex){
-        return new ResponseEntity<>( createError(ErrorType.UNEXPECTED_ERROR,ex, ex.getMessage()),HttpStatus.BAD_REQUEST);
+    public ResponseEntity<ErrorMessage> handleRunTimeException(RuntimeException ex) {
+        return new ResponseEntity<>(createError(ErrorType.UNEXPECTED_ERROR, ex, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AuthManagerException.class)
-    public ResponseEntity<ErrorMessage> handleManagerException(AuthManagerException exception){
+    public ResponseEntity<ErrorMessage> handleManagerException(AuthManagerException exception) {
         ErrorType errorType = exception.getErrorType();
         HttpStatus httpStatus = errorType.getHttpStatus();
-        ErrorMessage errorMessage=createError(errorType,exception);
+        ErrorMessage errorMessage = createError(errorType, exception);
         errorMessage.setMessage(exception.getMessage());
 
-        return new ResponseEntity<>(errorMessage,httpStatus);
+        return new ResponseEntity<>(errorMessage, httpStatus);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex){
-        ErrorType errorType=ErrorType.BAD_REQUEST;
-        List<String> fields=new ArrayList<>();
+    public ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        ErrorType errorType = ErrorType.BAD_REQUEST;
+        List<String> fields = new ArrayList<>();
 
-        ex.getBindingResult().getFieldErrors().forEach(e-> fields.add(e.getField()+": "+ e.getDefaultMessage()));
+        ex.getBindingResult().getFieldErrors().forEach(e -> fields.add(e.getField() + ": " + e.getDefaultMessage()));
 
-        ErrorMessage errorMessage=createError(errorType,ex);
+        ErrorMessage errorMessage = createError(errorType, ex);
         errorMessage.setFields(fields);
 
-        return new ResponseEntity<>(errorMessage,errorType.getHttpStatus());
+        return new ResponseEntity<>(errorMessage, errorType.getHttpStatus());
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<ErrorMessage> handleMethodArgumentConstraintViolationException(DataIntegrityViolationException ex){
-        ErrorType errorType=ErrorType.DATA_INTEGRITY;
-        return  new ResponseEntity<>(createError(errorType,ex),errorType.getHttpStatus());
+    public ResponseEntity<ErrorMessage> handleMethodArgumentConstraintViolationException(DataIntegrityViolationException ex) {
+        ErrorType errorType = ErrorType.DATA_INTEGRITY;
+        return new ResponseEntity<>(createError(errorType, ex), errorType.getHttpStatus());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -102,14 +97,15 @@ public class GlobalExceptionHandler {
     }
 
     private ErrorMessage createError(ErrorType errorType, Exception exception) {
-        System.out.println("Hata olustu: "+exception.getMessage());
-       return ErrorMessage.builder()
-               .code(errorType.getCode())
-               .message(errorType.getMessage())
-               .build();
+        System.out.println("Hata olustu: " + exception.getMessage());
+        return ErrorMessage.builder()
+                .code(errorType.getCode())
+                .message(errorType.getMessage())
+                .build();
     }
-    private ErrorMessage createError(ErrorType errorType, Exception exception,String message) {
-        System.out.println("Hata olustu: "+exception.getMessage());
+
+    private ErrorMessage createError(ErrorType errorType, Exception exception, String message) {
+        System.out.println("Hata olustu: " + exception.getMessage());
         return ErrorMessage.builder()
                 .code(errorType.getCode())
                 .message(message)

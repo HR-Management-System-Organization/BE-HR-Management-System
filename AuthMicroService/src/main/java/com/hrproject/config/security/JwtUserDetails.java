@@ -19,6 +19,7 @@ import java.util.Optional;
 public class JwtUserDetails implements UserDetailsService {
     @Autowired
     private AuthService authService;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return null;
@@ -26,10 +27,10 @@ public class JwtUserDetails implements UserDetailsService {
 
 
     public UserDetails loadUserByUserId(Long id) throws UsernameNotFoundException {
-        Optional<Auth> auth=authService.findById(id);
+        Optional<Auth> auth = authService.findById(id);
 
-        if (auth.isPresent()){
-            List<GrantedAuthority> authorityList=new ArrayList<>();
+        if (auth.isPresent()) {
+            List<GrantedAuthority> authorityList = new ArrayList<>();
             authorityList.add(new SimpleGrantedAuthority(auth.get().getRole().toString()));
             return User.builder()
                     .username(auth.get().getUsername())

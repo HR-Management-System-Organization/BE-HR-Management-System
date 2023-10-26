@@ -17,8 +17,8 @@ public class MailProducer {
     private String bindingKey;
 
 
-    public  void sendMail(MailModel model){
-        rabbitTemplate.convertAndSend(exchange,bindingKey,model);
+    public void sendMail(MailModel model) {
+        rabbitTemplate.convertAndSend(exchange, bindingKey, model);
     }
 
 }

@@ -1,14 +1,12 @@
 package com.hrproject.dto.request;
 
 
-import com.hrproject.repository.enums.ERole;
-import com.hrproject.repository.enums.EStatus;
+import com.hrproject.repository.enums.EGender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -24,16 +22,14 @@ public class RegisterGuestRequestDto {
     @NotBlank(message = "Email adı boş geçilemez!!!")
     @Email
     private String email;
+    private EGender gender;
     @NotBlank(message = "Şifre boş geçilemez!!!")
-    @Size(min = 8,max=32, message = "Şifre uzunlugu en az 8 karakter en fazla 32 karakter olabilir !!!")
+    @Size(min = 8, max = 32, message = "Şifre uzunlugu en az 8 karakter en fazla 32 karakter olabilir !!!")
     private String password;
     @NotBlank(message = "Şifre boş geçilemez!!!")
     private String rePassword;
     private String taxNumber;
     private String companyName;
-
-
-
 
 
 }

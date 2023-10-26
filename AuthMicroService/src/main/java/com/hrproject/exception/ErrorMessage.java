@@ -17,5 +17,5 @@ public class ErrorMessage {
     private String message;
     private List<String> fields;
     @Builder.Default
-    private LocalDateTime date= LocalDateTime.now();
+    private LocalDateTime date = LocalDateTime.now();
 }

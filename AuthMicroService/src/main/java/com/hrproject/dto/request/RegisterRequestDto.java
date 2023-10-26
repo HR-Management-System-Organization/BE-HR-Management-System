@@ -1,6 +1,7 @@
 package com.hrproject.dto.request;
 
 
+import com.hrproject.repository.enums.EGender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,10 +21,11 @@ public class RegisterRequestDto {
     private String email;
     @NotBlank(message = "Kullanıcı adı boş geçilemez!!!")
     private String username;
+    private EGender gender;
     @NotBlank(message = "Şifre adı boş geçilemez!!!")
-    @Size(min = 5,max=32, message = "Şifre uzunlugu en az 5 karakter en fazla 32 karakter olabilir !!!")
+    @Size(min = 5, max = 32, message = "Şifre uzunlugu en az 5 karakter en fazla 32 karakter olabilir !!!")
     @NotBlank(message = "Şifre boş geçilemez!!!")
-    @Size(min = 8,max=32, message = "Şifre uzunlugu en az 8 karakter en fazla 32 karakter olabilir !!!")
+    @Size(min = 8, max = 32, message = "Şifre uzunlugu en az 8 karakter en fazla 32 karakter olabilir !!!")
     private String password;
     @NotBlank(message = "Şifre boş geçilemez!!!")
     private String rePassword;

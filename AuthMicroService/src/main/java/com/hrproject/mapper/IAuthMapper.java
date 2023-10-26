@@ -17,14 +17,17 @@ import org.mapstruct.factory.Mappers;
 public interface IAuthMapper {//////?
 
     IAuthMapper INSTANCE = Mappers.getMapper(IAuthMapper.class);
+
     Auth toAuth(RegisterRequestDto dto);
+
     RegisterResponseDto toRegisterResponseDto(Auth auth);
+
     Auth toAuth(RegisterGuestRequestDto dto);
 
-    @Mapping(source = "id",target = "authId")
+    @Mapping(source = "id", target = "authId")
     UserSaveRequestDto toUserSaveRequestDto(Auth auth);
 
-    @Mapping(source = "id",target = "authId")
+    @Mapping(source = "id", target = "authId")
     RegisterModel toRegisterModel(Auth auth);
 
     MailModel toMailModel(Auth auth);

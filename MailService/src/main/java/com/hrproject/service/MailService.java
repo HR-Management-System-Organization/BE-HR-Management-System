@@ -3,7 +3,6 @@ package com.hrproject.service;
 import com.hrproject.rabbitmq.model.MailModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +29,7 @@ public class MailService {
         javaMailSender.send(message);
     }
 
-    public void rabbitMessage(MailModel mailModel){
-        sendEmail(mailModel.getEmail(),mailModel.getSubject(),mailModel.getText());
+    public void rabbitMessage(MailModel mailModel) {
+        sendEmail(mailModel.getEmail(), mailModel.getSubject(), mailModel.getText());
     }
 }

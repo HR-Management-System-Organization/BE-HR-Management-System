@@ -1,5 +1,5 @@
 package com.hrproject.repository.enums;
 
 public enum ERole {
-    GUEST,ADMIN,MANAGER,USER
+    EMPLOYEE, ADMIN, GUEST, COMPANY_MANAGER;
 }

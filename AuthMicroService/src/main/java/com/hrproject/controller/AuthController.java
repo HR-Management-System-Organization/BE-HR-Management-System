@@ -1,20 +1,14 @@
 package com.hrproject.controller;
 
 
-
 import com.hrproject.dto.request.LoginRequestDto;
-
 import com.hrproject.dto.request.RegisterRequestDto;
 import com.hrproject.dto.response.RegisterResponseDto;
 import com.hrproject.service.AuthService;
 import com.hrproject.utility.JwtTokenManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.CacheManager;
-
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
-
 
 import javax.validation.Valid;
 
@@ -28,14 +22,13 @@ public class AuthController {
     private final JwtTokenManager jwtTokenManager;
 
 
-
     @PostMapping(LOGIN)
-    public ResponseEntity<String> login(@RequestBody LoginRequestDto dto){
+    public ResponseEntity<String> login(@RequestBody LoginRequestDto dto) {
         return ResponseEntity.ok(authService.login(dto));
     }
 
     @GetMapping("/activation")
-    public ResponseEntity<String> activation(String token){
+    public ResponseEntity<String> activation(String token) {
         return ResponseEntity.ok(authService.activation(token));
     }
 
@@ -47,8 +40,6 @@ public class AuthController {
 
         return ResponseEntity.ok(authService.registerWithRabbitMq(dto));
     }
-
-
 
 
 }

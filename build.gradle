@@ -52,10 +52,10 @@ allprojects {
         implementation libs.springBootstartercache
         implementation libs.springCloudOpenFeign
 
-      //  implementation libs.springCloudZipkin
-      //  implementation libs.springCloudSleuth
+        //  implementation libs.springCloudZipkin
+        //  implementation libs.springCloudSleuth
         implementation libs.springBootRabbitMq
-       // implementation libs.springBootRedis
+        // implementation libs.springBootRedis
     }
 }
 

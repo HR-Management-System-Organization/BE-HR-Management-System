@@ -18,8 +18,9 @@ import java.util.List;
 public class AdminController {
 
     private final AuthService authService;
+
     @GetMapping("/find_all")
-    public ResponseEntity<List<Auth>> findAll(){
+    public ResponseEntity<List<Auth>> findAll() {
         return ResponseEntity.ok(authService.findAll());
     }
 }
