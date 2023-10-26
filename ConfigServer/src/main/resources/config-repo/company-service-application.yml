@@ -1,0 +1,21 @@
+server:
+  port: 9091
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: root
+    url: jdbc:postgresql://localhost:5432/CompanyServiceDB
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+rabbitmq:
+  auth-exchange: auth-exchange
+  register-binding-key: register-key
+  register-queue: register-queue
+  activation-binding-key: activation-key
+  activation-queue: queue-activation
+  mail-queue: mail-queue
+  mail-binding-key: mail-binding-key
