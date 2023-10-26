@@ -1,6 +1,5 @@
 package com.hrproject.mapper;
 
-
 import com.hrproject.dto.request.RegisterGuestRequestDto;
 import com.hrproject.dto.request.RegisterRequestDto;
 import com.hrproject.dto.request.UserSaveRequestDto;
@@ -14,7 +13,7 @@ import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface IAuthMapper {//////?
+public interface IAuthMapper {
 
     IAuthMapper INSTANCE = Mappers.getMapper(IAuthMapper.class);
 

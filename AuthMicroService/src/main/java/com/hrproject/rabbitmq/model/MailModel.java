@@ -12,7 +12,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 public class MailModel implements Serializable {
+
     private String text;
+
     private String email;
-    private String subject; // gerekli değil
+
+    private String subject; // gerekli Değil
 }

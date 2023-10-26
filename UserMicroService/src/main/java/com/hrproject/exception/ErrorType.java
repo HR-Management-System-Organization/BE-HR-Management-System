@@ -19,7 +19,9 @@ public enum ErrorType {
     INVALID_CODE(HttpStatus.BAD_REQUEST, 4212, "Geçersiz Kod!"),
 
     UNEXPECTED_ERROR(HttpStatus.BAD_REQUEST, 4213, "Beklenmeyen Bir Hata Oluştu!"),
+
     DOLOGIN_USERNAMEORPASSWORD_NOTEXISTS(HttpStatus.BAD_REQUEST, 1006, "Kullanıcı adı veya şifre hatalı."),
+
     NO_PERMISION(HttpStatus.BAD_REQUEST, 4317, "Rolun bu istek icin yetersiz"),
 
     INVALID_TOKEN(HttpStatus.BAD_REQUEST, 4214, "Geçersiz Token!"),

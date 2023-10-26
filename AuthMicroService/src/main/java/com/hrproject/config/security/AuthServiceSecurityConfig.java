@@ -27,14 +27,19 @@ public class AuthServiceSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
         httpSecurity.csrf().disable();
+
         httpSecurity.authorizeRequests().antMatchers(WHITELIST).permitAll().anyRequest().authenticated();
+
         // httpSecurity.authorizeRequests().antMatchers("/find_all").hasAuthority("ADMIN");
+
         //  httpSecurity.authorizeRequests().antMatchers("/swagger-ui/**","/v3/api-docs/**").authenticated().anyRequest().permitAll();
+
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-
         httpSecurity.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
         return httpSecurity.build();
     }
 }

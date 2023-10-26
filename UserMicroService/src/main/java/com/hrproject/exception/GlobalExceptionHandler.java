@@ -15,7 +15,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.ArrayList;
 import java.util.List;
 
-
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {

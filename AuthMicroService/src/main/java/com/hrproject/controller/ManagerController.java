@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ManagerController {
 
-
     private final AuthService authService;
 
     @GetMapping("/find_all")
@@ -27,8 +26,7 @@ public class ManagerController {
 
     @PutMapping(EndPoints.UPDATE)
     public ResponseEntity<String> updateAuth(@RequestBody AuthUpdateRequestDto dto, @RequestHeader("Authorization") String token) {
+
         return ResponseEntity.ok(authService.updateAuth(dto));
     }
-
-
 }

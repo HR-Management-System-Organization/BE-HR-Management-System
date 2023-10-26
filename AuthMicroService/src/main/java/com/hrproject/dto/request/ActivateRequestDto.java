@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class ActivateRequestDto {
 
     private String token;
-    private String activationCode;
 
+    private String activationCode;
 }

@@ -35,7 +35,9 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     }
 
     public void createNewUserWithRabbitmq(RegisterModel model) {
+
         UserProfile userProfile = userMapper.toUserProfile(model);
+
         save(userProfile);
 
     }
@@ -43,11 +45,13 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     public UserProfile savedto(UserSaveRequestDto dto) {
 
         UserProfile userProfile = userMapper.toUserProfile(dto);
+
         return save(userProfile);
 
     }
 
     public String logindto(UserLoginDto dto) {
+
         if (userRepository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword()).isEmpty()) {
             throw new UserManagerException(ErrorType.DOLOGIN_USERNAMEORPASSWORD_NOTEXISTS);
         } else {
@@ -58,22 +62,24 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     }
 
     public List<UserProfile> findalluser(UserProfile userProfile) {
+
         if (userProfile.getRole().equals(ERole.COMPANY_MANAGER) || userProfile.getRole().equals(ERole.ADMIN)) {
             return userRepository.findAll();
         } else throw new UserManagerException(ErrorType.NO_PERMISION);
     }
 
     public String delete(Long id) {
+
         try {
             delete(id);
-
-            return "Basarali";
+            return "Başarılı";
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     public void activation(String username) {
+
         if (userRepository.findByUsername(username).isEmpty()) {
             throw new UserManagerException(ErrorType.USER_NOT_FOUND);
         } else {

@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 public class UserSaveRequestDto {
 
     private Long authId;
+
     private String username;
+
     private String email;
 }

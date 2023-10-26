@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Service
 public class JwtUserDetails implements UserDetailsService {
+
     @Autowired
     private AuthService authService;
 
@@ -24,7 +25,6 @@ public class JwtUserDetails implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return null;
     }
-
 
     public UserDetails loadUserByUserId(Long id) throws UsernameNotFoundException {
         Optional<Auth> auth = authService.findById(id);

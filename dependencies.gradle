@@ -38,7 +38,5 @@ ext {
             springCloudSleuth               : "org.springframework.cloud:spring-cloud-starter-sleuth:$versions.springCloud",
             springBootstarter               : "org.springframework.boot:spring-boot-starter:$versions.springBoot",
             springBootstartercache          : "org.springframework.boot:spring-boot-starter:$versions.springBoot",
-
-
     ]
 }

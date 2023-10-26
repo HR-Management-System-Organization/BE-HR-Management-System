@@ -1,6 +1,7 @@
 package com.hrproject.constant;
 
 public class EndPoints {
+
     public static final String VERSION = "api/v1";
     public static final String MAIL = VERSION + "/mail";
 
@@ -12,6 +13,4 @@ public class EndPoints {
     public static final String SAVE = "/save";
 
     ///MAIl
-
-
 }

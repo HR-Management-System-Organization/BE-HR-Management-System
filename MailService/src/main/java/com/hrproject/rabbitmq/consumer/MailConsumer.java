@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class MailConsumer {
+
     private final MailService mailService;
 
     @RabbitListener(queues = "${rabbitmq.mail-queue}")
