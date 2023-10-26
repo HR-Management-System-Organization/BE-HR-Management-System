@@ -1,6 +1,5 @@
 package com.hrproject.repository.entity;
 
-
 import com.hrproject.repository.enums.EGender;
 import com.hrproject.repository.enums.ERole;
 import com.hrproject.repository.enums.EStatus;
@@ -46,5 +45,5 @@ public class Auth extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private EStatus status = EStatus.PENDING;
-    private Double permission;//ToDO yöneticiye izin talep sayfası ve izin istek
+    private Double permission; // ToDo yöneticiye izin talep sayfası ve izin istek
 }

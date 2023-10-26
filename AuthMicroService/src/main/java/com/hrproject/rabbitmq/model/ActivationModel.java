@@ -12,7 +12,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 public class ActivationModel implements Serializable {
+
     String Username;
-
-
 }

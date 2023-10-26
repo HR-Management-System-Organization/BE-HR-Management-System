@@ -1,6 +1,5 @@
 package com.hrproject.controller;
 
-
 import com.hrproject.dto.request.LoginRequestDto;
 import com.hrproject.dto.request.RegisterRequestDto;
 import com.hrproject.dto.response.RegisterResponseDto;
@@ -18,12 +17,14 @@ import static com.hrproject.constant.EndPoints.*;
 @RequestMapping(AUTH)
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthService authService;
-    private final JwtTokenManager jwtTokenManager;
 
+    private final AuthService authService;
+
+    private final JwtTokenManager jwtTokenManager;
 
     @PostMapping(LOGIN)
     public ResponseEntity<String> login(@RequestBody LoginRequestDto dto) {
+
         return ResponseEntity.ok(authService.login(dto));
     }
 
@@ -32,7 +33,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.activation(token));
     }
 
-
     @PostMapping(REGISTER + "_with_rabbitmq")
     public ResponseEntity<RegisterResponseDto> registerWithRabbitMq(@RequestBody @Valid RegisterRequestDto dto) {
 
@@ -40,6 +40,4 @@ public class AuthController {
 
         return ResponseEntity.ok(authService.registerWithRabbitMq(dto));
     }
-
-
 }

@@ -13,9 +13,13 @@ import java.util.List;
 @Data
 @Builder
 public class ErrorMessage {
+
     private int code;
+
     private String message;
+
     private List<String> fields;
+
     @Builder.Default
     private LocalDateTime date = LocalDateTime.now();
 }

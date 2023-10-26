@@ -18,21 +18,25 @@ public class UserController {
 
     @PostMapping(LOGIN)
     public ResponseEntity<String> dologin(@RequestBody UserLoginDto dto) {
+
         return ResponseEntity.ok(userService.logindto(dto));
     }
 
     @PostMapping("/addAnnualPermission ")
     public ResponseEntity<String> addAnnualPermission(@RequestBody UserLoginDto dto, @RequestParam int days) {
+
         return ResponseEntity.ok(userService.requestAnnualLeave(dto, days));
     }
 
     @PostMapping("/addAParentalPermission ")
     public ResponseEntity<String> addAParentalPermission(@RequestBody UserLoginDto dto, @RequestParam int days) {
+
         return ResponseEntity.ok(userService.requestParentalLeave(dto, days));
     }
 
     @GetMapping("/getTotalAnnualLeave/{username}")
     public ResponseEntity<Integer> getPermission(@RequestBody UserLoginDto dto) {
+
         return ResponseEntity.ok(userService.getTotalAnnualLeave(dto));
     }
 }

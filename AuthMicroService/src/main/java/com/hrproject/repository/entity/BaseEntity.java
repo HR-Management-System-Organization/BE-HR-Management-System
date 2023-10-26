@@ -1,6 +1,5 @@
 package com.hrproject.repository.entity;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,5 +15,6 @@ import javax.persistence.MappedSuperclass;
 public class BaseEntity {
 
     private Long createDate;
+
     private Long updateDate;
 }

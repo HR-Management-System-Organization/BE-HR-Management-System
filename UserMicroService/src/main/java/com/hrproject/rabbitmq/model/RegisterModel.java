@@ -14,10 +14,12 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder
 public class RegisterModel implements Serializable {
-    private Long authId;
-    private String username;
-    private String email;
 
+    private Long authId;
+
+    private String username;
+
+    private String email;
 
     private ERole role = ERole.GUEST;
 

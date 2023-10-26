@@ -10,19 +10,25 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMqConfig {
+
     @Value("${rabbitmq.auth-exchange}")
     private String exchange;
+
     @Value("${rabbitmq.register-binding-key}")
     private String registerBindingKey;  //unique --> her bir mesaj isteğine göre özel üretilmelidir
+
     @Value("${rabbitmq.register-queue}")
     private String registerQueueName;  //unique --> her bir mesaj isteğine göre özel üretilmelidir
+
     @Value("${rabbitmq.activation-binding-key}")
     private String activationBindingKey;
+
     @Value("${rabbitmq.activation-queue}")
     private String activationQueueName;
 
     @Value("${rabbitmq.mail-queue}")
     private String mailQueueName;
+
     @Value("${rabbitmq.mail-binding-key}")
     private String mailBindingKey;
 
@@ -61,4 +67,3 @@ public class RabbitMqConfig {
         return BindingBuilder.bind(mailQueue).to(exchange).with(mailBindingKey);
     }
 }
-

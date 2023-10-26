@@ -11,13 +11,14 @@ import org.springframework.stereotype.Service;
 public class RegisterProducer {
 
     private final RabbitTemplate rabbitTemplate;
+
     @Value("${rabbitmq.auth-exchange}")
     private String exchange;
+
     @Value("${rabbitmq.register-binding-key}")
     private String bindingKey;
 
     public void sendNewUser(RegisterModel model) {
         rabbitTemplate.convertAndSend(exchange, bindingKey, model);
     }
-
 }

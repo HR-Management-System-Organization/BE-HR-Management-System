@@ -16,21 +16,23 @@ import javax.validation.constraints.Size;
 @Data
 @Builder
 public class RegisterRequestDto {
-    @NotBlank(message = "Email adı boş geçilemez!!!")
+    @NotBlank(message = "E-mail Boş Geçilemez!")
     @Email
     private String email;
+
     @NotBlank(message = "Kullanıcı adı boş geçilemez!!!")
     private String username;
+
     private EGender gender;
-    @NotBlank(message = "Şifre adı boş geçilemez!!!")
-    @Size(min = 5, max = 32, message = "Şifre uzunlugu en az 5 karakter en fazla 32 karakter olabilir !!!")
-    @NotBlank(message = "Şifre boş geçilemez!!!")
-    @Size(min = 8, max = 32, message = "Şifre uzunlugu en az 8 karakter en fazla 32 karakter olabilir !!!")
+
+    @NotBlank(message = "Şifre Boş Geçilemez!")
+    @Size(min = 8, max = 32, message = "Şifre Uzunluğu En Az 8 Karakter, En Fazla 32 Karakter Olabilir!")
     private String password;
-    @NotBlank(message = "Şifre boş geçilemez!!!")
+
+    @NotBlank(message = "Şifre Boş Geçilemez!")
     private String rePassword;
+
     private String taxNumber;
+
     private String companyName;
-
-
 }

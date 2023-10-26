@@ -8,30 +8,42 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorType {
 
-    INTERNAL_ERROR_SERVER(5100, "Sunucu Hatası", HttpStatus.INTERNAL_SERVER_ERROR),
-    BAD_REQUEST(4100, "Parametre hatası", HttpStatus.BAD_REQUEST),
-    USER_NOT_FOUND(4110, "Böyle bir kullanıcı bulunamadı", HttpStatus.NOT_FOUND),
-    ACCOUNT_NOT_ACTIVE(4111, "Hesabınız Aktif değildir", HttpStatus.BAD_REQUEST),
-    INVALID_CODE(4112, "Geçersiz Kod", HttpStatus.BAD_REQUEST),
-    ALREADY_ACTIVE(4113, "Hesabınız zaten aktif", HttpStatus.BAD_REQUEST),
-    UNEXPECTED_ERROR(4114, "Beklenmeyen bir hata olustu", HttpStatus.BAD_REQUEST),
-    USERNAME_ALREADY_EXIST(4115, "Böyle bir kullanıcı adı bulunmaktadır !!!", HttpStatus.BAD_REQUEST),
-    DATA_INTEGRITY(4116, "hatalı veri", HttpStatus.BAD_REQUEST),
-    LOGIN_ERROR(4117, "Kullanıcı adı veya şifre hatalı!!!", HttpStatus.BAD_REQUEST),
-    INVALID_TOKEN(4118, "Geçersiz Token !!!", HttpStatus.BAD_REQUEST),
-    TOKEN_NOT_CREATED(4119, "Token Oluşturulamadı !!!", HttpStatus.BAD_REQUEST),
-    INVALID_ACTION(4900, "Kullanıcı istenilen statüye geçirilemedi.", HttpStatus.BAD_REQUEST),
-    PASSWORD_DUPLICATE(5000, "Şifre son kullanılan şifreyle aynıdır.", HttpStatus.BAD_REQUEST),
-    COMPANY_NOT_FOUND(5010, "Böyle bir şirket bulunamadı", HttpStatus.NOT_FOUND),
-    DUPLICATE_USER(5200, "Bu kullanıcı zaten kayıtlı", HttpStatus.BAD_REQUEST),
+    INTERNAL_ERROR_SERVER(HttpStatus.INTERNAL_SERVER_ERROR, 5100, "Sunucu Hatası!"),
 
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, 4100, "Parametre Hatası!"),
 
-    ;
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, 4110, "Böyle Bir Kullanıcı Bulunamadı!"),
+
+    ACCOUNT_NOT_ACTIVE(HttpStatus.BAD_REQUEST, 4111, "Hesabınız Aktif Değil!"),
+
+    INVALID_CODE(HttpStatus.BAD_REQUEST, 4112, "Geçersiz Kod!"),
+
+    ALREADY_ACTIVE(HttpStatus.BAD_REQUEST, 4113, "Hesabınız Zaten Aktif!"),
+
+    UNEXPECTED_ERROR(HttpStatus.BAD_REQUEST, 4114, "Beklenmeyen Bir Hata Oluştu!"),
+
+    USERNAME_ALREADY_EXIST(HttpStatus.BAD_REQUEST, 4115, "Böyle bir Kullanıcı Adı Bulunmaktadır!"),
+
+    DATA_INTEGRITY(HttpStatus.BAD_REQUEST, 4116, "Hatalı Veri!"),
+
+    LOGIN_ERROR(HttpStatus.BAD_REQUEST, 4117, "Kullanıcı Adı Veya Şifre Hatalı!"),
+
+    INVALID_TOKEN(HttpStatus.BAD_REQUEST, 4118, "Geçersiz Token!"),
+
+    TOKEN_NOT_CREATED(HttpStatus.BAD_REQUEST, 4119, "Token Oluşturulamadı!"),
+
+    INVALID_ACTION(HttpStatus.BAD_REQUEST, 4900, "Kullanıcı İstenilen Statüye Geçirilemedi!"),
+
+    PASSWORD_DUPLICATE(HttpStatus.BAD_REQUEST, 5000, "Şifre Son Kullanılan Şifreyle Aynıdır!"),
+
+    COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, 5010, "Böyle Bir Şirket Bulunamadı!"),
+
+    DUPLICATE_USER(HttpStatus.BAD_REQUEST, 5200, "Bu Kullanıcı Zaten Kayıtlı!");
 
 
     HttpStatus httpStatus;
+
     private int code;
+
     private String message;
-
-
 }
