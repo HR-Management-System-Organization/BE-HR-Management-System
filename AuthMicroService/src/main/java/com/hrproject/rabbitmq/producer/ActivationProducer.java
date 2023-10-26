@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 public class ActivationProducer {
 
     private final RabbitTemplate rabbitTemplate;
-    @Value("auth-exchange")
+    @Value("${rabbitmq.auth-exchange}")
     private String exchange;
-    @Value("activation-key")
+    @Value("${rabbitmq.activation-binding-key}")
     private String bindingKey;
 
 

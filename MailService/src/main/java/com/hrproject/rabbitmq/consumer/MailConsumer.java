@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class MailConsumer {
     private final MailService mailService;
 
-    @RabbitListener(queues = "mail-queue")
+    @RabbitListener(queues = "${rabbitmq.mail-queue}")
     public void sendEmail(MailModel model) {
         mailService.rabbitMessage(model);
     }

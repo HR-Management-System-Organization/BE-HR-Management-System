@@ -14,7 +14,7 @@ public class RegisterConsumer {
 
     private final UserService userService;
 
-    @RabbitListener(queues = ("register-queue"))
+    @RabbitListener(queues = ("${rabbitmq.register-queue}"))
     public void newUserCreate(RegisterModel model) {
 
         userService.createNewUserWithRabbitmq(model);
