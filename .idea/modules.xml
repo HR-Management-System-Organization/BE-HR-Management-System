@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Api_Gateway_Service/HR_Management_System.Api_Gateway_Service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Api_Gateway_Service/HR_Management_System.Api_Gateway_Service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/AuthMicroService/HR_Management_System.AuthMicroService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/AuthMicroService/HR_Management_System.AuthMicroService.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/CompanyService/HR_Management_System.CompanyService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/CompanyService/HR_Management_System.CompanyService.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ConfigServer/HR_Management_System.ConfigServer.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ConfigServer/HR_Management_System.ConfigServer.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/MailService/HR_Management_System.MailService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/MailService/HR_Management_System.MailService.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/UserMicroService/HR_Management_System.UserMicroService.main.iml" filepath="$PROJECT_DIR$/.idea/modules/UserMicroService/HR_Management_System.UserMicroService.main.iml" />
     </modules>
   </component>
 </project>
