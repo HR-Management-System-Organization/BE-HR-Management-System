@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMqConfig {
+
     @Value("${rabbitmq.auth-exchange}")
     private String exchange;
 

@@ -1,5 +1,6 @@
 package com.hrproject.rabbitmq.model;
 
+import com.hrproject.repository.enums.EGender;
 import com.hrproject.repository.enums.ERole;
 import com.hrproject.repository.enums.EStatus;
 import lombok.AllArgsConstructor;
@@ -20,6 +21,8 @@ public class RegisterModel implements Serializable {
     private String username;
 
     private String email;
+
+    private EGender gender;
 
     private ERole role = ERole.GUEST;
 
