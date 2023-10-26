@@ -16,8 +16,8 @@ public class ActivationProducer {
     private String bindingKey;
 
 
-    public  void activateStatus(String token){
-        rabbitTemplate.convertAndSend(exchange,bindingKey,token);
+    public void activateStatus(String token) {
+        rabbitTemplate.convertAndSend(exchange, bindingKey, token);
     }
 
 }

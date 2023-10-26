@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
     @Bean
-    public OpenAPI customize(){
-        String securitySchemaName="bearerAuth";
-        return  new OpenAPI()
+    public OpenAPI customize() {
+        String securitySchemaName = "bearerAuth";
+        return new OpenAPI()
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemaName))
-                .components(new Components().addSecuritySchemes(securitySchemaName,new SecurityScheme()
+                .components(new Components().addSecuritySchemes(securitySchemaName, new SecurityScheme()
                         .name(securitySchemaName)
                         .type(SecurityScheme.Type.HTTP)
                         .scheme("Bearer").bearerFormat("JWT")

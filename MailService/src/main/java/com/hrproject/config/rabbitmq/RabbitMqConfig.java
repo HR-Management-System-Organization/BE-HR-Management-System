@@ -7,6 +7,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 @Configuration
 public class RabbitMqConfig {
     @Value("${rabbitmq.auth-exchange}")
@@ -21,9 +22,9 @@ public class RabbitMqConfig {
     private String activationQueueName;
 
     @Value("${rabbitmq.mail-queue}")
-    private String  mailQueueName;
+    private String mailQueueName;
     @Value("${rabbitmq.mail-binding-key}")
-    private String  mailBindingKey;
+    private String mailBindingKey;
 
     @Bean
     public DirectExchange exchange() {

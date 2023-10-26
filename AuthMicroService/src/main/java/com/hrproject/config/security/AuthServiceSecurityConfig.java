@@ -14,23 +14,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class AuthServiceSecurityConfig {
 
-    private final JwtTokenFilter jwtTokenFilter;
-    private static final String[] WHITELIST={
+    private static final String[] WHITELIST = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/api/v1/auth/register",
             "/api/v1/auth/login",
             "/api/v1/auth/activate_status",
             "/api/v1/auth/activation",
-           "/api/v1/auth/register_with_rabbitmq",
+            "/api/v1/auth/register_with_rabbitmq",
     };
+    private final JwtTokenFilter jwtTokenFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable();
         httpSecurity.authorizeRequests().antMatchers(WHITELIST).permitAll().anyRequest().authenticated();
-       // httpSecurity.authorizeRequests().antMatchers("/find_all").hasAuthority("ADMIN");
-      //  httpSecurity.authorizeRequests().antMatchers("/swagger-ui/**","/v3/api-docs/**").authenticated().anyRequest().permitAll();
+        // httpSecurity.authorizeRequests().antMatchers("/find_all").hasAuthority("ADMIN");
+        //  httpSecurity.authorizeRequests().antMatchers("/swagger-ui/**","/v3/api-docs/**").authenticated().anyRequest().permitAll();
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 

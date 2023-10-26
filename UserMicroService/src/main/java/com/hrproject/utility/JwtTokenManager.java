@@ -54,8 +54,7 @@ public class JwtTokenManager {
             JWTVerifier verifier = JWT.require(algorithm).withIssuer(issuer).build();
             DecodedJWT decodedJWT = verifier.verify(token);
             if (decodedJWT == null) return false;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
         return true;
@@ -71,7 +70,7 @@ public class JwtTokenManager {
 
             token = JWT.create()
                     .withIssuer(issuer)
-                    .withClaim("myId", id).withClaim("activation","activation")
+                    .withClaim("myId", id).withClaim("activation", "activation")
                     .withIssuedAt(new Date())
                     .withExpiresAt(date)
                     .sign(Algorithm.HMAC512(secretKey));
@@ -155,12 +154,9 @@ public class JwtTokenManager {
             }
 
             String role = decodedJWT.getClaim("activation").asString();
-            if (role.equals("activation")){
+            if (role.equals("activation")) {
                 return Optional.of(true);
-            }
-
-            else return Optional.of(false);
-
+            } else return Optional.of(false);
 
 
         } catch (Exception e) {
@@ -172,7 +168,8 @@ public class JwtTokenManager {
         }
 
     }
-    public Optional<String> createToken(Long id,String activationCode) {
+
+    public Optional<String> createToken(Long id, String activationCode) {
 
         String token = null;
 

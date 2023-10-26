@@ -12,9 +12,9 @@ public class MailManagerException extends RuntimeException {
         this.errorType = errorType;
     }
 
-    public MailManagerException(ErrorType errorType, String customMessage){
+    public MailManagerException(ErrorType errorType, String customMessage) {
         super(customMessage);
-        this.errorType=errorType;
+        this.errorType = errorType;
     }
 
 }

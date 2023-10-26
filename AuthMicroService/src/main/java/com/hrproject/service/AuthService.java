@@ -1,6 +1,5 @@
 package com.hrproject.service;
 
-
 import com.hrproject.dto.request.AuthUpdateRequestDto;
 import com.hrproject.dto.request.LoginRequestDto;
 import com.hrproject.dto.request.RegisterGuestRequestDto;
@@ -8,7 +7,6 @@ import com.hrproject.dto.request.RegisterRequestDto;
 import com.hrproject.dto.response.RegisterResponseDto;
 import com.hrproject.exception.AuthManagerException;
 import com.hrproject.exception.ErrorType;
-
 import com.hrproject.mapper.IAuthMapper;
 import com.hrproject.rabbitmq.model.MailModel;
 import com.hrproject.rabbitmq.model.RegisterModel;
@@ -27,17 +25,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-
-
 @Service
 public class AuthService extends ServiceManager<Auth, Long> {
 
     private final IAuthRepository authRepository;
 
     private final JwtTokenManager jwtTokenManager;
-
-
-
     private final RegisterProducer registerProducer;
 
     private final ActivationProducer activationProducer;
@@ -49,7 +42,6 @@ public class AuthService extends ServiceManager<Auth, Long> {
         super(authRepository);
         this.authRepository = authRepository;
         this.jwtTokenManager = jwtTokenManager;
-
         this.registerProducer = registerProducer;
         this.activationProducer = activationProducer;
         this.mailProducer = mailProducer;
@@ -57,6 +49,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
     @Transactional
     public RegisterResponseDto registerWithRabbitMq(RegisterRequestDto dto) {
+
         System.out.println("burdasin");
         Auth auth = IAuthMapper.INSTANCE.toAuth(dto);
         auth.setActivationCode(CodeGenerator.generateCode());
@@ -88,6 +81,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
     @Transactional
     public RegisterResponseDto registerWithRabbitMq(RegisterGuestRequestDto dto) {
+
         Auth auth = IAuthMapper.INSTANCE.toAuth(dto);
         auth.setActivationCode(CodeGenerator.generateCode());
         if (authRepository.existsByUsername(dto.getUsername())) {
@@ -113,10 +107,10 @@ public class AuthService extends ServiceManager<Auth, Long> {
                 .build();
 
 
-
         mailProducer.sendMail(mailModel);
         return responseDto;
     }
+
     public String login(LoginRequestDto dto) {
         Optional<Auth> optionalAuth = authRepository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword());
         if (optionalAuth.isEmpty()) {
@@ -138,6 +132,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
         }
         return authRepository.findAll();
     }
+
     public String updateAuth(AuthUpdateRequestDto dto) {
         Optional<Auth> auth = findById(dto.getId());
         if (auth.isEmpty()) {
@@ -150,7 +145,6 @@ public class AuthService extends ServiceManager<Auth, Long> {
     }
 
 
-
     public String activation(String token) {
         if (!jwtTokenManager.verifyToken(token))
             throw new AuthManagerException(ErrorType.INVALID_TOKEN);
@@ -158,12 +152,12 @@ public class AuthService extends ServiceManager<Auth, Long> {
             throw new AuthManagerException(ErrorType.INVALID_TOKEN);
         if (jwtTokenManager.getIdFromToken(token).isEmpty())
             throw new AuthManagerException(ErrorType.INVALID_TOKEN);
-        if (authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).isEmpty()){
+        if (authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).isEmpty()) {
             System.out.println("burdasin0");
             throw new AuthManagerException(ErrorType.USER_NOT_FOUND);
         }
 
-        if (!authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get().getId().equals(jwtTokenManager.getIdFromToken(token).get())){
+        if (!authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get().getId().equals(jwtTokenManager.getIdFromToken(token).get())) {
             System.out.println(authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get());
             System.out.println("burdasin");
 
@@ -175,7 +169,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
         if (userProfile.getActivationCode().equals(jwtTokenManager.getActivationCode(token).get())) {
             try {
                 userProfile.setStatus(EStatus.ACTIVE);
-                RegisterModel registerModel=IAuthMapper.INSTANCE.toRegisterModel(userProfile);
+                RegisterModel registerModel = IAuthMapper.INSTANCE.toRegisterModel(userProfile);
                 activationProducer.activateStatus(userProfile.getUsername());
                 return update(userProfile).getStatus().toString();
             } catch (Exception e) {
@@ -185,8 +179,4 @@ public class AuthService extends ServiceManager<Auth, Long> {
         return "Başarısız";
 
     }
-
-
-
-
 }
