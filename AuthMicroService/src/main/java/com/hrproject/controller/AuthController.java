@@ -34,7 +34,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(dto));
     }
 
-    @PostMapping("/activation")
+    @GetMapping("/activation")
     public ResponseEntity<String> activation(String token){
         return ResponseEntity.ok(authService.activation(token));
     }

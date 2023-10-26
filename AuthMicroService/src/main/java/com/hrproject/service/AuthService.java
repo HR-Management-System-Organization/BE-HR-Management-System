@@ -109,7 +109,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
         MailModel mailModel = MailModel.builder()
                 .email(dto.getEmail())
                 .subject("Aktivasyon Linki")
-                .text("Aktivasyon kodu ->  " + link)
+                .text("Aktivasyon kodu ->   " + link)
                 .build();
 
 
@@ -158,10 +158,19 @@ public class AuthService extends ServiceManager<Auth, Long> {
             throw new AuthManagerException(ErrorType.INVALID_TOKEN);
         if (jwtTokenManager.getIdFromToken(token).isEmpty())
             throw new AuthManagerException(ErrorType.INVALID_TOKEN);
-        if (authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).isEmpty())
+        if (authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).isEmpty()){
+            System.out.println("burdasin0");
             throw new AuthManagerException(ErrorType.USER_NOT_FOUND);
-        if (!authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get().equals(jwtTokenManager.getIdFromToken(token)))
+        }
+
+        if (!authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get().getId().equals(jwtTokenManager.getIdFromToken(token).get())){
+            System.out.println(authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get());
+            System.out.println("burdasin");
+
             throw new AuthManagerException(ErrorType.USER_NOT_FOUND);
+        }
+        System.out.println("burdasin2");
+
         Auth userProfile = authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
         if (userProfile.getActivationCode().equals(jwtTokenManager.getActivationCode(token).get())) {
             try {

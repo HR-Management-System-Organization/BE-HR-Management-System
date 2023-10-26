@@ -9,26 +9,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMqConfig {
-    @Value("auth-exchange")
+    @Value("${rabbitmq.auth-exchange}")
     private String exchange;
-
-    @Value("register-key")
-    private String registerBindingKey;
-
-    @Value("register-queue")
-    private String registerQueueName;
-
-    @Value("activation-key")
+    @Value("${rabbitmq.register-binding-key}")
+    private String registerBindingKey;  //unique --> her bir mesaj isteğine göre özel üretilmelidir
+    @Value("${rabbitmq.register-queue}")
+    private String registerQueueName;  //unique --> her bir mesaj isteğine göre özel üretilmelidir
+    @Value("${rabbitmq.activation-binding-key}")
     private String activationBindingKey;
-
-    @Value("queue-activation")
+    @Value("${rabbitmq.activation-queue}")
     private String activationQueueName;
 
-    @Value("mail-queue")
-    private String mailQueueName;
-
-    @Value("mail-binding-key")
-    private String mailBindingKey;
+    @Value("${rabbitmq.mail-queue}")
+    private String  mailQueueName;
+    @Value("${rabbitmq.mail-binding-key}")
+    private String  mailBindingKey;
 
     @Bean
     public DirectExchange exchange() {

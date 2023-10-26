@@ -21,6 +21,7 @@ public class AuthServiceSecurityConfig {
             "/api/v1/auth/register",
             "/api/v1/auth/login",
             "/api/v1/auth/activate_status",
+            "/api/v1/auth/activation",
            "/api/v1/auth/register_with_rabbitmq",
     };
 
