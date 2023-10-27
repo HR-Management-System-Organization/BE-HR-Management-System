@@ -23,5 +23,5 @@ spring:
     url: jdbc:postgresql://localhost:5432/AuthServiceDB
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true

@@ -13,7 +13,7 @@ public class ActivationConsumer {
 
     private final UserService userService;
 
-    @RabbitListener(queues = ("${rabbitmq.activation-queue}"))
+    @RabbitListener(queues = ("queue-activation"))
     public void activateStatus(String token) {
 
         log.info("token=> {}", token);

@@ -11,10 +11,10 @@ public class ActivationProducer {
 
     private final RabbitTemplate rabbitTemplate;
 
-    @Value("${rabbitmq.auth-exchange}")
+    @Value("auth-exchange")
     private String exchange;
 
-    @Value("${rabbitmq.activation-binding-key}")
+    @Value("activation-key")
     private String bindingKey;
 
     public void activateStatus(String token) {

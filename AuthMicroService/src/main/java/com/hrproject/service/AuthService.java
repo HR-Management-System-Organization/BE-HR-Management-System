@@ -22,6 +22,7 @@ import com.hrproject.utility.ServiceManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,9 +97,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
     @Transactional
     public RegisterResponseDto registerWithRabbitMq(RegisterGuestRequestDto dto) {
-
         Auth auth = IAuthMapper.INSTANCE.toAuth(dto);
-
         auth.setActivationCode(CodeGenerator.generateCode());
 
         if (authRepository.existsByUsername(dto.getUsername())) {
@@ -117,7 +116,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
         responseDto.setToken(token);
 
-        String link = "http://localhost:7071/activationcode?token=" + token;
+        String link = "http://localhost:7071/activation?token=" + token;
 
         // mail atma işlemi için mail servis ile haberleşilecek
         MailModel mailModel = MailModel.builder()
@@ -138,11 +137,12 @@ public class AuthService extends ServiceManager<Auth, Long> {
         if (optionalAuth.isEmpty()) {
             throw new AuthManagerException(ErrorType.LOGIN_ERROR);
         }
+        if (!optionalAuth.get().getStatus().equals(EStatus.ACTIVE))
+            throw new AuthManagerException(ErrorType.ACCOUNT_NOT_ACTIVE);
 
         if (!optionalAuth.get().getStatus().equals(EStatus.ACTIVE)) {
             throw new AuthManagerException(ErrorType.ACCOUNT_NOT_ACTIVE);
         }
-
         return jwtTokenManager.createToken(optionalAuth.get().getId(), optionalAuth.get().getRole())
                 .orElseThrow(() -> new AuthManagerException(ErrorType.TOKEN_NOT_CREATED));
     }
@@ -181,7 +181,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
     }
 
 
-    public String activation(String token) {
+    public String activation(String token, HttpServletResponse response) {
 
         if (!jwtTokenManager.verifyToken(token)) {
             throw new AuthManagerException(ErrorType.INVALID_TOKEN);
@@ -205,20 +205,21 @@ public class AuthService extends ServiceManager<Auth, Long> {
             System.out.println("burdasin");
 
             throw new AuthManagerException(ErrorType.USER_NOT_FOUND);
+
         }
 
         System.out.println("burdasin2");
 
         Auth userProfile = authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
-
+        String redirectUrl = "http://localhost:3000/authentication/activation";
         if (userProfile.getActivationCode().equals(jwtTokenManager.getActivationCode(token).get())) {
             try {
 
                 userProfile.setStatus(EStatus.ACTIVE);
                 RegisterModel registerModel = IAuthMapper.INSTANCE.toRegisterModel(userProfile);
                 activationProducer.activateStatus(userProfile.getUsername());
-                return update(userProfile).getStatus().toString();
-
+                response.sendRedirect(redirectUrl);
+                return update(userProfile).getStatus().toString().toLowerCase();
             } catch (Exception e) {
 
                 throw new AuthManagerException(ErrorType.INTERNAL_ERROR_SERVER);

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import static com.hrproject.constant.EndPoints.*;
@@ -16,6 +17,7 @@ import static com.hrproject.constant.EndPoints.*;
 @RestController
 @RequestMapping(AUTH)
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     private final AuthService authService;
@@ -29,8 +31,8 @@ public class AuthController {
     }
 
     @GetMapping("/activation")
-    public ResponseEntity<String> activation(String token) {
-        return ResponseEntity.ok(authService.activation(token));
+    public ResponseEntity<String> activation(String token, HttpServletResponse response) {
+        return ResponseEntity.ok(authService.activation(token,response));
     }
 
     @PostMapping(REGISTER + "_with_rabbitmq")
