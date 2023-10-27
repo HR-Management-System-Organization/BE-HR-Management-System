@@ -93,12 +93,12 @@ public class AuthService extends ServiceManager<Auth, Long> {
         //register token olusturma
         RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
 
-        String token = jwtTokenManager.createToken(auth.getId())
+        String token = jwtTokenManager.createToken(auth.getId(),auth.getActivationCode())
                 .orElseThrow(() -> new AuthManagerException(ErrorType.INVALID_TOKEN));
 
         responseDto.setToken(token);
 
-        String link = "http://localhost:7071/activationcode?token=" + token;
+        String link = "http://localhost:7071/api/v1/auth/activation?token=" + token;
 
         // mail atma işlemi için mail servis ile haberleşilecek
         MailModel mailModel = MailModel.builder()
