@@ -55,8 +55,11 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         if (userRepository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword()).isEmpty()) {
             throw new UserManagerException(ErrorType.DOLOGIN_USERNAMEORPASSWORD_NOTEXISTS);
         } else {
+
             UserProfile userProfile = userRepository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword()).get();
-            return String.valueOf(jwtTokenManager.createToken(userProfile.getId()).get());
+            if (!userProfile.getStatus().equals(EStatus.ACTIVE)) throw new UserManagerException(ErrorType.ACCOUNT_NOT_ACTIVE);
+            System.out.println(userProfile.toString());
+            return String.valueOf(jwtTokenManager.createToken(userProfile.getId(),userProfile.getRole()).get());
         }
 
     }
@@ -147,5 +150,25 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         } else {
             throw new UserManagerException(ErrorType.DOLOGIN_USERNAMEORPASSWORD_NOTEXISTS);
         }
+    }
+
+    public UserProfile findbytokken(String tokken){
+        try {
+            // Sleep for 5 seconds (5000 milliseconds)
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // Handle the InterruptedException, which can be thrown if another thread interrupts the sleep.
+        }
+        UserProfile userProfile=userRepository.findByUsername(jwtTokenManager.getUsername(tokken).get()).get();
+
+
+        return userProfile;
+    }
+
+    public List<UserProfile> finduserprofilesbyadmin(String tokken){
+        if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
+
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString())) throw new UserManagerException(ErrorType.NO_PERMISION);
+        else return userRepository.findAll();
     }
 }

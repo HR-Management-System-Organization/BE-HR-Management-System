@@ -17,7 +17,7 @@ public class UserServiceSecurityConfig {
     private static final String[] WHITELIST = {
             "/swagger-ui/**",
             "/v3/api-docs/**",
-            // "/api/v1/user/find_all",
+
             "/api/v1/user/**"
     };
     

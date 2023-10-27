@@ -15,6 +15,7 @@ import com.hrproject.rabbitmq.producer.MailProducer;
 import com.hrproject.rabbitmq.producer.RegisterProducer;
 import com.hrproject.repository.IAuthRepository;
 import com.hrproject.repository.entity.Auth;
+import com.hrproject.repository.enums.ERole;
 import com.hrproject.repository.enums.EStatus;
 import com.hrproject.utility.CodeGenerator;
 import com.hrproject.utility.JwtTokenManager;
@@ -59,39 +60,19 @@ public class AuthService extends ServiceManager<Auth, Long> {
         System.out.println("burdasin");
 
         Auth auth = IAuthMapper.INSTANCE.toAuth(dto);
+        auth.setRole(ERole.COMPANY_MANAGER);
 
-        auth.setActivationCode(CodeGenerator.generateCode());
-
-        if (authRepository.existsByUsername(dto.getUsername())) {
-            throw new AuthManagerException(ErrorType.USERNAME_ALREADY_EXIST);
-        }
 
         save(auth);
 
-        // rabbitmq ile haberleştireceğiz
-        registerProducer.sendNewUser(IAuthMapper.INSTANCE.toRegisterModel(auth));
+            // rabbitmq ile haberleştireceğiz
+            registerProducer.sendNewUser(IAuthMapper.INSTANCE.toRegisterModel(auth));
 
-        // register token oluşturma
-        RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
+            RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
 
-        String token = jwtTokenManager.createToken(auth.getId(), auth.getActivationCode())
-                .orElseThrow(() -> new AuthManagerException(ErrorType.INVALID_TOKEN));
+            return responseDto;
 
-        responseDto.setToken(token);
 
-        String link = "http://localhost:7071/api/v1/auth/activation?token=" + token;
-
-        // mail atma işlemi için mail servis ile haberleşilecek
-
-        MailModel mailModel = MailModel.builder()
-                .email(dto.getEmail())
-                .subject("Aktivasyon Linki")
-                .text("Aktivasyon kodu ->  " + link)
-                .build();
-
-        mailProducer.sendMail(mailModel);
-
-        return responseDto;
     }
 
     @Transactional
