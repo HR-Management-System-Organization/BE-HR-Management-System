@@ -32,7 +32,5 @@ public class RegisterGuestRequestDto {
     @NotBlank(message = "Şifre Boş Geçilemez!")
     private String rePassword;
 
-    private String taxNumber;
 
-    private String companyName;
 }

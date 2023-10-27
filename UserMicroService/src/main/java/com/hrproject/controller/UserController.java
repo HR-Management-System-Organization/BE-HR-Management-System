@@ -1,10 +1,13 @@
 package com.hrproject.controller;
 
 import com.hrproject.dto.request.UserLoginDto;
+import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.hrproject.constant.EndPoints.LOGIN;
 import static com.hrproject.constant.EndPoints.USER;
@@ -23,6 +26,7 @@ public class UserController {
         return ResponseEntity.ok(userService.logindto(dto));
     }
 
+
     @PostMapping("/addAnnualPermission ")
     public ResponseEntity<String> addAnnualPermission(@RequestBody UserLoginDto dto, @RequestParam int days) {
 
@@ -39,5 +43,9 @@ public class UserController {
     public ResponseEntity<Integer> getPermission(@RequestBody UserLoginDto dto) {
 
         return ResponseEntity.ok(userService.getTotalAnnualLeave(dto));
+    }
+    @GetMapping("/findallbyadmin")
+    public ResponseEntity<List<UserProfile>> findallbyadmin(String tokken){
+        return ResponseEntity.ok(userService.finduserprofilesbyadmin(tokken));
     }
 }
