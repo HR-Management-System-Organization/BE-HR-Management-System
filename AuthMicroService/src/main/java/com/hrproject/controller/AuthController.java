@@ -9,7 +9,9 @@ import com.hrproject.utility.JwtTokenManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import static com.hrproject.constant.EndPoints.*;
@@ -31,8 +33,8 @@ public class AuthController {
     }
 
     @GetMapping("/activation")
-    public ResponseEntity<String> activation(String token) {
-        return ResponseEntity.ok(authService.activation(token));
+    public RedirectView activation(String token) {
+        return authService.activation(token);
     }
 
     @PostMapping(REGISTER + "_with_rabbitmqguset")
@@ -46,7 +48,7 @@ public class AuthController {
     @PostMapping(REGISTER + "_with_rabbitmq")
     public ResponseEntity<RegisterResponseDto> registerWithRabbitMq(@RequestBody @Valid RegisterRequestDto dto) {
 
-        System.out.println("burdasin1");
+        System.out.println("burdasin2");
 
         return ResponseEntity.ok(authService.registerWithRabbitMq(dto));
     }
