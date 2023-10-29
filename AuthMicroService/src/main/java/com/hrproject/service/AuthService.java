@@ -20,9 +20,12 @@ import com.hrproject.repository.enums.EStatus;
 import com.hrproject.utility.CodeGenerator;
 import com.hrproject.utility.JwtTokenManager;
 import com.hrproject.utility.ServiceManager;
+import org.apache.catalina.connector.Response;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,12 +68,12 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
         save(auth);
 
-            // rabbitmq ile haberleştireceğiz
-            registerProducer.sendNewUser(IAuthMapper.INSTANCE.toRegisterModel(auth));
+        // rabbitmq ile haberleştireceğiz
+        registerProducer.sendNewUser(IAuthMapper.INSTANCE.toRegisterModel(auth));
 
-            RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
+        RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
 
-            return responseDto;
+        return responseDto;
 
 
     }
@@ -93,7 +96,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
         //register token olusturma
         RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
 
-        String token = jwtTokenManager.createToken(auth.getId(),auth.getActivationCode())
+        String token = jwtTokenManager.createToken(auth.getId(), auth.getActivationCode())
                 .orElseThrow(() -> new AuthManagerException(ErrorType.INVALID_TOKEN));
 
         responseDto.setToken(token);
@@ -162,51 +165,40 @@ public class AuthService extends ServiceManager<Auth, Long> {
     }
 
 
-    public String activation(String token) {
-
+    public RedirectView activation(String token) {
         if (!jwtTokenManager.verifyToken(token)) {
             throw new AuthManagerException(ErrorType.INVALID_TOKEN);
         }
-
         if (jwtTokenManager.getActivationCode(token).isEmpty()) {
             throw new AuthManagerException(ErrorType.INVALID_TOKEN);
         }
-
         if (jwtTokenManager.getIdFromToken(token).isEmpty()) {
             throw new AuthManagerException(ErrorType.INVALID_TOKEN);
         }
-
         if (authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).isEmpty()) {
             System.out.println("burdasin0");
             throw new AuthManagerException(ErrorType.USER_NOT_FOUND);
         }
-
         if (!authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get().getId().equals(jwtTokenManager.getIdFromToken(token).get())) {
             System.out.println(authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get());
             System.out.println("burdasin");
-
             throw new AuthManagerException(ErrorType.USER_NOT_FOUND);
         }
-
         System.out.println("burdasin2");
-
         Auth userProfile = authRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
-
         if (userProfile.getActivationCode().equals(jwtTokenManager.getActivationCode(token).get())) {
             try {
-
                 userProfile.setStatus(EStatus.ACTIVE);
                 RegisterModel registerModel = IAuthMapper.INSTANCE.toRegisterModel(userProfile);
                 activationProducer.activateStatus(userProfile.getUsername());
-                return update(userProfile).getStatus().toString();
-
+                update(userProfile);
+                String redirectUrl = "http://localhost:3000/authentication/activation";
+                return new RedirectView(redirectUrl);
             } catch (Exception e) {
-
                 throw new AuthManagerException(ErrorType.INTERNAL_ERROR_SERVER);
-
             }
         }
-
-        return "Başarısız!";
+        String failedUrl = "http://localhost:3000/authentication/activation-failed";
+        return new RedirectView(failedUrl);
     }
 }
