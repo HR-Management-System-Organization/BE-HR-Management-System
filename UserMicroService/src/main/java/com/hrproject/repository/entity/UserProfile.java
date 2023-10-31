@@ -25,6 +25,8 @@ public class UserProfile extends BaseEntity {
 
     private Long authId;
 
+    private String companyId;
+
     private String username;
 
     private String email;
