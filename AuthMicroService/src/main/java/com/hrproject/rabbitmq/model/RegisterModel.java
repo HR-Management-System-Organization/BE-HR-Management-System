@@ -20,11 +20,13 @@ public class RegisterModel implements Serializable {
 
     private String username;
 
-    private String  password;
+    private String password;
 
     private String email;
 
     private EGender gender;
+    private String name;
+    private String surname;
 
     private ERole role = ERole.GUEST;
 

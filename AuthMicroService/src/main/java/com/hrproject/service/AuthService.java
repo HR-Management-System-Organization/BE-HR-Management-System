@@ -209,4 +209,12 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
         return "Başarısız!";
     }
+
+    public String findCompanyNameById(Long id) {
+        return authRepository.findOptionalCompanyNameById(id).get();
+    }
+
+    public Optional<Auth> getById(Long id) {
+        return findById(id);
+    }
 }

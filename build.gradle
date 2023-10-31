@@ -40,6 +40,7 @@ allprojects {
     }
     dependencies {
         implementation libs.springBootWeb
+        implementation 'io.swagger.core.v3:swagger-annotations:2.2.16'
 
         implementation libs.lombok
         annotationProcessor libs.lombok
@@ -51,10 +52,7 @@ allprojects {
         implementation libs.springBootstarter
         implementation libs.springBootstartercache
         implementation libs.springCloudOpenFeign
-        // implementation libs.springCloudZipkin
-        // implementation libs.springCloudSleuth
         implementation libs.springBootRabbitMq
-        // implementation libs.springBootRedis
     }
 }
 

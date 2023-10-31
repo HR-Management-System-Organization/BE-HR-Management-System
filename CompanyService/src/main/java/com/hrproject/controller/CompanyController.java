@@ -1,5 +1,6 @@
 package com.hrproject.controller;
 
+import com.hrproject.constants.EndPoints;
 import com.hrproject.dto.request.*;
 import com.hrproject.dto.response.*;
 import com.hrproject.repository.entity.Company;
@@ -24,24 +25,25 @@ public class CompanyController {
 
     @PostMapping("/save")
     @Operation(summary = "Şirket kaydeder.")
-    public ResponseEntity<Long> saveCompanyRequestDto(@RequestBody SaveCompanyRequestDto dto){
+    public ResponseEntity<Long> saveCompanyRequestDto(@RequestBody SaveCompanyRequestDto dto) {
         return ResponseEntity.ok(companyService.save(dto));
     }
+
     @PutMapping("/update/company")
     @Operation(summary = "Şirket günceller.")
-    public ResponseEntity<Long> updateCompanyRequestDto(@RequestBody CompanyUpdateRequestDto dto){
+    public ResponseEntity<Long> updateCompanyRequestDto(@RequestBody CompanyUpdateRequestDto dto) {
         return ResponseEntity.ok(companyService.updateCompany(dto));
     }
 
     @GetMapping("/show-company-information/{token}")
-    public ResponseEntity<CompanyUpdateRequestDto> showCompanyInformation(@PathVariable String token){
+    public ResponseEntity<CompanyUpdateRequestDto> showCompanyInformation(@PathVariable String token) {
         return ResponseEntity.ok(companyService.showCompanyInformation(token));
     }
 
 
     @GetMapping("/get-personnel-company-information/{companyId}")
     @Operation(summary = "Id'si sorgulanan şirketin logosu ve şirketin ismiyle birlikte personel izin günlerini getirir.")
-    public ResponseEntity<PersonnelCompanyInformationResponseDto> getPersonnelCompanyInformation(@PathVariable Long companyId){
+    public ResponseEntity<PersonnelCompanyInformationResponseDto> getPersonnelCompanyInformation(@PathVariable Long companyId) {
         return ResponseEntity.ok(companyService.getPersonnelCompanyInformation(companyId));
     }
 
@@ -54,17 +56,20 @@ public class CompanyController {
 
 
     @GetMapping("/get-salarydate-with-company-id/{companyId}")
-    ResponseEntity<SalaryDateRequestDto> getCompanyNameAndWageDateResponseDto(@PathVariable Long companyId){
+    ResponseEntity<SalaryDateRequestDto> getCompanyNameAndWageDateResponseDto(@PathVariable Long companyId) {
         return ResponseEntity.ok(companyService.getSalaryDateResponseDto(companyId));
     }
 
 
-
     @GetMapping(HOLIDAYS)
-    public ResponseEntity<List<PublicHolidaysRequestDto>> getPublicHoliday(){
+    public ResponseEntity<List<PublicHolidaysRequestDto>> getPublicHoliday() {
         return ResponseEntity.ok(companyService.getPublicHolidays());
     }
 
+    @GetMapping(FINDBYID + "/{companyId}")
+    public ResponseEntity<Company> findByCompanyId(@PathVariable Long id) {
+        return ResponseEntity.ok(companyService.findByCompanyId(id));
+    }
 
 
 }

@@ -4,6 +4,7 @@ import com.hrproject.dto.request.LoginRequestDto;
 import com.hrproject.dto.request.RegisterGuestRequestDto;
 import com.hrproject.dto.request.RegisterRequestDto;
 import com.hrproject.dto.response.RegisterResponseDto;
+import com.hrproject.repository.entity.Auth;
 import com.hrproject.service.AuthService;
 import com.hrproject.utility.JwtTokenManager;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +50,10 @@ public class AuthController {
         System.out.println("burdasin1");
 
         return ResponseEntity.ok(authService.registerWithRabbitMq(dto));
+    }
+
+    @GetMapping("/findbyid/{id}")
+    public ResponseEntity<Auth> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(authService.getById(id).get());
     }
 }

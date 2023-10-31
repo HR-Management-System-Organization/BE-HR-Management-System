@@ -25,6 +25,8 @@ public class UserProfile extends BaseEntity {
 
     private Long authId;
 
+    private Long companyId;
+
     private String username;
 
     private String email;
@@ -54,6 +56,7 @@ public class UserProfile extends BaseEntity {
     private String surName;
 
     private LocalDate birthDate;
+    private String employee_email;
 
     @Builder.Default
     @Enumerated(EnumType.STRING)

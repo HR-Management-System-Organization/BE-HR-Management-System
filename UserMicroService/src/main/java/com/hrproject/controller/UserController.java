@@ -1,5 +1,6 @@
 package com.hrproject.controller;
 
+import com.hrproject.constant.EndPoints;
 import com.hrproject.dto.request.UserLoginDto;
 import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.service.UserService;
@@ -44,8 +45,14 @@ public class UserController {
 
         return ResponseEntity.ok(userService.getTotalAnnualLeave(dto));
     }
+
     @GetMapping("/findallbyadmin")
-    public ResponseEntity<List<UserProfile>> findallbyadmin(String tokken){
+    public ResponseEntity<List<UserProfile>> findallbyadmin(String tokken) {
         return ResponseEntity.ok(userService.finduserprofilesbyadmin(tokken));
+    }
+
+    @GetMapping(EndPoints.FIND_BY_ID+"/{authId}")
+    public ResponseEntity<UserProfile> findByAuthId(@PathVariable Long authId) {
+        return ResponseEntity.ok(userService.findEmployeeByAuthId(authId));
     }
 }

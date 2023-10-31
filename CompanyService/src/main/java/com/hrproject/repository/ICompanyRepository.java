@@ -7,10 +7,15 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ICompanyRepository extends JpaRepository<Company,Long> {
+public interface ICompanyRepository extends JpaRepository<Company, Long> {
     Boolean existsByCompanyNameIgnoreCase(String companyName);
+
     Boolean existsByCompanyId(Long companyId);
+
     Optional<Company> findByCompanyName(String companyName);
+
     Boolean existsByTaxNumber(String taxNumber);
+
+    Optional<Company> findByCompanyId(Long id);
 
 }

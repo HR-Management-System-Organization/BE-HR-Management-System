@@ -16,6 +16,7 @@ import com.hrproject.utility.ServiceManager;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService extends ServiceManager<UserProfile, Long> { //extends ServiceManager<UserProfile, String> {
@@ -57,9 +58,10 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         } else {
 
             UserProfile userProfile = userRepository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword()).get();
-            if (!userProfile.getStatus().equals(EStatus.ACTIVE)) throw new UserManagerException(ErrorType.ACCOUNT_NOT_ACTIVE);
+            if (!userProfile.getStatus().equals(EStatus.ACTIVE))
+                throw new UserManagerException(ErrorType.ACCOUNT_NOT_ACTIVE);
             System.out.println(userProfile.toString());
-            return String.valueOf(jwtTokenManager.createToken(userProfile.getId(),userProfile.getRole()).get());
+            return String.valueOf(jwtTokenManager.createToken(userProfile.getId(), userProfile.getRole()).get());
         }
 
     }
@@ -152,23 +154,32 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         }
     }
 
-    public UserProfile findbytokken(String tokken){
+    public UserProfile findbytokken(String tokken) {
         try {
             // Sleep for 5 seconds (5000 milliseconds)
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             // Handle the InterruptedException, which can be thrown if another thread interrupts the sleep.
         }
-        UserProfile userProfile=userRepository.findByUsername(jwtTokenManager.getUsername(tokken).get()).get();
+        UserProfile userProfile = userRepository.findByUsername(jwtTokenManager.getUsername(tokken).get()).get();
 
 
         return userProfile;
     }
 
-    public List<UserProfile> finduserprofilesbyadmin(String tokken){
+    public List<UserProfile> finduserprofilesbyadmin(String tokken) {
         if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
 
-        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString())) throw new UserManagerException(ErrorType.NO_PERMISION);
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString()))
+            throw new UserManagerException(ErrorType.NO_PERMISION);
         else return userRepository.findAll();
+    }
+
+    public UserProfile findEmployeeByAuthId(Long authId) {
+        Optional<UserProfile> employee = userRepository.findByAuthId(authId);
+        if (employee.isPresent())
+            return employee.get();
+        else
+            throw new UserManagerException(ErrorType.USER_NOT_FOUND);
     }
 }

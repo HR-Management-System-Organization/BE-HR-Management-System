@@ -24,6 +24,8 @@ public class Auth extends BaseEntity {
 
     @Column(unique = true)
     private String username;
+    private String name;
+    private String surname;
 
     private String password;
 
