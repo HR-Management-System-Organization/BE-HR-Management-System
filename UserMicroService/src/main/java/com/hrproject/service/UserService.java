@@ -16,6 +16,7 @@ import com.hrproject.utility.ServiceManager;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService extends ServiceManager<UserProfile, Long> { //extends ServiceManager<UserProfile, String> {
@@ -170,5 +171,12 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 
         if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString())) throw new UserManagerException(ErrorType.NO_PERMISION);
         else return userRepository.findAll();
+    }
+
+    public List<UserProfile> getAllEmployees() {
+
+        List<UserProfile> employeeList = userRepository.findByRole(ERole.EMPLOYEE.name());
+
+        return employeeList;
     }
 }

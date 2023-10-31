@@ -48,4 +48,12 @@ public class UserController {
     public ResponseEntity<List<UserProfile>> findallbyadmin(String tokken){
         return ResponseEntity.ok(userService.finduserprofilesbyadmin(tokken));
     }
+
+    @GetMapping("/allEmployees")
+    public ResponseEntity<List<UserProfile>> getAllEmployees() {
+
+        List<UserProfile> employeeList = userService.getAllEmployees();
+
+        return ResponseEntity.ok(employeeList);
+    }
 }
