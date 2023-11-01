@@ -179,4 +179,62 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 
         return employeeList;
     }
+
+    public List<UserProfile> finduserprofilesbyadmin(String tokken){
+        System.out.println("burdasinfindbyadim");
+        System.out.println(tokken);
+
+        if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
+
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString())) throw new UserManagerException(ErrorType.NO_PERMISION);
+        else return userRepository.findAll();
+    }
+    public List<UserProfile> finduserprofilesbyadminpending( String tokken){
+        System.out.println("burdasinfindbyadim");
+        System.out.println(tokken);
+
+        if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
+
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString())) throw new UserManagerException(ErrorType.NO_PERMISION);
+        else{ ;
+            return userRepository.findAll().stream().filter(a->a.getStatus().equals(EStatus.PENDING)).toList();
+
+    }
+    }
+    public void activitosyon (String token,Long id){
+        if (!jwtTokenManager.verifyToken(token)){
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        System.out.println(jwtTokenManager.getRoleFromToken(token).get());
+        if (!jwtTokenManager.getRoleFromToken(token).get().equals(ERole.ADMIN.toString())){
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        }
+        UserProfile admin=userRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
+        UserProfile userProfile=userRepository.findById(id).get();
+        userProfile.setStatus(EStatus.ACTIVE);
+        System.out.println(update(userProfile));
+        MailModel mailModel= MailModel.builder().
+                text("Uyeliginiz "+admin.getUsername()+ "tarafindan onaylanmıs/n"
+                        +"Linke tıklayarak giris sayfasina ulasabilirsiniz  "+"http://localhost:3000/authentication/sign-in").
+                email(userProfile.getEmail())
+                .subject("Aktivasyon onay maili").build();
+        mailProducer.sendMail(mailModel);
+        System.out.println(mailModel);
+
+
+
+
+
+
+
+    }
+    public UserProfile userProfilefindbidwithtokken(String tokken){
+        if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        if (jwtTokenManager.getIdFromToken(tokken).isEmpty()) throw new UserManagerException(ErrorType.USER_NOT_FOUND);
+        UserProfile userProfile=userRepository.findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
+
+
+        return userProfile;
+
+}
 }
