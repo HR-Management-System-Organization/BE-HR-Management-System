@@ -5,7 +5,9 @@ import com.hrproject.dto.request.UserSaveRequestDto;
 import com.hrproject.exception.ErrorType;
 import com.hrproject.exception.UserManagerException;
 import com.hrproject.mapper.IUserMapper;
+import com.hrproject.rabbitmq.model.MailModel;
 import com.hrproject.rabbitmq.model.RegisterModel;
+import com.hrproject.rabbitmq.producer.MailProducer;
 import com.hrproject.repository.IUserRepository;
 import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.repository.enums.EGender;
@@ -13,9 +15,11 @@ import com.hrproject.repository.enums.ERole;
 import com.hrproject.repository.enums.EStatus;
 import com.hrproject.utility.JwtTokenManager;
 import com.hrproject.utility.ServiceManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService extends ServiceManager<UserProfile, Long> { //extends ServiceManager<UserProfile, String> {
@@ -25,13 +29,15 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     private final JwtTokenManager jwtTokenManager;
 
     private final IUserMapper userMapper;
+    private final MailProducer mailProducer;
 
 
-    public UserService(IUserRepository userRepository, JwtTokenManager jwtTokenManager, IUserMapper userMapper) {
+    public UserService(IUserRepository userRepository, JwtTokenManager jwtTokenManager, IUserMapper userMapper, MailProducer mailProducer) {
         super(userRepository);
         this.userRepository = userRepository;
         this.jwtTokenManager = jwtTokenManager;
         this.userMapper = userMapper;
+        this.mailProducer = mailProducer;
     }
 
     public void createNewUserWithRabbitmq(RegisterModel model) {
@@ -165,10 +171,77 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         return userProfile;
     }
 
+
+
+    public List<UserProfile> getAllEmployees() {
+
+        List<UserProfile> employeeList = userRepository.findByRole(ERole.EMPLOYEE.name());
+
+        return employeeList;
+    }
+
     public List<UserProfile> finduserprofilesbyadmin(String tokken){
+        System.out.println("burdasinfindbyadim");
+        System.out.println(tokken);
+
         if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
 
         if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString())) throw new UserManagerException(ErrorType.NO_PERMISION);
         else return userRepository.findAll();
+    }
+    public List<UserProfile> finduserprofilesbyadminpending( String tokken){
+        System.out.println("burdasinfindbyadim");
+        System.out.println(tokken);
+
+        if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
+
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString())) throw new UserManagerException(ErrorType.NO_PERMISION);
+        else{ ;
+            return userRepository.findAll().stream().filter(a->a.getStatus().equals(EStatus.PENDING)).toList();
+
+        }
+    }
+    public void activitosyon (String token,Long id){
+        if (!jwtTokenManager.verifyToken(token)){
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        System.out.println(jwtTokenManager.getRoleFromToken(token).get());
+        if (!jwtTokenManager.getRoleFromToken(token).get().equals(ERole.ADMIN.toString())){
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        }
+        UserProfile admin=userRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
+        UserProfile userProfile=userRepository.findById(id).get();
+        userProfile.setStatus(EStatus.ACTIVE);
+        System.out.println(update(userProfile));
+        MailModel mailModel= MailModel.builder().
+                text("Uyeliginiz "+admin.getUsername()+ "tarafindan onaylanmıs/n"
+                        +"Linke tıklayarak giris sayfasina ulasabilirsiniz  "+"http://localhost:3000/authentication/sign-in").
+                email(userProfile.getEmail())
+                .subject("Aktivasyon onay maili").build();
+        mailProducer.sendMail(mailModel);
+        System.out.println(mailModel);
+
+
+
+
+
+
+
+    }
+    public UserProfile userProfilefindbidwithtokken(String tokken){
+        if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        if (jwtTokenManager.getIdFromToken(tokken).isEmpty()) throw new UserManagerException(ErrorType.USER_NOT_FOUND);
+        UserProfile userProfile=userRepository.findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
+
+
+        return userProfile;
+
+    }
+    public UserProfile findEmployeeByAuthId(Long authId) {
+        Optional<UserProfile> employee = userRepository.findByAuthId(authId);
+        if (employee.isPresent())
+            return employee.get();
+        else
+            throw new UserManagerException(ErrorType.USER_NOT_FOUND);
     }
 }

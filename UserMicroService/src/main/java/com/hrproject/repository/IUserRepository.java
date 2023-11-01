@@ -16,6 +16,7 @@ public interface IUserRepository extends JpaRepository<UserProfile, Long> {
     Optional<UserProfile> findByUsername(String username);
 
     List<UserProfile> findByStatus(EStatus status);
+    List<UserProfile> findByRole(String role);
 
     Optional<UserProfile> findOptionalByUsernameAndPassword(String username, String password);
 }

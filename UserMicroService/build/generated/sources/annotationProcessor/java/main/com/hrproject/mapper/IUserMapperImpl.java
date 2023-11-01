@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-10-27T16:30:56+0300",
-    comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.2.jar, environment: Java 17.0.9 (Oracle Corporation)"
+    date = "2023-11-01T19:44:59+0300",
+    comments = "version: 1.5.5.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.2.jar, environment: Java 17.0.9 (Amazon.com Inc.)"
 )
 @Component
 public class IUserMapperImpl implements IUserMapper {
@@ -69,6 +69,7 @@ public class IUserMapperImpl implements IUserMapper {
         userProfile.about( dto.getAbout() );
         userProfile.name( dto.getName() );
         userProfile.surName( dto.getSurName() );
+        userProfile.birthDate( dto.getBirthDate() );
 
         return userProfile.build();
     }

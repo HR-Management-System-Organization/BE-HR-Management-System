@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class UserProfileUpdateRequestDto {
 
-    private String token;
+
 
     @NotBlank(message = "Username Boş Geçilemez!")
     private String username;
@@ -33,4 +34,6 @@ public class UserProfileUpdateRequestDto {
     private String name;
 
     private String surName;
+
+    private LocalDate  birthDate;
 }
