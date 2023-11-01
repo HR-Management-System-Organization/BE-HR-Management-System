@@ -16,9 +16,6 @@ public class WorkerController {
 
     private final AuthService authService;
 
-    @PostMapping("getCompany")
-    public ResponseEntity<String> getCompanyName(Long id) {
-        return ResponseEntity.ok(authService.findCompanyNameById(id));
-    }
+
 
 }

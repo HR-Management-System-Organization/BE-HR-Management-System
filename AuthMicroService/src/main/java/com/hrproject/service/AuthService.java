@@ -65,12 +65,12 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
         save(auth);
 
-            // rabbitmq ile haberleştireceğiz
-            registerProducer.sendNewUser(IAuthMapper.INSTANCE.toRegisterModel(auth));
+        // rabbitmq ile haberleştireceğiz
+        registerProducer.sendNewUser(IAuthMapper.INSTANCE.toRegisterModel(auth));
 
-            RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
+        RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
 
-            return responseDto;
+        return responseDto;
 
 
     }
@@ -93,7 +93,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
         //register token olusturma
         RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
 
-        String token = jwtTokenManager.createToken(auth.getId(),auth.getActivationCode())
+        String token = jwtTokenManager.createToken(auth.getId(), auth.getActivationCode())
                 .orElseThrow(() -> new AuthManagerException(ErrorType.INVALID_TOKEN));
 
         responseDto.setToken(token);
@@ -210,11 +210,5 @@ public class AuthService extends ServiceManager<Auth, Long> {
         return "Başarısız!";
     }
 
-    public String findCompanyNameById(Long id) {
-        return authRepository.findOptionalCompanyNameById(id).get();
-    }
 
-    public Optional<Auth> getById(Long id) {
-        return findById(id);
-    }
 }

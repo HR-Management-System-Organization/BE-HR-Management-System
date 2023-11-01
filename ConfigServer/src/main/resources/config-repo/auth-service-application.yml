@@ -11,18 +11,6 @@ rabbitmq:
   mail-binding-key: mail-binding-key
 
 spring:
-  cloud:
-    gateway:
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowed-origins: "*"
-            allowed-headers: "*"
-            allowed-methods:
-              - GET
-              - POST
-              - PUT
-              - DELETE
   rabbitmq:
     host: localhost
     port: 5672
@@ -31,7 +19,7 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: Rx199630
+    password: root
     url: jdbc:postgresql://localhost:5432/AuthServiceDB
   jpa:
     hibernate:

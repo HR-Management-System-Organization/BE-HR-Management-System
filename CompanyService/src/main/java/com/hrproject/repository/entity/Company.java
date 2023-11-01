@@ -19,7 +19,7 @@ import java.util.List;
 public class Company extends Base{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long companyId;
+    private Long id;
     private String companyName;
     private String companyNeighbourhood;
     private String companyDistrict;

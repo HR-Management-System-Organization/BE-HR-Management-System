@@ -52,8 +52,5 @@ public class AuthController {
         return ResponseEntity.ok(authService.registerWithRabbitMq(dto));
     }
 
-    @GetMapping("/findbyid/{id}")
-    public ResponseEntity<Auth> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(authService.getById(id).get());
-    }
+
 }

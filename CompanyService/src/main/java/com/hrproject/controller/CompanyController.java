@@ -66,9 +66,14 @@ public class CompanyController {
         return ResponseEntity.ok(companyService.getPublicHolidays());
     }
 
-    @GetMapping(FINDBYID + "/{companyId}")
+    @GetMapping(FINDBYID + "/{id}")
     public ResponseEntity<Company> findByCompanyId(@PathVariable Long id) {
-        return ResponseEntity.ok(companyService.findByCompanyId(id));
+        return ResponseEntity.ok(companyService.findByIdd(id));
+    }
+
+    @GetMapping("/existbyname")
+    public ResponseEntity<Boolean> existByName(String companyName){
+        return ResponseEntity.ok(companyService.existsByCompanyName(companyName));
     }
 
 

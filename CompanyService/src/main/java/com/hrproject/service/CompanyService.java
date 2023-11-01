@@ -35,7 +35,7 @@ public class CompanyService extends ServiceManager<Company, Long> {
         if (!companyRepository.existsByCompanyNameIgnoreCase(dto.getCompanyName()) && !companyRepository.existsByTaxNumber(dto.getTaxNumber())) {
             Company company = ICompanyMapper.INSTANCE.fromSaveCompanyResponseDtoToCompany(dto);
 
-            return save(company).getCompanyId();
+            return save(company).getId();
         }
         throw new CompanyManagerException(ErrorType.COMPANY_ALREADY_EXIST);
     }
@@ -60,7 +60,7 @@ public class CompanyService extends ServiceManager<Company, Long> {
                 company.setCompanyApartmentNumber(dto.getCompanyApartmentNumber());
                 company.setSector(dto.getSector());
                 company.setCompanyProvince(dto.getCompanyProvince());
-                return update(company).getCompanyId();
+                return update(company).getId();
             } else {
                 throw new CompanyManagerException(ErrorType.USER_NOT_FOUND);
             }
@@ -217,7 +217,11 @@ public class CompanyService extends ServiceManager<Company, Long> {
         return holiday;
     }
 
-    public Company findByCompanyId(Long id) {
-        return companyRepository.findByCompanyId(id).get();
+    public Company findByIdd(Long id) {
+        return findById(id).get();
+    }
+
+    public Boolean existsByCompanyName(String companyName) {
+        return companyRepository.existsByCompanyNameIgnoreCase(companyName);
     }
 }
