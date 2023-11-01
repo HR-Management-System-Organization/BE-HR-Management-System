@@ -5,7 +5,9 @@ import com.hrproject.dto.request.UserSaveRequestDto;
 import com.hrproject.exception.ErrorType;
 import com.hrproject.exception.UserManagerException;
 import com.hrproject.mapper.IUserMapper;
+import com.hrproject.rabbitmq.model.MailModel;
 import com.hrproject.rabbitmq.model.RegisterModel;
+import com.hrproject.rabbitmq.producer.MailProducer;
 import com.hrproject.repository.IUserRepository;
 import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.repository.enums.EGender;
@@ -16,7 +18,6 @@ import com.hrproject.utility.ServiceManager;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService extends ServiceManager<UserProfile, Long> { //extends ServiceManager<UserProfile, String> {
@@ -26,13 +27,15 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     private final JwtTokenManager jwtTokenManager;
 
     private final IUserMapper userMapper;
+    private final MailProducer mailProducer;
 
 
-    public UserService(IUserRepository userRepository, JwtTokenManager jwtTokenManager, IUserMapper userMapper) {
+    public UserService(IUserRepository userRepository, JwtTokenManager jwtTokenManager, IUserMapper userMapper, MailProducer mailProducer) {
         super(userRepository);
         this.userRepository = userRepository;
         this.jwtTokenManager = jwtTokenManager;
         this.userMapper = userMapper;
+        this.mailProducer = mailProducer;
     }
 
     public void createNewUserWithRabbitmq(RegisterModel model) {
@@ -52,7 +55,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     }
 
     public String logindto(UserLoginDto dto) {
-
+        System.out.println(dto.toString());
         if (userRepository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword()).isEmpty()) {
             throw new UserManagerException(ErrorType.DOLOGIN_USERNAMEORPASSWORD_NOTEXISTS);
         } else {
@@ -164,20 +167,6 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 
 
         return userProfile;
-    }
-
-    public List<UserProfile> finduserprofilesbyadmin(String tokken){
-        if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
-
-        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString())) throw new UserManagerException(ErrorType.NO_PERMISION);
-        else return userRepository.findAll();
-    }
-
-    public List<UserProfile> getAllEmployees() {
-
-        List<UserProfile> employeeList = userRepository.findByRole(ERole.EMPLOYEE.name());
-
-        return employeeList;
     }
 
     public List<UserProfile> finduserprofilesbyadmin(String tokken){
