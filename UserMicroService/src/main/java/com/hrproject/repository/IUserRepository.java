@@ -1,6 +1,7 @@
 package com.hrproject.repository;
 
 import com.hrproject.repository.entity.UserProfile;
+import com.hrproject.repository.enums.ERole;
 import com.hrproject.repository.enums.EStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -19,5 +20,5 @@ public interface IUserRepository extends JpaRepository<UserProfile, Long> {
 
     Optional<UserProfile> findOptionalByUsernameAndPassword(String username, String password);
 
-    List<UserProfile> findByRole(String role);
+    List<UserProfile> findByRole(ERole role);
 }

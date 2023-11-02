@@ -78,8 +78,11 @@ public class UserController {
                 token = tokenWithoutBearer;
             }
         } else if (requestBody != null && requestBody.containsKey("token")) {
+
             System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
+            String tokenWithoutBearer = requestBody.get("token").substring(7); // 7, "Bearer " prefix uzunluğudur
             // İstek gövdesinden gelen token'ı işleyebilirsiniz
+            token = tokenWithoutBearer;
         } else {
             System.out.println("Token sağlanmadı");
         }
@@ -159,9 +162,17 @@ public class UserController {
 
     }
 
-    @GetMapping(EndPoints.FIND_BY_ID+"/{authId}")
+    @GetMapping(EndPoints.FIND_BY_ID + "/{authId}")
     public ResponseEntity<UserProfile> findByAuthId(@PathVariable Long authId) {
         return ResponseEntity.ok(userService.findEmployeeByAuthId(authId));
     }
+
+    @GetMapping("/allEmployees/{companyId}")
+    public ResponseEntity<List<UserProfile>> getAllEmployees(@PathVariable Long companyId) {
+
+
+        return ResponseEntity.ok(userService.getAllEmployees(companyId));
+    }
+
 
 }

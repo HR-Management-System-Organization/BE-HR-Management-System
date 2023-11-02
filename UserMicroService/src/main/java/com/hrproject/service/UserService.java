@@ -16,6 +16,7 @@ import com.hrproject.repository.enums.EStatus;
 import com.hrproject.utility.JwtTokenManager;
 import com.hrproject.utility.ServiceManager;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 import java.util.List;
@@ -230,9 +231,6 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 
     }
 
-    public UserProfile findByAuthId(Long AuthId) {
-        return userRepository.findByAuthId(AuthId).get();
-    }
 
     public UserProfile findEmployeeByAuthId(Long authId) {
         Optional<UserProfile> employee = userRepository.findByAuthId(authId);
@@ -240,5 +238,16 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             return employee.get();
         else
             throw new UserManagerException(ErrorType.USER_NOT_FOUND);
+    }
+
+    public List<UserProfile> getAllEmployees(Long companyId) {
+
+        List<UserProfile> employeeList = userRepository.findByRole(ERole.EMPLOYEE);
+        return employeeList.stream().filter(emp -> emp.getCompanyId() == companyId).toList();
+//        Optional<User> user = findEmployeeByAuthId(userId);
+//        if (optionalUser.isPresent()) {
+//            String companyId = user.get().getCompanyId();
+//            List<User> employeeList = userRepository.findByCompanyId(companyId);
+//            return employeeList.size();
     }
 }
