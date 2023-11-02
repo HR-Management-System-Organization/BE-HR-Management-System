@@ -65,6 +65,9 @@ public class CompanyController {
         return ResponseEntity.ok(companyService.getPublicHolidays());
     }
 
-
+    @GetMapping(FINDBYID + "/{id}")
+    public ResponseEntity<Company> findByCompanyId(@PathVariable Long id) {
+        return ResponseEntity.ok(companyService.findByIdd(id));
+    }
 
 }

@@ -39,6 +39,7 @@ public class CompanyService extends ServiceManager<Company, Long> {
         }
         throw new CompanyManagerException(ErrorType.COMPANY_ALREADY_EXIST);
     }
+
     public Long updateCompany(CompanyUpdateRequestDto dto) {
         Long companyId = jwtTokenProvider.getCompanyIdFromToken(dto.getToken())
                 .orElseThrow(() -> new CompanyManagerException(ErrorType.COMPANY_NOT_FOUND));
@@ -90,9 +91,6 @@ public class CompanyService extends ServiceManager<Company, Long> {
     }
 
 
-
-
-
     public PersonnelCompanyInformationResponseDto getPersonnelCompanyInformation(Long companyId) {
         Company company = findById(companyId).orElseThrow(() -> {
             throw new CompanyManagerException(ErrorType.COMPANY_NOT_FOUND);
@@ -110,7 +108,6 @@ public class CompanyService extends ServiceManager<Company, Long> {
         }
         return dto;
     }
-
 
 
 //    public ManagerDashboardResponseDto getManagerDashboardInformation(String token) {
@@ -164,12 +161,8 @@ public class CompanyService extends ServiceManager<Company, Long> {
     }
 
 
-
-
-
-
     @PostConstruct
-    public void defaultCompany(){
+    public void defaultCompany() {
         save(Company.builder()
                 .companyName("A Şirketi")
                 .companyCountry("Türkiye")
@@ -214,6 +207,7 @@ public class CompanyService extends ServiceManager<Company, Long> {
 
         return listHoliday;
     }
+
     private PublicHolidaysRequestDto createHoliday(Long id, String name, String date, String description) {
         PublicHolidaysRequestDto holiday = new PublicHolidaysRequestDto();
         holiday.setId(id);
@@ -223,4 +217,7 @@ public class CompanyService extends ServiceManager<Company, Long> {
         return holiday;
     }
 
+    public Company findByIdd(Long id) {
+        return findById(id).get();
+    }
 }
