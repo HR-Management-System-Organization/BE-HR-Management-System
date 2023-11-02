@@ -1,5 +1,6 @@
 package com.hrproject.controller;
 
+import com.hrproject.constant.EndPoints;
 import com.hrproject.dto.request.UserLoginDto;
 import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.service.UserService;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.hrproject.constant.EndPoints.LOGIN;
 import static com.hrproject.constant.EndPoints.USER;
@@ -45,18 +47,19 @@ public class UserController {
         return ResponseEntity.ok(userService.getTotalAnnualLeave(dto));
     }
     //@GetMapping("/findallbyadmin")
-   // public ResponseEntity<List<UserProfile>> findallbyadmin(String tokken){
+    // public ResponseEntity<List<UserProfile>> findallbyadmin(String tokken){
     //    return ResponseEntity.ok(userService.finduserprofilesbyadmin(tokken));
-  //  }
+    //  }
 
-    @GetMapping("/allEmployees")
-    public ResponseEntity<List<UserProfile>> getAllEmployees() {
+//    @GetMapping("/allEmployees")
+//    public ResponseEntity<List<UserProfile>> getAllEmployees() {
+//
+////        List<UserProfile> employeeList = userService.getAllEmployees();
+//
+//        return ResponseEntity.ok(employeeList);
+//    }
 
-        List<UserProfile> employeeList = userService.getAllEmployees();
-
-        return ResponseEntity.ok(employeeList);
-    }
-@PostMapping("/findallbyadmin")
+    @PostMapping("/findallbyadmin")
     public ResponseEntity<List<UserProfile>> findallbyadmin(
             @RequestParam(required = false) String token,
             @RequestHeader(required = false) String authorization,
@@ -72,7 +75,7 @@ public class UserController {
                 System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
                 // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
                 // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
-                token=tokenWithoutBearer;
+                token = tokenWithoutBearer;
             }
         } else if (requestBody != null && requestBody.containsKey("token")) {
             System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
@@ -83,7 +86,9 @@ public class UserController {
 
         // Alınan token ile işlemlerinizi gerçekleştirin
         return ResponseEntity.ok(userService.finduserprofilesbyadmin(token));
-    }@PostMapping("/findallbyadminpending")
+    }
+
+    @PostMapping("/findallbyadminpending")
     public ResponseEntity<List<UserProfile>> findallbyadminpending(
             @RequestParam(required = false) String token,
             @RequestHeader(required = false) String authorization,
@@ -99,7 +104,7 @@ public class UserController {
                 System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
                 // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
                 // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
-                token=tokenWithoutBearer;
+                token = tokenWithoutBearer;
             }
         } else if (requestBody != null && requestBody.containsKey("token")) {
             System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
@@ -111,28 +116,29 @@ public class UserController {
         // Alınan token ile işlemlerinizi gerçekleştirin
         return ResponseEntity.ok(userService.finduserprofilesbyadminpending(token));
     }
+
     @PostMapping("/activationbyadmin")
     public void activasyonbyadmin(
             @RequestParam Integer authorId,
             @RequestHeader(required = false) String authorization) {
         System.out.println(authorId);
         String token = null;
-            if (!authorId.equals(null)){
-                if (authorization.startsWith("Bearer ")) {
-                    String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
-                    System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
-                    // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
-                    // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
-                    token=tokenWithoutBearer;
-                    System.out.println(token);
-
-                }
-                Long longSayi = (long) authorId; // int'i Long'a dönüştür
-
-                userService.activitosyon(token,longSayi);
-
+        if (!authorId.equals(null)) {
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+                System.out.println(token);
 
             }
+            Long longSayi = (long) authorId; // int'i Long'a dönüştür
+
+            userService.activitosyon(token, longSayi);
+
+
+        }
 
 
     }
@@ -140,17 +146,22 @@ public class UserController {
     @PostMapping("/finduserbyadmin")
     public ResponseEntity<UserProfile> findallbyadmin(
             @RequestParam(required = false) String token,
-            @RequestHeader(required = false) String authorization){
+            @RequestHeader(required = false) String authorization) {
         if (authorization.startsWith("Bearer ")) {
             String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
             System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
             // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
             // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
-            token=tokenWithoutBearer;
+            token = tokenWithoutBearer;
         }
         System.out.println(token);
-       return ResponseEntity.ok(userService.userProfilefindbidwithtokken(token));
+        return ResponseEntity.ok(userService.userProfilefindbidwithtokken(token));
 
+    }
+
+    @GetMapping(EndPoints.FIND_BY_ID+"/{authId}")
+    public ResponseEntity<UserProfile> findByAuthId(@PathVariable Long authId) {
+        return ResponseEntity.ok(userService.findEmployeeByAuthId(authId));
     }
 
 }

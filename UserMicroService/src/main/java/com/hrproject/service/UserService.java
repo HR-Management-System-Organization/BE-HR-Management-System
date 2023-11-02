@@ -16,6 +16,7 @@ import com.hrproject.repository.enums.EStatus;
 import com.hrproject.utility.JwtTokenManager;
 import com.hrproject.utility.ServiceManager;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 import java.util.List;
 
@@ -61,9 +62,10 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         } else {
 
             UserProfile userProfile = userRepository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword()).get();
-            if (!userProfile.getStatus().equals(EStatus.ACTIVE)) throw new UserManagerException(ErrorType.ACCOUNT_NOT_ACTIVE);
+            if (!userProfile.getStatus().equals(EStatus.ACTIVE))
+                throw new UserManagerException(ErrorType.ACCOUNT_NOT_ACTIVE);
             System.out.println(userProfile.toString());
-            return String.valueOf(jwtTokenManager.createToken(userProfile.getId(),userProfile.getRole()).get());
+            return String.valueOf(jwtTokenManager.createToken(userProfile.getId(), userProfile.getRole()).get());
         }
 
     }
@@ -156,74 +158,87 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         }
     }
 
-    public UserProfile findbytokken(String tokken){
+    public UserProfile findbytokken(String tokken) {
         try {
             // Sleep for 5 seconds (5000 milliseconds)
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             // Handle the InterruptedException, which can be thrown if another thread interrupts the sleep.
         }
-        UserProfile userProfile=userRepository.findByUsername(jwtTokenManager.getUsername(tokken).get()).get();
+        UserProfile userProfile = userRepository.findByUsername(jwtTokenManager.getUsername(tokken).get()).get();
 
 
         return userProfile;
     }
 
-    public List<UserProfile> finduserprofilesbyadmin(String tokken){
+    public List<UserProfile> finduserprofilesbyadmin(String tokken) {
         System.out.println("burdasinfindbyadim");
         System.out.println(tokken);
 
         if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
 
-        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString())) throw new UserManagerException(ErrorType.NO_PERMISION);
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString()))
+            throw new UserManagerException(ErrorType.NO_PERMISION);
         else return userRepository.findAll();
     }
-    public List<UserProfile> finduserprofilesbyadminpending( String tokken){
+
+    public List<UserProfile> finduserprofilesbyadminpending(String tokken) {
         System.out.println("burdasinfindbyadim");
         System.out.println(tokken);
 
         if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
 
-        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString())) throw new UserManagerException(ErrorType.NO_PERMISION);
-        else{ ;
-            return userRepository.findAll().stream().filter(a->a.getStatus().equals(EStatus.PENDING)).toList();
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString()))
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        else {
+            ;
+            return userRepository.findAll().stream().filter(a -> a.getStatus().equals(EStatus.PENDING)).toList();
 
+        }
     }
-    }
-    public void activitosyon (String token,Long id){
-        if (!jwtTokenManager.verifyToken(token)){
+
+    public void activitosyon(String token, Long id) {
+        if (!jwtTokenManager.verifyToken(token)) {
             throw new UserManagerException(ErrorType.INVALID_TOKEN);
         }
         System.out.println(jwtTokenManager.getRoleFromToken(token).get());
-        if (!jwtTokenManager.getRoleFromToken(token).get().equals(ERole.ADMIN.toString())){
+        if (!jwtTokenManager.getRoleFromToken(token).get().equals(ERole.ADMIN.toString())) {
             throw new UserManagerException(ErrorType.NO_PERMISION);
         }
-        UserProfile admin=userRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
-        UserProfile userProfile=userRepository.findById(id).get();
+        UserProfile admin = userRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
+        UserProfile userProfile = userRepository.findById(id).get();
         userProfile.setStatus(EStatus.ACTIVE);
         System.out.println(update(userProfile));
-        MailModel mailModel= MailModel.builder().
-                text("Uyeliginiz "+admin.getUsername()+ "tarafindan onaylanmıs/n"
-                        +"Linke tıklayarak giris sayfasina ulasabilirsiniz  "+"http://localhost:3000/authentication/sign-in").
+        MailModel mailModel = MailModel.builder().
+                text("Uyeliginiz " + admin.getUsername() + "tarafindan onaylanmıs/n"
+                        + "Linke tıklayarak giris sayfasina ulasabilirsiniz  " + "http://localhost:3000/authentication/sign-in").
                 email(userProfile.getEmail())
                 .subject("Aktivasyon onay maili").build();
         mailProducer.sendMail(mailModel);
         System.out.println(mailModel);
 
 
-
-
-
-
-
     }
-    public UserProfile userProfilefindbidwithtokken(String tokken){
+
+    public UserProfile userProfilefindbidwithtokken(String tokken) {
         if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
         if (jwtTokenManager.getIdFromToken(tokken).isEmpty()) throw new UserManagerException(ErrorType.USER_NOT_FOUND);
-        UserProfile userProfile=userRepository.findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
+        UserProfile userProfile = userRepository.findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
 
 
         return userProfile;
 
-}
+    }
+
+    public UserProfile findByAuthId(Long AuthId) {
+        return userRepository.findByAuthId(AuthId).get();
+    }
+
+    public UserProfile findEmployeeByAuthId(Long authId) {
+        Optional<UserProfile> employee = userRepository.findByAuthId(authId);
+        if (employee.isPresent())
+            return employee.get();
+        else
+            throw new UserManagerException(ErrorType.USER_NOT_FOUND);
+    }
 }
