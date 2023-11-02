@@ -13,4 +13,6 @@ public interface ICompanyRepository extends JpaRepository<Company,Long> {
     Optional<Company> findByCompanyName(String companyName);
     Boolean existsByTaxNumber(String taxNumber);
 
+
+
 }
