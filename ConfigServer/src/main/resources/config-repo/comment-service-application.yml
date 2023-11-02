@@ -1,0 +1,18 @@
+server:
+  port: 9093
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: root
+    url: jdbc:postgresql://localhost:5959/CommentServiceDB
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: user
