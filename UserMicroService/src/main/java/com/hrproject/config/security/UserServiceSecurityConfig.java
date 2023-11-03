@@ -20,7 +20,7 @@ public class UserServiceSecurityConfig {
 
             "/api/v1/user/**"
     };
-    
+
     private final JwtTokenFilter jwtTokenFilter;
 
     @Bean

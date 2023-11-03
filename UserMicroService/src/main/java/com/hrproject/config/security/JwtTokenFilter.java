@@ -25,22 +25,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         System.out.println(request.getRequestURL());
 
         String authorizationHeader = request.getHeader("Authorization");
-
         System.out.println("authHeader ===> " + authorizationHeader);
 
-        System.out.println("auth ==> " + SecurityContextHolder.getContext().getAuthentication());
-
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")
-            //   && SecurityContextHolder.getContext().getAuthentication()==null
-        ) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
             Optional<String> role = jwtTokenManager.getRoleFromToken(token);
             UserDetails userDetails = null;
             System.out.println("token==>" + token);
+
             if (role.isPresent()) {
                 userDetails = jwtUserDetails.loadUserByUserRole(role.get());
                 UsernamePasswordAuthenticationToken authenticationToken =
@@ -51,8 +46,19 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             System.out.println("getcontext ==> " + SecurityContextHolder.getContext());
         }
 
-        // System.out.println("auth ==> " + SecurityContextHolder.getContext().getAuthentication());
+        // CORS başlıklarını burada ayarlayın
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000"); // İzin verilen origin
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
 
-        filterChain.doFilter(request, response);
+        // Preflight isteğini ele alın
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            filterChain.doFilter(request, response);
+        }
     }
+
 }
