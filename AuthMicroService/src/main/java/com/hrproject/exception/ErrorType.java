@@ -38,7 +38,9 @@ public enum ErrorType {
 
     COMPANY_NOT_FOUND(HttpStatus.NOT_FOUND, 5010, "Böyle Bir Şirket Bulunamadı!"),
 
-    DUPLICATE_USER(HttpStatus.BAD_REQUEST, 5200, "Bu Kullanıcı Zaten Kayıtlı!");
+    DUPLICATE_USER(HttpStatus.BAD_REQUEST, 5200, "Bu Kullanıcı Zaten Kayıtlı!"),
+    PASSWORDLENGTHLOWERTHAN8 (HttpStatus.BAD_REQUEST, 200, "Sifreniz en az 8 haneli olamli"),
+    PASSWORDSnotsame (HttpStatus.BAD_REQUEST, 200, "Sifreler eslesmiyor");
 
 
     HttpStatus httpStatus;

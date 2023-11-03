@@ -61,7 +61,11 @@ public class AuthService extends ServiceManager<Auth, Long> {
     public RegisterResponseDto registerWithRabbitMq(RegisterRequestDto dto) {
 
         System.out.println("burdasin");
-
+        if (authRepository.existsByUsername(dto.getUsername())) {
+            throw new AuthManagerException(ErrorType.USERNAME_ALREADY_EXIST);
+        }
+        if (!(dto.getPassword().length() >7)){throw new AuthManagerException(ErrorType.PASSWORDLENGTHLOWERTHAN8);}
+        if (!(dto.getPassword().equals(dto.getRePassword()))){throw new AuthManagerException(ErrorType.PASSWORDSnotsame);}
         Auth auth = IAuthMapper.INSTANCE.toAuth(dto);
         auth.setRole(ERole.COMPANY_MANAGER);
 
@@ -80,14 +84,16 @@ public class AuthService extends ServiceManager<Auth, Long> {
 
     @Transactional
     public RegisterResponseDto registerWithRabbitMq(RegisterGuestRequestDto dto) {
-
+        if (authRepository.existsByUsername(dto.getUsername())) {
+            throw new AuthManagerException(ErrorType.USERNAME_ALREADY_EXIST);
+        }
+        if (!(dto.getPassword().length() >7)){throw new AuthManagerException(ErrorType.PASSWORDLENGTHLOWERTHAN8);}
+        if (!(dto.getPassword().equals(dto.getRePassword()))){throw new AuthManagerException(ErrorType.PASSWORDSnotsame);}
         Auth auth = IAuthMapper.INSTANCE.toAuth(dto);
 
         auth.setActivationCode(CodeGenerator.generateCode());
 
-        if (authRepository.existsByUsername(dto.getUsername())) {
-            throw new AuthManagerException(ErrorType.USERNAME_ALREADY_EXIST);
-        }
+
         save(auth);
 
         //rabbit mq ile haberleştireceğiz
