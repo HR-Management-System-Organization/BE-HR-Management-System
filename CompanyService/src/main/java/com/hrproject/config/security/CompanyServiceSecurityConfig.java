@@ -38,7 +38,7 @@ public class CompanyServiceSecurityConfig {
 
         // httpSecurity.authorizeRequests().antMatchers("/find_all").hasAuthority("ADMIN");
 
-        // httpSecurity.authorizeRequests().antMatchers("/swagger-ui/**","/v3/api-docs/**").authenticated().anyRequest().permitAll();
+        //  httpSecurity.authorizeRequests().antMatchers("/swagger-ui/**","/v3/api-docs/**").authenticated().anyRequest().permitAll();
 
         httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

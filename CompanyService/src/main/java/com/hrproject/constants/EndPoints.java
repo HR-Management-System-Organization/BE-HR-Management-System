@@ -10,5 +10,5 @@ public class EndPoints {
     public static final String FINDBYCOMPANYNAME ="/findbycompanyname";
     public static final String HOLIDAYS = "/holidays";
 
-    public static final String FINDBYID = "findbycompanyid";
+    public static final String FINDBYID = "/findbycompanyid";
 }
