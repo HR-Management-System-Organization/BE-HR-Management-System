@@ -18,6 +18,7 @@ import com.hrproject.repository.enums.ERole;
 import com.hrproject.utility.JwtTokenProvider;
 import com.hrproject.utility.ServiceManager;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class CommentService extends ServiceManager<Comment, Long> {
         this.jwtTokenProvider = jwtTokenProvider;
         this.createCommentProducer = createCommentProducer;
     }
+
     public List<FindCompanyCommentsResponseDto> findCompanyComments(Long companyId) {
         List<Comment> commentList = commentRepository.findByCompanyId(companyId);
         List<FindCompanyCommentsResponseDto> companyComments = commentList.stream().filter(y ->
@@ -42,6 +44,7 @@ public class CommentService extends ServiceManager<Comment, Long> {
                 ICommentMapper.INSTANCE.fromCompanyToFindCompanyCommentsResponseDto(x)).collect(Collectors.toList());
         return companyComments;
     }
+
     public Boolean changeCommentStatus(String token, ChangeCommentStatusRequestDto dto) {
         List<String> roles = jwtTokenProvider.getRoleFromToken(token);
         if (roles.isEmpty())
@@ -63,31 +66,17 @@ public class CommentService extends ServiceManager<Comment, Long> {
         }
         throw new CommentException(ErrorType.NO_AUTHORIZATION);
     }
-//    public Boolean personelMakeComment(String token, PersonnelCommentRequestDto dto) {
-//        Long authId = jwtTokenProvider.getAuthIdFromToken(token).orElseThrow(() -> new CommentException(ErrorType.USER_NOT_FOUND));
-//        List<String> roles = jwtTokenProvider.getRoleFromToken(token);
-//        if (roles.isEmpty())
-//            throw new CommentException(ErrorType.BAD_REQUEST);
-//        if (roles.contains(ERole.PERSONEL.toString())) {
-//            UserProfileCommentResponseDto userProfileCommentResponseDto = userManager.getUserProfileCommentInformation(authId).getBody();
-//            Comment comment = ICommentMapper.INSTANCE.fromUserProfileCommentResponseDtoToComment(userProfileCommentResponseDto);
-//            comment.setComment(dto.getComment());
-//            save(comment);
-//            return true;
-//        }
-//        throw new CommentException(ErrorType.NO_AUTHORIZATION);
-//    }
-    public Comment personnelMakeComment(String token, PersonnelCommentRequestDto dto){
-        Long authId = jwtTokenProvider.getAuthIdFromToken(token).orElseThrow(()->{
-            throw new CommentException(ErrorType.INVALID_TOKEN);
-        });
-        CreateCommentModel createCommentModel =CreateCommentModel.builder().authId(authId).build();
 
-        UserProfileCommentResponseDto userProfile = (UserProfileCommentResponseDto) createCommentProducer.createComment(createCommentModel);
 
-        Comment comment = Comment.builder().userId(userProfile.getUserId()).name(userProfile.getName()).surname(userProfile.getSurname()).build();
-        return save(comment);
+    public Comment personnelMakeComment(Long userId, String comment) {
+        Comment yorum = Comment.builder()
+                .comment(comment)
+                .userId(userId)
+                .build();
+
+        return save(yorum);
     }
+
     public List<Comment> findCommentByStatus() {
         List<Comment> commentList = commentRepository.findAll();
         List<Comment> pendingComment = new ArrayList<>();
