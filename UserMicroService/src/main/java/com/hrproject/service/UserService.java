@@ -2,6 +2,7 @@ package com.hrproject.service;
 
 import com.hrproject.dto.request.AddEmployeeDto;
 import com.hrproject.dto.request.UserLoginDto;
+import com.hrproject.dto.request.UserProfileUpdateRequestDto;
 import com.hrproject.dto.request.UserSaveRequestDto;
 import com.hrproject.exception.ErrorType;
 import com.hrproject.exception.UserManagerException;
@@ -12,6 +13,8 @@ import com.hrproject.rabbitmq.model.RegisterModel;
 import com.hrproject.rabbitmq.producer.CompanyProducer;
 import com.hrproject.rabbitmq.producer.MailProducer;
 import com.hrproject.repository.IUserRepository;
+import com.hrproject.repository.IizinRepository;
+import com.hrproject.repository.entity.Izintelebi;
 import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.repository.enums.EGender;
 import com.hrproject.repository.enums.ERole;
@@ -20,6 +23,9 @@ import com.hrproject.utility.JwtTokenManager;
 import com.hrproject.utility.ServiceManager;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 
 import java.util.List;
@@ -34,11 +40,12 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     private final IUserMapper userMapper;
     private final MailProducer mailProducer;
     private final CompanyProducer companyProducer;
+    private final IizinRepository iizinRepository;
 
 
 
 
-    public UserService(IUserRepository userRepository, JwtTokenManager jwtTokenManager, IUserMapper userMapper, MailProducer mailProducer, CompanyProducer companyProducer) {
+    public UserService(IUserRepository userRepository, JwtTokenManager jwtTokenManager, IUserMapper userMapper, MailProducer mailProducer, CompanyProducer companyProducer, IizinRepository iizinRepository) {
         super(userRepository);
         this.userRepository = userRepository;
         this.jwtTokenManager = jwtTokenManager;
@@ -46,6 +53,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         this.mailProducer = mailProducer;
 
         this.companyProducer = companyProducer;
+        this.iizinRepository = iizinRepository;
     }
 
     public void createNewUserWithRabbitmq(RegisterModel model) {
@@ -201,7 +209,25 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             throw new UserManagerException(ErrorType.NO_PERMISION);
         else {
             ;
-            return userRepository.findAll().stream().filter(a -> a.getStatus().equals(EStatus.PENDING)).toList();
+            return userRepository.findAll().stream().filter(a -> a.getRole().equals(ERole.COMPANY_MANAGER)).filter(a -> a.getStatus().equals(EStatus.PENDING)).toList();
+
+        }
+    }
+    public List<UserProfile> findallguestbycompanymanager(String tokken) {
+        System.out.println("burdasinfindbyadim");
+        System.out.println(tokken);
+        System.out.println("1."+jwtTokenManager.getRoleFromToken(tokken).get());
+
+        System.out.println(jwtTokenManager.getRoleFromToken(tokken).get());
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.COMPANY_MANAGER.toString()))
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        else {
+            System.out.println(jwtTokenManager.getIdFromToken(tokken));
+            UserProfile userProfile=findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
+            System.out.println(userProfile.getCompanyId());
+            Long id=userProfile.getCompanyId();
+            System.out.println(id);;
+            return userRepository.findAll().stream().filter(a -> a.getCompanyId() != null && a.getCompanyId().equals(id)).toList();
 
         }
     }
@@ -223,6 +249,28 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
                         + "Linke tıklayarak giris sayfasina ulasabilirsiniz  " + "http://localhost:3000/authentication/sign-in").
                 email(userProfile.getEmail())
                 .subject("Aktivasyon onay maili").build();
+        mailProducer.sendMail(mailModel);
+        System.out.println(mailModel);
+
+
+    }
+    public void deletebyadmin(String token, Long id) {
+        if (!jwtTokenManager.verifyToken(token)) {
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        System.out.println(jwtTokenManager.getRoleFromToken(token).get());
+        if (!jwtTokenManager.getRoleFromToken(token).get().equals(ERole.ADMIN.toString())) {
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        }
+        UserProfile admin = userRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
+        UserProfile userProfile = userRepository.findById(id).get();
+        userProfile.setStatus(EStatus.DELETED);
+        System.out.println(update(userProfile));
+        MailModel mailModel = MailModel.builder().
+                text("Uyeliginiz " + admin.getUsername() + "tarafindan onaylanmamıstır"
+                ).
+                email(userProfile.getEmail())
+                .subject("Delete your account").build();
         mailProducer.sendMail(mailModel);
         System.out.println(mailModel);
 
@@ -257,6 +305,132 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 //            String companyId = user.get().getCompanyId();
 //            List<User> employeeList = userRepository.findByCompanyId(companyId);
 //            return employeeList.size();
+    }
+    public UserProfile updateprofile(Long id, UserProfileUpdateRequestDto dto){
+        UserProfile userProfile=findById(id).get();
+        userProfile.setName(dto.getName());
+        userProfile.setEmail(dto.getEmail());
+        userProfile.setSurName(dto.getSurName());
+        update(userProfile);
+        return userProfile;
+
+    }
+    public boolean izintelebi(String tokken, String neden, String tarihler) throws ParseException {
+
+        UserProfile userProfile1=findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
+        String dateStr = tarihler;
+
+        // İlk tarih (ilk 10 karakteri alın)
+        String firstDateStr = dateStr.substring(0, 10);
+
+        // İkinci tarih (sonraki 10 karakteri alın)
+        String secondDateStr = dateStr.substring(10);
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+
+
+        Date firstDate = dateFormat.parse(firstDateStr);
+        Date secondDate = dateFormat.parse(secondDateStr);long firstDateMillis = firstDate.getTime();
+        long secondDateMillis = secondDate.getTime();
+
+
+
+
+        UserProfile userProfile=findAll().stream().filter(a->a.getRole().equals(ERole.COMPANY_MANAGER))
+                .filter(a -> a.getCompanyId() != null && a.getCompanyId().equals(userProfile1.getCompanyId())).findFirst().get();
+        System.out.println(userProfile);
+
+        Izintelebi izintelebi= Izintelebi.builder().status(EStatus.PENDING).managerid(userProfile.getId()).
+                nedeni(neden).userid(userProfile1.getId()).izinbaslangic(firstDateMillis).izinbitis(secondDateMillis).build();
+
+        iizinRepository.save(izintelebi);
+        return true;
+    }
+    public List<Izintelebi> findallreguestbycompanymanager(String tokken) {
+        System.out.println("burdasinfindbyadim");
+        System.out.println(tokken);
+        System.out.println("1."+jwtTokenManager.getRoleFromToken(tokken).get());
+
+        System.out.println(jwtTokenManager.getRoleFromToken(tokken).get());
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.COMPANY_MANAGER.toString()))
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        else {
+            System.out.println(jwtTokenManager.getIdFromToken(tokken));
+            UserProfile userProfile=findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
+            System.out.println(userProfile.getCompanyId());
+            Long id=userProfile.getCompanyId();
+            System.out.println(id);;
+            return iizinRepository.findAll().stream().
+                    filter(a->a.getManagerid().equals(userProfile.getId())).filter(a->a.getStatus().equals(EStatus.PENDING)).toList();
+
+        }
+    }
+    public void deleterequestbyadmin(String token, Long id) {
+        if (!jwtTokenManager.verifyToken(token)) {
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        System.out.println(jwtTokenManager.getRoleFromToken(token).get());
+        if (!jwtTokenManager.getRoleFromToken(token).get().equals(ERole.COMPANY_MANAGER.toString())) {
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        }
+        UserProfile userProfile=findById(id).get();
+        UserProfile admin = userRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
+        Izintelebi izintelebi=iizinRepository.findById(id).get();
+        izintelebi.setStatus(EStatus.DELETED);
+        System.out.println(iizinRepository.save(izintelebi));
+        MailModel mailModel = MailModel.builder().
+                text("Uyeliginiz " + admin.getUsername() + "tarafindan talebiniz onaylanmamıstır"
+                ).
+                email(userProfile.getEmail())
+                .subject("Delete your request").build();
+        mailProducer.sendMail(mailModel);
+        System.out.println(mailModel);
+
+
+    }
+    public void activerequestbyadmin(String token, Long id) {
+        if (!jwtTokenManager.verifyToken(token)) {
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        System.out.println(jwtTokenManager.getRoleFromToken(token).get());
+        if (!jwtTokenManager.getRoleFromToken(token).get().equals(ERole.COMPANY_MANAGER.toString())) {
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        }
+        UserProfile userProfile=findById(id).get();
+        UserProfile admin = userRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
+        Izintelebi izintelebi=iizinRepository.findById(id).get();
+        izintelebi.setStatus(EStatus.ACTIVE);
+        System.out.println(iizinRepository.save(izintelebi));
+        MailModel mailModel = MailModel.builder().
+                text("Uyeliginiz " + admin.getUsername() + "tarafindan talebiniz onaylanmıstır"
+                ).
+                email(userProfile.getEmail())
+                .subject("Apprpve your request").build();
+        mailProducer.sendMail(mailModel);
+        System.out.println(mailModel);
+
+
+    }
+    public List<Izintelebi> findalloldreguestbycompanymanager(String tokken) {
+        System.out.println("burdasinfindbyadim");
+        System.out.println(tokken);
+        System.out.println("1."+jwtTokenManager.getRoleFromToken(tokken).get());
+
+        System.out.println(jwtTokenManager.getRoleFromToken(tokken).get());
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.COMPANY_MANAGER.toString()))
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        else {
+            System.out.println(jwtTokenManager.getIdFromToken(tokken));
+            UserProfile userProfile=findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
+            System.out.println(userProfile.getCompanyId());
+            Long id=userProfile.getCompanyId();
+            System.out.println(id);;
+            return iizinRepository.findAll().stream()
+                    .filter(a->a.getManagerid().
+                            equals(userProfile.getId())).filter(a->!a.getStatus().equals(EStatus.PENDING)).toList();
+
+        }
     }
 
 
