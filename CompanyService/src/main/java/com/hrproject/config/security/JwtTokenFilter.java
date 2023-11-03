@@ -50,7 +50,18 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             System.out.println("getcontext==>" + SecurityContextHolder.getContext());
         }
 
-        // System.out.println("auth==>"+SecurityContextHolder.getContext().getAuthentication());
-        filterChain.doFilter(request, response);
+        // CORS başlıklarını burada ayarlayın
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000"); // İzin verilen origin
+        response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
+        response.setHeader("Access-Control-Max-Age", "3600");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
+        // Preflight isteğini ele alın
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            filterChain.doFilter(request, response);
+        }
     }
 }

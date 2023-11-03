@@ -1,6 +1,7 @@
 package com.hrproject.controller;
 
 import com.hrproject.constant.EndPoints;
+import com.hrproject.dto.request.AddEmployeeDto;
 import com.hrproject.dto.request.UserLoginDto;
 import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.service.UserService;
@@ -175,4 +176,11 @@ public class UserController {
     }
 
 
+    @PostMapping("/addemployee/{id}")
+    public ResponseEntity<String> addEmployee(@PathVariable Long id, AddEmployeeDto dto){
+
+        userService.addEmployee(id,dto);
+
+        return ResponseEntity.ok("Kayıt oldu");
+    }
 }

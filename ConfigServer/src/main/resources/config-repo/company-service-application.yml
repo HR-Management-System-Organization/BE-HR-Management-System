@@ -19,3 +19,5 @@ rabbitmq:
   activation-queue: queue-activation
   mail-queue: mail-queue
   mail-binding-key: mail-binding-key
+  company-queue: company-queue
+  company-binding-key: company-binding-key

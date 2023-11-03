@@ -2,6 +2,18 @@ server:
   port: 7074
 
 spring:
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowed-origins: "*"
+            allowed-headers: "*"
+            allowed-methods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres

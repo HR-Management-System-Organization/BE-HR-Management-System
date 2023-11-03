@@ -49,6 +49,16 @@ spring:
             - name: CircuitBreaker
               args:
                 enabled: true
-                fallbackUri: forward:/fallback/user-service
+                fallbackUri: forward:/fallback/company-service
+        - id: comment-service
+          predicates:
+            - Path=/comment/**          #localhost/api/v1/user/findall
+          uri: http://localhost:9093      #localhost:7071/api/v1/user/findall
+          filters:
+            - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+            - name: CircuitBreaker
+              args:
+                enabled: true
+                fallbackUri: forward:/fallback/comment-service
       default-filters:
         - RewritePath= /(?<segment>.*),/api/v1/$\{segment}

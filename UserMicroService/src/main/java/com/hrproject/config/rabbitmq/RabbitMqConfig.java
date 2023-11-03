@@ -32,6 +32,13 @@ public class RabbitMqConfig {
     @Value("${rabbitmq.mail-binding-key}")
     private String mailBindingKey;
 
+    @Value("${rabbitmq.company-queue}")
+    private String companyQueueName;
+
+    @Value("${rabbitmq.company-binding-key}")
+    private String companyBindingKey;
+
+
     @Bean
     public DirectExchange exchange() {
         return new DirectExchange(exchange);
@@ -65,5 +72,14 @@ public class RabbitMqConfig {
     @Bean
     public Binding bindingMail(Queue mailQueue, DirectExchange exchange) {
         return BindingBuilder.bind(mailQueue).to(exchange).with(mailBindingKey);
+    }
+    @Bean
+    public Queue companyQueue() {
+        return new Queue(companyQueueName);
+    }
+
+    @Bean
+    public Binding bindingCompany(Queue companyQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(companyQueue).to(exchange).with(companyBindingKey);
     }
 }

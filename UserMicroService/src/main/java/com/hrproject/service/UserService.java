@@ -1,12 +1,15 @@
 package com.hrproject.service;
 
+import com.hrproject.dto.request.AddEmployeeDto;
 import com.hrproject.dto.request.UserLoginDto;
 import com.hrproject.dto.request.UserSaveRequestDto;
 import com.hrproject.exception.ErrorType;
 import com.hrproject.exception.UserManagerException;
 import com.hrproject.mapper.IUserMapper;
+import com.hrproject.rabbitmq.model.CompanyModel;
 import com.hrproject.rabbitmq.model.MailModel;
 import com.hrproject.rabbitmq.model.RegisterModel;
+import com.hrproject.rabbitmq.producer.CompanyProducer;
 import com.hrproject.rabbitmq.producer.MailProducer;
 import com.hrproject.repository.IUserRepository;
 import com.hrproject.repository.entity.UserProfile;
@@ -30,14 +33,19 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 
     private final IUserMapper userMapper;
     private final MailProducer mailProducer;
+    private final CompanyProducer companyProducer;
 
 
-    public UserService(IUserRepository userRepository, JwtTokenManager jwtTokenManager, IUserMapper userMapper, MailProducer mailProducer) {
+
+
+    public UserService(IUserRepository userRepository, JwtTokenManager jwtTokenManager, IUserMapper userMapper, MailProducer mailProducer, CompanyProducer companyProducer) {
         super(userRepository);
         this.userRepository = userRepository;
         this.jwtTokenManager = jwtTokenManager;
         this.userMapper = userMapper;
         this.mailProducer = mailProducer;
+
+        this.companyProducer = companyProducer;
     }
 
     public void createNewUserWithRabbitmq(RegisterModel model) {
@@ -250,4 +258,51 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 //            List<User> employeeList = userRepository.findByCompanyId(companyId);
 //            return employeeList.size();
     }
+
+
+    public void addEmployee(Long id,AddEmployeeDto addEmployeeCompanyDto) {
+
+        Optional<UserProfile> userProfile= userRepository.findById(id);
+
+
+      //  UserProfile getCompanyId = new UserProfile();
+
+       // getCompanyId.setCompanyId(addEmployeeCompanyDto.getCompanyId());
+
+
+
+
+        String companyEmail = addEmployeeCompanyDto.getName() + addEmployeeCompanyDto.getSurName() + "@";
+
+        companyProducer.sendCompany(CompanyModel.builder().companyId(userProfile.get().getCompanyId()).mail(companyEmail).build());
+
+
+        String[] mailArray = companyEmail.toLowerCase().split(" ");
+
+        companyEmail = "";
+
+        for (String part : mailArray) {
+
+            companyEmail = companyEmail + part;
+
+        }
+
+        UserProfile userModel = new UserProfile();
+        userModel.setName(addEmployeeCompanyDto.getName());
+        userModel.setSurName(addEmployeeCompanyDto.getSurName());
+        userModel.setUsername(addEmployeeCompanyDto.getUserName());
+        userModel.setBirthDate(addEmployeeCompanyDto.getBirthDate());
+        userModel.setCompanyEmail(companyEmail);
+        userModel.setRole(ERole.EMPLOYEE);
+        userModel.setPhone(addEmployeeCompanyDto.getPhone());
+        userModel.setAddress(addEmployeeCompanyDto.getAddress());
+        userModel.setPassword(addEmployeeCompanyDto.getPassword());
+        userModel.setCompanyId(userProfile.get().getCompanyId());
+
+        save(userModel);
+
+    }
+
+
+
 }

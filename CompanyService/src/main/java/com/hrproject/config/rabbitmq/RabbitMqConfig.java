@@ -14,23 +14,12 @@ public class RabbitMqConfig {
     @Value("${rabbitmq.auth-exchange}")
     private String exchange;
 
-    @Value("${rabbitmq.register-binding-key}")
-    private String registerBindingKey;  //unique --> her bir mesaj isteğine göre özel üretilmelidir
+    @Value("${rabbitmq.company-queue}")
+    private String companyQueueName;
 
-    @Value("${rabbitmq.register-queue}")
-    private String registerQueueName;  //unique --> her bir mesaj isteğine göre özel üretilmelidir
+    @Value("${rabbitmq.company-binding-key}")
+    private String companyBindingKey;
 
-    @Value("${rabbitmq.activation-binding-key}")
-    private String activationBindingKey;
-
-    @Value("${rabbitmq.activation-queue}")
-    private String activationQueueName;
-
-    @Value("${rabbitmq.mail-queue}")
-    private String mailQueueName;
-
-    @Value("${rabbitmq.mail-binding-key}")
-    private String mailBindingKey;
 
     @Bean
     public DirectExchange exchange() {
@@ -38,32 +27,12 @@ public class RabbitMqConfig {
     }
 
     @Bean
-    public Queue registerQueue() {
-        return new Queue(registerQueueName);
+    public Queue companyQueue() {
+        return new Queue(companyQueueName);
     }
 
     @Bean
-    public Binding bindingRegister(Queue registerQueue, DirectExchange exchange) {
-        return BindingBuilder.bind(registerQueue).to(exchange).with(registerBindingKey);
-    }
-
-    @Bean
-    public Queue activationQueue() {
-        return new Queue(activationQueueName);
-    }
-
-    @Bean
-    public Binding bindingActivation(Queue activationQueue, DirectExchange exchange) {
-        return BindingBuilder.bind(activationQueue).to(exchange).with(activationBindingKey);
-    }
-
-    @Bean
-    public Queue mailQueue() {
-        return new Queue(mailQueueName);
-    }
-
-    @Bean
-    public Binding bindingMail(Queue mailQueue, DirectExchange exchange) {
-        return BindingBuilder.bind(mailQueue).to(exchange).with(mailBindingKey);
+    public Binding bindingCompany(Queue companyQueue, DirectExchange exchange) {
+        return BindingBuilder.bind(companyQueue).to(exchange).with(companyBindingKey);
     }
 }

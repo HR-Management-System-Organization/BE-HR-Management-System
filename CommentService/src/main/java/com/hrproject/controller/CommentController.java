@@ -18,17 +18,18 @@ import static com.hrproject.constant.EndPoints.COMMENT;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(COMMENT)
+@CrossOrigin(origins = "*")
 public class CommentController {
     private final CommentService commentService;
-
-    @PostMapping("/personel-make-comment/{token}")
-    public ResponseEntity<Comment> personnelMakeComment(@PathVariable String token, @RequestBody PersonnelCommentRequestDto dto){
-        return ResponseEntity.ok(commentService.personnelMakeComment(token,dto));
+    @CrossOrigin(origins = "http://localhost:3000")
+    @GetMapping("/personel-make-comment/{userId}")
+    public ResponseEntity<Comment> personnelMakeComment(@PathVariable Long userId, String comment) {
+        return ResponseEntity.ok(commentService.personnelMakeComment(userId,comment));
     }
 
     @PutMapping("/change-comment-status/{token}")
-    public ResponseEntity<Boolean> changeCommentStatus(@PathVariable String token, @RequestBody ChangeCommentStatusRequestDto dto){
-        return ResponseEntity.ok(commentService.changeCommentStatus(token,dto));
+    public ResponseEntity<Boolean> changeCommentStatus(@PathVariable String token, @RequestBody ChangeCommentStatusRequestDto dto) {
+        return ResponseEntity.ok(commentService.changeCommentStatus(token, dto));
     }
 
 
