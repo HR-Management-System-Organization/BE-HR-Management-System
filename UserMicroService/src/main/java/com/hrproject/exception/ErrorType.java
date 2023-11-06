@@ -30,7 +30,11 @@ public enum ErrorType {
 
     USER_NOT_CREATED(HttpStatus.BAD_REQUEST, 4216, "Kullanıcı Oluşturulamadı!"),
 
-    STATUS_NOT_FOUND(HttpStatus.BAD_REQUEST, 4217, "Böyle Bir Kullanıcı Durumu Bulunamadı!");
+    STATUS_NOT_FOUND(HttpStatus.BAD_REQUEST, 4217, "Böyle Bir Kullanıcı Durumu Bulunamadı!"),
+    DATES_NOT_CORRECT(HttpStatus.BAD_REQUEST, 3217, "bitis tarihi baslangic tarihinden önce olamaz"),
+    DATES_NOT_CORRECT2(HttpStatus.BAD_REQUEST, 3217, "bitis tarihi baslangic tarihi ile ayni olamaz"),
+    WRONG_GENDER_MAN(HttpStatus.BAD_REQUEST, 3217, "Bu istek icin cinsiyteiniz erkek olmali"),
+    WRONG_GENDER_WOMAN(HttpStatus.BAD_REQUEST, 3217, "Bu istek icin cinsiyteiniz kadin olmali");
 
 
     HttpStatus httpStatus;

@@ -1,5 +1,6 @@
 package com.hrproject.mapper;
 
+import com.hrproject.dto.request.AddEmployeeCompanyDto;
 import com.hrproject.dto.request.UserProfileUpdateRequestDto;
 import com.hrproject.dto.request.UserSaveRequestDto;
 import com.hrproject.dto.response.UserProfileFindAllResponseDto;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-03T14:58:48+0300",
+    date = "2023-11-06T17:05:08+0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.9 (Amazon.com Inc.)"
 )
 @Component
@@ -49,6 +50,24 @@ public class IUserMapperImpl implements IUserMapper {
         userProfile.role( model.getRole() );
         userProfile.gender( model.getGender() );
         userProfile.status( model.getStatus() );
+
+        return userProfile.build();
+    }
+
+    @Override
+    public UserProfile toUserProfile(AddEmployeeCompanyDto model) {
+        if ( model == null ) {
+            return null;
+        }
+
+        UserProfile.UserProfileBuilder<?, ?> userProfile = UserProfile.builder();
+
+        userProfile.username( model.getUsername() );
+        userProfile.password( model.getPassword() );
+        userProfile.phone( model.getPhone() );
+        userProfile.address( model.getAddress() );
+        userProfile.avatar( model.getAvatar() );
+        userProfile.name( model.getName() );
 
         return userProfile.build();
     }

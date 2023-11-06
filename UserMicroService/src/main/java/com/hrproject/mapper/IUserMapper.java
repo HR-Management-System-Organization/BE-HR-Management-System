@@ -1,5 +1,6 @@
 package com.hrproject.mapper;
 
+import com.hrproject.dto.request.AddEmployeeCompanyDto;
 import com.hrproject.dto.request.UserProfileUpdateRequestDto;
 import com.hrproject.dto.request.UserSaveRequestDto;
 import com.hrproject.dto.response.UserProfileFindAllResponseDto;
@@ -18,6 +19,7 @@ public interface IUserMapper {
     UserProfile toUserProfile(UserSaveRequestDto dto);
 
     UserProfile toUserProfile(RegisterModel model);
+    UserProfile toUserProfile(AddEmployeeCompanyDto model);
 
     UserProfile toUserProfile(UserProfileUpdateRequestDto dto);
 

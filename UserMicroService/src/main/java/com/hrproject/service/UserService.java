@@ -1,9 +1,6 @@
 package com.hrproject.service;
 
-import com.hrproject.dto.request.AddEmployeeDto;
-import com.hrproject.dto.request.UserLoginDto;
-import com.hrproject.dto.request.UserProfileUpdateRequestDto;
-import com.hrproject.dto.request.UserSaveRequestDto;
+import com.hrproject.dto.request.*;
 import com.hrproject.exception.ErrorType;
 import com.hrproject.exception.UserManagerException;
 import com.hrproject.mapper.IUserMapper;
@@ -17,6 +14,7 @@ import com.hrproject.repository.IizinRepository;
 import com.hrproject.repository.entity.Izintelebi;
 import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.repository.enums.EGender;
+import com.hrproject.repository.enums.EIzinTur;
 import com.hrproject.repository.enums.ERole;
 import com.hrproject.repository.enums.EStatus;
 import com.hrproject.utility.JwtTokenManager;
@@ -25,10 +23,9 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
-
-import java.util.List;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
 
 @Service
 public class UserService extends ServiceManager<UserProfile, Long> { //extends ServiceManager<UserProfile, String> {
@@ -315,7 +312,25 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         return userProfile;
 
     }
-    public boolean izintelebi(String tokken, String neden, String tarihler) throws ParseException {
+    public ArrayList<Long>resmitattiler() throws ParseException {
+        ArrayList<Long> resmitattiller2=new ArrayList<>();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
+        String[] tarihler = {"01.01.2024", "23.04.2024", "19.05.2024", "30.08.2024", "29.10.2024"};
+
+        for (String tarihStr : tarihler) {
+            Date tarih = dateFormat.parse(tarihStr);
+            long zamanDamgasi = tarih.getTime();
+            System.out.println("Tarih: " + tarihStr + " -> Unix Zaman Damgası: " + zamanDamgasi);
+            resmitattiller2.add(zamanDamgasi);
+        }
+
+        return resmitattiller2;
+    }
+
+    public boolean izintelebi(String tokken, String neden, String tarihler,String izitur) throws ParseException {
+        System.out.println("x--izintur->"+izitur);
 
         UserProfile userProfile1=findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
         String dateStr = tarihler;
@@ -332,17 +347,55 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 
         Date firstDate = dateFormat.parse(firstDateStr);
         Date secondDate = dateFormat.parse(secondDateStr);long firstDateMillis = firstDate.getTime();
+
+
         long secondDateMillis = secondDate.getTime();
+        if (firstDateMillis>secondDateMillis) throw new UserManagerException(ErrorType.DATES_NOT_CORRECT);
+        if (firstDateMillis==secondDateMillis) throw new UserManagerException(ErrorType.DATES_NOT_CORRECT2);
+        ArrayList<Long> dates=new ArrayList<>();
+        Date dayOfWeekDate = new Date(firstDateMillis);
+
+        SimpleDateFormat dayFormat = new SimpleDateFormat("EEE", Locale.ENGLISH);
+        String dayOfWeek = dayFormat.format(firstDate);
+        ArrayList<Long> resmitattiler=new ArrayList<>();
+        resmitattiler=resmitattiler();
+        System.out.println("Day: " + dayOfWeek);
+        if (dayOfWeek.equals("Sat")||dayOfWeek.equals("Sun")){
+            System.out.println("haftasonu");
+        }
+
+        for (long i = firstDateMillis; i <secondDateMillis ; i=i+86400000l) {
+            dayOfWeekDate=new Date(i);
+            dayOfWeek = dayFormat.format(dayOfWeekDate);
+            System.out.println(i);
+            Long x=i;
+
+
+            if (!dayOfWeek.equals("Sat") && !dayOfWeek.equals("Sun") && !resmitattiler.stream().anyMatch(a -> a.equals(x))) {
+                dates.add(i);
+            }
+        }
 
 
 
 
         UserProfile userProfile=findAll().stream().filter(a->a.getRole().equals(ERole.COMPANY_MANAGER))
                 .filter(a -> a.getCompanyId() != null && a.getCompanyId().equals(userProfile1.getCompanyId())).findFirst().get();
-        System.out.println(userProfile);
 
-        Izintelebi izintelebi= Izintelebi.builder().status(EStatus.PENDING).managerid(userProfile.getId()).
-                nedeni(neden).userid(userProfile1.getId()).izinbaslangic(firstDateMillis).izinbitis(secondDateMillis).build();
+        System.out.println(userProfile);EIzinTur izinTur1=EIzinTur.Yillikizin;
+        if (izitur.equals("babalik")) {
+            if (userProfile1.getGender().equals(EGender.FEMALE)) throw new UserManagerException(ErrorType.WRONG_GENDER_MAN);
+            izinTur1=EIzinTur.Babalikizini;
+        }else if (izitur.equals("annelik")) {
+            if (userProfile1.getGender().equals(EGender.MALE)) throw new UserManagerException(ErrorType.WRONG_GENDER_WOMAN);
+            izinTur1=EIzinTur.Annelikizini;
+        }
+
+        Izintelebi izintelebi= Izintelebi.builder().status(EStatus.PENDING).username(userProfile1.getUsername()).izinTur(izinTur1)
+                .managerid(userProfile.getId()).izinsuresi(dates.size()).izinhakki(userProfile1.getTotalAnnualLeave()).
+                nedeni(neden).userid(userProfile.getId()).izinbaslangic(firstDateMillis).izinbitis(secondDateMillis).build();
+
+
 
         iizinRepository.save(izintelebi);
         return true;
@@ -409,6 +462,14 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
                 .subject("Apprpve your request").build();
         mailProducer.sendMail(mailModel);
         System.out.println(mailModel);
+        if (izintelebi.getIzinTur().equals(EIzinTur.Yillikizin))
+        userProfile.setTotalAnnualLeave(userProfile.getTotalAnnualLeave()- izintelebi.getIzinsuresi());
+        if (izintelebi.getIzinTur().equals(EIzinTur.Annelikizini))
+            userProfile.setParentalLeave(userProfile.getParentalLeave()- izintelebi.getIzinsuresi());
+        if (izintelebi.getIzinTur().equals(EIzinTur.Babalikizini))
+            userProfile.setParentalLeave(userProfile.getParentalLeave()- izintelebi.getIzinsuresi());
+
+        save(userProfile);
 
 
     }
@@ -476,7 +537,59 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         save(userModel);
 
     }
+    public Boolean addEmployee(String tokken,AddEmployeeCompanyDto addEmployeeCompanyDto) throws ParseException {
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.COMPANY_MANAGER.toString()))
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        else {
+            System.out.println(jwtTokenManager.getIdFromToken(tokken));
+            UserProfile userProfile=findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
 
 
 
+        System.out.println("company id" + userProfile.getCompanyId());
+            System.out.println("gelenbilgiler ->>> "+addEmployeeCompanyDto);
+
+        String companyEmail = addEmployeeCompanyDto.getName() + addEmployeeCompanyDto.getSurname() + "@";
+
+        companyProducer.sendCompany(CompanyModel.builder().companyId(userProfile.getCompanyId()).mail(companyEmail).build());
+
+        String[] mailArray = companyEmail.toLowerCase().split(" ");
+
+        companyEmail = "";
+
+        for (String part : mailArray) {
+
+            companyEmail = companyEmail + part;
+
+        }
+
+        UserProfile userModel = userMapper.toUserProfile(addEmployeeCompanyDto);
+            System.out.println(userModel.toString());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+
+
+            Date firstDate = dateFormat.parse(addEmployeeCompanyDto.getBirthday());
+            LocalDate localDate = firstDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//        userModel.setName(addEmployeeCompanyDto.getName());
+//        userModel.setSurName(addEmployeeCompanyDto.getSurname());
+//        userModel.setUsername(addEmployeeCompanyDto.getUsername());
+
+        userModel.setBirthDate(localDate);
+        userModel.setCompanyEmail(companyEmail);
+        userModel.setRole(ERole.EMPLOYEE);
+        userModel.setPhone(addEmployeeCompanyDto.getPhone());
+        userModel.setAddress(addEmployeeCompanyDto.getAddress());
+
+        userModel.setCompanyId(userProfile.getCompanyId());
+
+        save(userModel);
+
+
+    }return null;
+    }
 }
+
+
+
+

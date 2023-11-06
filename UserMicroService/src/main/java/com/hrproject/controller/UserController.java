@@ -1,6 +1,7 @@
 package com.hrproject.controller;
 
 import com.hrproject.constant.EndPoints;
+import com.hrproject.dto.request.AddEmployeeCompanyDto;
 import com.hrproject.dto.request.AddEmployeeDto;
 import com.hrproject.dto.request.UserLoginDto;
 import com.hrproject.dto.request.UserProfileUpdateRequestDto;
@@ -232,7 +233,8 @@ public class UserController {
     @PostMapping("/izinal")
     public ResponseEntity<Boolean> izintalebi( @RequestParam(required = false) String token,
                                                @RequestHeader(required = false) String authorization,
-                                               @RequestBody(required = false) Map<String, String> requestBody, @RequestParam String sebep,
+                                               @RequestBody(required = false) Map<String, String> requestBody,
+                                               @RequestParam String sebep,@RequestParam String izinTur,
                                                @RequestParam String tarihler) throws ParseException {
         System.out.println(tarihler);
         System.out.println("icerdyi<");
@@ -243,7 +245,7 @@ public class UserController {
 
 
         // Alınan token ile işlemlerinizi gerçekleştirin
-        return ResponseEntity.ok(userService.izintelebi(tokenWithoutBearer,sebep,tarihler));
+        return ResponseEntity.ok(userService.izintelebi(tokenWithoutBearer,sebep,tarihler,izinTur));
     }
     @PostMapping("/findallrequesbycompanymanager")
     public ResponseEntity<List<Izintelebi>> findallrequestbycompanymanager(
@@ -379,4 +381,17 @@ public class UserController {
         // Alınan token ile işlemlerinizi gerçekleştirin
         return ResponseEntity.ok(userService.findalloldreguestbycompanymanager(token));
     }
+    @PostMapping("/addEmployee")
+    public ResponseEntity<Boolean> addEmployee(@RequestBody AddEmployeeCompanyDto dto,@RequestHeader(required = false) String authorization) throws ParseException {
+        String token=null;
+        if (authorization.startsWith("Bearer ")) {
+            String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+            System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+            // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+            // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+            token = tokenWithoutBearer;
+        }
+        System.out.println("burdayim");
+        return ResponseEntity.ok(userService.addEmployee(token,dto));
+}
 }

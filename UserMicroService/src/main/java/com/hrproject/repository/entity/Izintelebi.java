@@ -1,5 +1,6 @@
 package com.hrproject.repository.entity;
 
+import com.hrproject.repository.enums.EIzinTur;
 import com.hrproject.repository.enums.EStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,11 @@ public class Izintelebi extends BaseEntity{
     private Long managerid;
 
     private String username;
+
+    private int izinsuresi;
+    private int izinhakki;
+    @Enumerated(EnumType.STRING)
+    private EIzinTur izinTur;
 
     private Long izinbaslangic;
     private Long izinbitis;
