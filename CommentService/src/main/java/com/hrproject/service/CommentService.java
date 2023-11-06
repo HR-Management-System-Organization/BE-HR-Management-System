@@ -87,6 +87,12 @@ public class CommentService extends ServiceManager<Comment, Long> {
         });
         return pendingComment;
     }
+
+    public List<Comment> findByStatus() {
+        List<Comment> activeList = findAll().stream().filter(x -> x.getECommentStatus().equals(ECommentStatus.ACTIVE)).toList();
+
+        return activeList;
+    }
 //    public List<PersonnelActiveCompanyCommentsResponseDto> findAllActiveCompanyComments(String token){
 //        Long authId = jwtTokenProvider.getIdFromToken(token).orElseThrow(()->{throw new CommentException(ErrorType.USER_NOT_FOUND);});
 //        List<String> roles = jwtTokenProvider.getRoleFromToken(token);

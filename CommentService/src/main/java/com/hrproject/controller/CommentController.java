@@ -37,4 +37,9 @@ public class CommentController {
     public List<Comment> getPendingComments() {
         return commentService.findCommentByStatus();
     }
+
+    @GetMapping("/active-comments")
+    public ResponseEntity<List<Comment>> getActiveComments(){
+        return ResponseEntity.ok(commentService.findByStatus());
+    }
 }
