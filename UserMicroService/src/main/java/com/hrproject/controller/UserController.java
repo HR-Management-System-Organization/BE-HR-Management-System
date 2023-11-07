@@ -1,14 +1,12 @@
 package com.hrproject.controller;
 
 import com.hrproject.constant.EndPoints;
-import com.hrproject.dto.request.AddEmployeeCompanyDto;
-import com.hrproject.dto.request.AddEmployeeDto;
-import com.hrproject.dto.request.UserLoginDto;
-import com.hrproject.dto.request.UserProfileUpdateRequestDto;
+import com.hrproject.dto.request.*;
 import com.hrproject.repository.entity.Izintelebi;
 import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -394,4 +392,20 @@ public class UserController {
         System.out.println("burdayim");
         return ResponseEntity.ok(userService.addEmployee(token,dto));
 }
+
+    @DeleteMapping("deleteemployee/{id}")
+    public ResponseEntity<String> deleteEmployee(@PathVariable Long id) {
+        if (userService.deleteUserById(id)) {
+            return ResponseEntity.ok( + id + " silindi");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found with ID " + id);
+        }
+    }
+
+    @PutMapping("updateemployee/{id}")
+    public ResponseEntity<UserProfile> updateUserProfile(@RequestParam Long Id, @RequestBody UserProfileUpdateDto dto){
+        return ResponseEntity.ok(userService.updateprofileManager(Id,dto));
+    }
+
+
 }
