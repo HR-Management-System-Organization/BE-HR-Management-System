@@ -21,7 +21,7 @@ spring:
     url: jdbc:postgresql://localhost:5432/CommentServiceDB
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     show-sql: true
   rabbitmq:
     host: localhost

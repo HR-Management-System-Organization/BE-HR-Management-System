@@ -7,6 +7,10 @@ import java.util.List;
 
 public interface ICommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByCompanyId(Long companyId);
+
     List<Comment> findAllByUserId(String userId);
+
+
+//    Long companyId = findOptionalCompanyIdByUserId(Long userId);
 
 }

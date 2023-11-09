@@ -21,10 +21,11 @@ import static com.hrproject.constant.EndPoints.COMMENT;
 @CrossOrigin(origins = "*")
 public class CommentController {
     private final CommentService commentService;
+
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/personel-make-comment/{userId}")
-    public ResponseEntity<Comment> personnelMakeComment(@PathVariable Long userId, String comment) {
-        return ResponseEntity.ok(commentService.personnelMakeComment(userId,comment));
+    public ResponseEntity<Comment> personnelMakeComment(@PathVariable Long userId, String comment, Long companyId) {
+        return ResponseEntity.ok(commentService.personnelMakeComment(userId, comment, companyId));
     }
 
     @PutMapping("/change-comment-status/{token}")
@@ -39,7 +40,12 @@ public class CommentController {
     }
 
     @GetMapping("/active-comments")
-    public ResponseEntity<List<Comment>> getActiveComments(){
+    public ResponseEntity<List<Comment>> getActiveComments() {
         return ResponseEntity.ok(commentService.findByStatus());
+    }
+
+    @GetMapping("commentbycompanyid")
+    public ResponseEntity<List<Comment>> findByCompanyId(@RequestParam Long companyId) {
+        return ResponseEntity.ok(commentService.findByCompanyId(companyId));
     }
 }

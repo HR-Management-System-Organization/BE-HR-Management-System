@@ -33,7 +33,7 @@ spring:
         - id: user-service
           predicates:
             - Path=/user/**          #localhost/api/v1/user/findall
-          uri: http://localhost:7072       #localhost:7071/api/v1/user/findall
+          uri: http://localhost:7072 #localhost:7071/api/v1/user/findall
           filters:
             - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
             - name: CircuitBreaker
@@ -53,7 +53,7 @@ spring:
         - id: comment-service
           predicates:
             - Path=/comment/**          #localhost/api/v1/user/findall
-          uri: http://localhost:9093      #localhost:7071/api/v1/user/findall
+          uri: http://localhost:7074      #localhost:7071/api/v1/user/findall
           filters:
             - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
             - name: CircuitBreaker

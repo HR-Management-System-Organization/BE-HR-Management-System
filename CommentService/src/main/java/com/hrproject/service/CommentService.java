@@ -17,7 +17,9 @@ import com.hrproject.repository.enums.ECommentStatus;
 import com.hrproject.repository.enums.ERole;
 import com.hrproject.utility.JwtTokenProvider;
 import com.hrproject.utility.ServiceManager;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
@@ -68,12 +70,12 @@ public class CommentService extends ServiceManager<Comment, Long> {
     }
 
 
-    public Comment personnelMakeComment(Long userId, String comment) {
+    public Comment personnelMakeComment(Long userId, String comment, Long companyId) {
         Comment yorum = Comment.builder()
                 .comment(comment)
                 .userId(userId)
+                .companyId(companyId)
                 .build();
-
         return save(yorum);
     }
 
@@ -93,7 +95,8 @@ public class CommentService extends ServiceManager<Comment, Long> {
 
         return activeList;
     }
-//    public List<PersonnelActiveCompanyCommentsResponseDto> findAllActiveCompanyComments(String token){
+
+    //    public List<PersonnelActiveCompanyCommentsResponseDto> findAllActiveCompanyComments(String token){
 //        Long authId = jwtTokenProvider.getIdFromToken(token).orElseThrow(()->{throw new CommentException(ErrorType.USER_NOT_FOUND);});
 //        List<String> roles = jwtTokenProvider.getRoleFromToken(token);
 //        if(roles.isEmpty())
@@ -119,4 +122,9 @@ public class CommentService extends ServiceManager<Comment, Long> {
 //        }
 //        throw new CommentException(ErrorType.NO_AUTHORIZATION);
 //    }
+
+    public List<Comment> findByCompanyId(Long companyId) {
+
+        return commentRepository.findByCompanyId(companyId).stream().filter((x) -> x.getECommentStatus().equals(ECommentStatus.ACTIVE)).toList();
+    }
 }
