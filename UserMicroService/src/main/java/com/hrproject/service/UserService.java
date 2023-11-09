@@ -603,6 +603,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         userProfile.setName(dto.getName());
         userProfile.setEmail(dto.getEmail());
         userProfile.setSurName(dto.getSurName());
+        userProfile.setPhone(dto.getPhone());
         update(userProfile);
         return userProfile;
 
