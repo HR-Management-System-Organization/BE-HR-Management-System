@@ -351,7 +351,7 @@ public class CompanyService extends ServiceManager<Company, Long> {
                 .totalincome4(incomes4.stream().map(a -> a.getAmount()).collect(Collectors.toList()).stream().mapToDouble(Double::doubleValue).sum())
                 .totalexpense4(expenses4.stream().map(a -> a.getAmount()).collect(Collectors.toList()).stream().mapToDouble(Double::doubleValue).sum())
 
-
+                .expense5(expenses.stream().filter(a->a.getBillDate().isAfter(LocalDate.now().minusDays(1))).toList())
 
                 .incomes(incomes).expenses(expenses)
                 .income1(incomes1).expense1(expenses1).
@@ -363,5 +363,24 @@ public class CompanyService extends ServiceManager<Company, Long> {
                 build();
 
         return dtogelirgider;
+    }
+    public List<Expense> findalloldreguestbycompanymanager(String tokken) {
+        System.out.println("burdasinfindbyadim");
+        System.out.println(tokken);
+        System.out.println("1."+jwtTokenManager.getRoleFromToken(tokken).get());
+
+        System.out.println(jwtTokenManager.getRoleFromToken(tokken).get());
+
+
+            System.out.println(jwtTokenManager.getIdFromToken(tokken));
+
+            Long id=expenseRepository.findAll().stream().filter(a->a.getUserId().equals(jwtTokenManager.getIdFromToken(tokken).get())).findFirst().get().getCompanyId();
+
+
+            System.out.println(id);;
+            return expenseRepository.findAll().stream()
+                    .filter(a->a.getCompanyId().equals(id)).filter(a->a.getBillDate().isAfter(LocalDate.now().minusDays(1))).toList();
+
+
     }
 }

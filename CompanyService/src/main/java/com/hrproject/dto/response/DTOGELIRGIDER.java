@@ -35,6 +35,7 @@ public class DTOGELIRGIDER {
     private List<Expense> expense2;
     private List<Expense> expense3;
     private List<Expense> expense4;
+    private List<Expense> expense5;
     private List<Expense> expenses;
 
 

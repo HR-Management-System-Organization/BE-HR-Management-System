@@ -3,6 +3,7 @@ package com.hrproject.controller;
 import com.hrproject.dto.request.*;
 import com.hrproject.dto.response.*;
 import com.hrproject.repository.entity.Company;
+import com.hrproject.repository.entity.Expense;
 import com.hrproject.service.CompanyService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.hrproject.constants.EndPoints.*;
@@ -116,6 +118,34 @@ public class CompanyController {
     public ResponseEntity<DTOGELIRGIDER> findBydtogelirgider(@PathVariable Long id) {
         System.out.println("ca"+id);
         return ResponseEntity.ok(companyService.dtogelirgider(id));
+    }
+    @PostMapping("/findalloldrequesbycompanymanager")
+    public ResponseEntity<List<Expense>> findalloldrequesbycompanymanager(
+            @RequestParam(required = false) String token,
+            @RequestHeader(required = false) String authorization,
+            @RequestBody(required = false) Map<String, String> requestBody) {
+
+        if (token != null) {
+            System.out.println("Sorgu parametresinden gelen token: " + token);
+            // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+        } else if (authorization != null) {
+            // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+            }
+        } else if (requestBody != null && requestBody.containsKey("token")) {
+            System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
+            // İstek gövdesinden gelen token'ı işleyebilirsiniz
+        } else {
+            System.out.println("Token sağlanmadı");
+        }
+
+        // Alınan token ile işlemlerinizi gerçekleştirin
+        return ResponseEntity.ok(companyService.findalloldreguestbycompanymanager(token));
     }
 
 
