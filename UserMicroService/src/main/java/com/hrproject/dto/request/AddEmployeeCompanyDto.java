@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
 @Builder
 public class AddEmployeeCompanyDto {
 
-    
+
 
     @NotEmpty(message = "Name cannot be empty")
     @Size(min = 3, max = 20, message = "Name must be between 3 and 20 characters.")
@@ -24,7 +24,7 @@ public class AddEmployeeCompanyDto {
 
     @NotEmpty(message = "Surname cannot be empty")
     @Size(min = 3, max = 20, message = "Surname must be between 3 and 20 characters.")
-    private String surname;
+    private String surName;
 
     @NotEmpty(message = "Username cannot be empty")
     @Size(min = 3, max = 20, message = "Username must be between 3 and 20 characters.")

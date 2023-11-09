@@ -7,28 +7,43 @@ import com.hrproject.exception.CompanyManagerException;
 import com.hrproject.exception.ErrorType;
 import com.hrproject.mapper.ICompanyMapper;
 import com.hrproject.repository.ICompanyRepository;
+import com.hrproject.repository.IExpenseRepository;
+import com.hrproject.repository.IIncomeRepository;
 import com.hrproject.repository.entity.Company;
+import com.hrproject.repository.entity.Expense;
+import com.hrproject.repository.entity.Income;
+import com.hrproject.repository.enums.EExpenseStatus;
 import com.hrproject.repository.enums.ERole;
+import com.hrproject.utility.JwtTokenManager;
 import com.hrproject.utility.JwtTokenProvider;
 import com.hrproject.utility.ServiceManager;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
 public class CompanyService extends ServiceManager<Company, Long> {
     private final ICompanyRepository companyRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenManager jwtTokenManager;
+    private final IExpenseRepository expenseRepository;
+    private final IIncomeRepository incomeRepository;
 
 
-    private CompanyService(ICompanyRepository companyRepository, JwtTokenProvider jwtTokenProvider) {
+    private CompanyService(ICompanyRepository companyRepository, JwtTokenProvider jwtTokenProvider, JwtTokenManager jwtTokenManager, IExpenseRepository expenseRepository, IIncomeRepository incomeRepository) {
         super(companyRepository);
         this.companyRepository = companyRepository;
         this.jwtTokenProvider = jwtTokenProvider;
 
+        this.jwtTokenManager = jwtTokenManager;
+        this.expenseRepository = expenseRepository;
+        this.incomeRepository = incomeRepository;
     }
 
     public Long save(SaveCompanyRequestDto dto) {
@@ -219,5 +234,134 @@ public class CompanyService extends ServiceManager<Company, Long> {
 
     public Company findByIdd(Long id) {
         return findById(id).get();
+    }
+
+    public Expense maasekle(Long sayi,int maas,String name,String surname,Long company ){
+        Double maas1= (double) maas;
+        Double tax=null;
+        if (maas<=27000)tax=0.15;
+        if (maas<=65000&&maas>27000)tax=0.20;
+        if (maas<=95000&&maas>65000)tax=0.25;
+        else tax=0.35;
+        tax=tax*maas1;
+        Double brut=tax+maas1;
+        LocalDate localDate=LocalDate.now();
+        Expense expense=Expense.builder().expenseType("Maas").netAmount(maas1).name(name).surname(surname).amount(brut).tax(tax).companyId(company).userId(sayi).build();
+        expense.setEExpenseStatus(EExpenseStatus.ACTIVE);
+        return expenseRepository.save(expense);
+
+    }
+    public Income incomeekle(String gelirtur,Long id,Double gelir,Long comapnyid,String sebep,String name,String surname,String gelirtarihi) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+
+
+        Date firstDate = dateFormat.parse(gelirtarihi);
+        LocalDate localDate = firstDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        Income income=Income.builder().incomeType(gelirtur).userId(id).amount(gelir).companyId(comapnyid).aciklama(sebep).name(name).surname(surname).billDate(localDate).build();
+        income.setEIncomeStatus(EExpenseStatus.ACTIVE);
+        return incomeRepository.save(income);
+    }
+
+    public DTOGELIRGIDER dtogelirgider(Long companyid){
+        List<Income> incomes= incomeRepository.findAll().stream().filter(a->a.getCompanyId().equals(companyid)).toList();
+        List<Expense> expenses= expenseRepository.findAll().stream().filter(a->a.getCompanyId().equals(companyid)).toList();
+        LocalDate suankiTarih = LocalDate.now();
+
+        // Şu anki yılı ve ayı al
+        int yil = suankiTarih.getYear();
+        int ay = suankiTarih.getMonthValue();
+
+        // Belirli ay ve yıl için ilk günü hesapla
+        LocalDate ilkGun = LocalDate.of(yil, ay, 1).minusDays(1);
+
+
+
+
+        List<Income> incomes1 =incomes.stream().
+                filter(a->a.getBillDate().isAfter(ilkGun)).
+                filter(a->a.getBillDate().isBefore(ilkGun.plusDays(8))).toList();
+        List<Income> incomes2 =incomes.stream().
+                filter(a->a.getBillDate().isAfter(ilkGun.plusDays(7))).
+                filter(a->a.getBillDate().isBefore(ilkGun.plusDays(15))).toList();
+        List<Income> incomes3 =incomes.stream().
+                filter(a->a.getBillDate().isAfter(ilkGun.plusDays(14))).
+                filter(a->a.getBillDate().isBefore(ilkGun.plusDays(22))).toList();
+        List<Income> incomes4 =incomes.stream().
+                filter(a->a.getBillDate().isAfter(ilkGun.plusDays(21))).toList();
+
+        List<Expense> expenses1=expenses.stream().
+                filter(a->a.getBillDate().isAfter(ilkGun)).
+                filter(a->a.getBillDate().isBefore(ilkGun.plusDays(8))).toList();
+        List<Expense> expenses2=expenses.stream().
+                filter(a->a.getBillDate().isAfter(ilkGun.plusDays(7))).
+                filter(a->a.getBillDate().isBefore(ilkGun.plusDays(15))).toList();
+        List<Expense> expenses3=expenses.stream().
+                filter(a->a.getBillDate().isAfter(ilkGun.plusDays(14))).
+                filter(a->a.getBillDate().isBefore(ilkGun.plusDays(22))).toList();
+        List<Expense> expenses4=expenses.stream().
+
+                filter(a->a.getBillDate().isAfter(ilkGun.plusDays(21))).toList();
+
+        List<Double> toplamAmountincomeaylik = incomes.stream()
+                .filter(a -> a.getBillDate().isAfter(ilkGun))
+                .map(a -> a.getAmount())
+                .collect(Collectors.toList());
+
+        Double toplamAmountincomeaylikToplam = toplamAmountincomeaylik.stream().mapToDouble(Double::doubleValue).sum();
+        System.out.println(toplamAmountincomeaylikToplam+" toplamAmountincomeaylikToplam");
+
+        List<Double> toplamAmountexpenceaylik = expenses.stream()
+                .filter(a -> a.getBillDate().isAfter(ilkGun))
+                .map(a -> a.getAmount())
+                .collect(Collectors.toList());
+
+        Double toplamAmountexpenceaylikToplam = toplamAmountexpenceaylik.stream().mapToDouble(Double::doubleValue).sum();
+        System.out.println(toplamAmountexpenceaylikToplam+" ttoplamAmountexpenceaylikToplam");
+
+
+        List<Double> toplamAmountincome = incomes.stream()
+
+                .map(a -> a.getAmount())
+                .collect(Collectors.toList());
+
+        Double toplamAmountincomeToplam = toplamAmountincome.stream().mapToDouble(Double::doubleValue).sum();
+
+        List<Double> toplamAmountexpence = expenses.stream()
+
+                .map(a -> a.getAmount())
+                .collect(Collectors.toList());
+        System.out.println("total kazanc"+toplamAmountincomeToplam);
+
+        Double toplamAmountexpenceToplam = toplamAmountexpence.stream().mapToDouble(Double::doubleValue).sum();
+
+        incomes1.stream().map(a -> a.getAmount()).collect(Collectors.toList()).stream().mapToDouble(Double::doubleValue).sum();
+
+
+
+
+        DTOGELIRGIDER dtogelirgider=DTOGELIRGIDER.builder()
+                .totalincome1(incomes1.stream().map(a -> a.getAmount()).collect(Collectors.toList()).stream().mapToDouble(Double::doubleValue).sum())
+                .totalexpense1(expenses1.stream().map(a -> a.getAmount()).collect(Collectors.toList()).stream().mapToDouble(Double::doubleValue).sum())
+                .totalincome2(incomes2.stream().map(a -> a.getAmount()).collect(Collectors.toList()).stream().mapToDouble(Double::doubleValue).sum())
+                .totalexpense2(expenses2.stream().map(a -> a.getAmount()).collect(Collectors.toList()).stream().mapToDouble(Double::doubleValue).sum())
+
+                .totalincome3(incomes3.stream().map(a -> a.getAmount()).collect(Collectors.toList()).stream().mapToDouble(Double::doubleValue).sum())
+                .totalexpense3(expenses3.stream().map(a -> a.getAmount()).collect(Collectors.toList()).stream().mapToDouble(Double::doubleValue).sum())
+                .totalincome4(incomes4.stream().map(a -> a.getAmount()).collect(Collectors.toList()).stream().mapToDouble(Double::doubleValue).sum())
+                .totalexpense4(expenses4.stream().map(a -> a.getAmount()).collect(Collectors.toList()).stream().mapToDouble(Double::doubleValue).sum())
+
+
+
+                .incomes(incomes).expenses(expenses)
+                .income1(incomes1).expense1(expenses1).
+                income1(incomes2).expense1(expenses2).
+                income1(incomes3).expense1(expenses3).
+                income1(incomes4).expense1(expenses4).
+                totalincome(toplamAmountincomeToplam).totalexpense(toplamAmountexpenceToplam).
+                montlytotalincome(toplamAmountincomeaylikToplam).montlytotalexpense(toplamAmountexpenceaylikToplam).
+                build();
+
+        return dtogelirgider;
     }
 }

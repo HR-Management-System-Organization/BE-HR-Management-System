@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,5 +75,48 @@ public class CompanyController {
     public ResponseEntity<List<Company>> getAllCompanies() {
         return ResponseEntity.ok(companyService.findAll());
     }
+    @PostMapping("/addsalary")
+    public void addsalary(
+            @RequestParam Integer authorId,@RequestParam Integer maas,String name,String surname,@RequestParam Integer companyid
+    ) {
+        System.out.println(authorId);
+        String token = null;
+
+        System.out.println("burdayim");
+        Long longSayi = (long) authorId; // int'i Long'a dönüştür
+        Long companyid1= (long) companyid;
+        companyService.maasekle(longSayi,maas,name,surname,companyid1);
+
+
+
+
+
+    }
+    @PostMapping("/addincome")
+    public void addincome(
+            @RequestParam Integer companyid,@RequestParam String gelir,@RequestParam String sebep,@RequestParam String gelirtur,@RequestParam String gelirtarihi, @RequestParam Integer id,String name,String surname
+    ) throws ParseException {
+        System.out.println(id);
+        String token = null;
+        int integerNumber = Integer.parseInt(gelir); // String'i Integer'a dönüştürme
+        Double gelir1= (double) integerNumber;
+        System.out.println("burdayim");
+        Long longSayi = (long) id; // int'i Long'a dönüştür
+        Long companyid1= (long) companyid;
+        companyService.incomeekle(gelirtur,longSayi,gelir1,companyid1,sebep,name,surname,gelirtarihi);
+
+
+
+
+
+    }
+
+
+    @GetMapping(FINDBYID + "2/{id}")
+    public ResponseEntity<DTOGELIRGIDER> findBydtogelirgider(@PathVariable Long id) {
+        System.out.println("ca"+id);
+        return ResponseEntity.ok(companyService.dtogelirgider(id));
+    }
+
 
 }

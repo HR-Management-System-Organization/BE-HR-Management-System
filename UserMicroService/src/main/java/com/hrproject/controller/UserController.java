@@ -6,7 +6,6 @@ import com.hrproject.repository.entity.Izintelebi;
 import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -391,21 +390,35 @@ public class UserController {
         }
         System.out.println("burdayim");
         return ResponseEntity.ok(userService.addEmployee(token,dto));
-}
+    }
+    @PutMapping("/updateemployee")
+    public ResponseEntity<UserProfile> updateUserProfile( UserProfileUpdateDto dto){
+        return ResponseEntity.ok(userService.updateprofileManager(dto));
+    }
+    @PostMapping("/deleteprofilebycompanymanager")
+    public void deleteprofilebycompanymanager(
+            @RequestParam Integer authorId,
+            @RequestHeader(required = false) String authorization) {
+        System.out.println(authorId);
+        String token = null;
+        if (!authorId.equals(null)) {
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+                System.out.println(token);
 
-    @DeleteMapping("deleteemployee/{id}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable Long id) {
-        if (userService.deleteUserById(id)) {
-            return ResponseEntity.ok( + id + " silindi");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found with ID " + id);
+            }
+            System.out.println("burdayim");
+            Long longSayi = (long) authorId; // int'i Long'a dönüştür
+
+            userService.deleteprofilebycompanymanager(token, longSayi);
+
+
         }
+
+
     }
-
-    @PutMapping("updateemployee/{id}")
-    public ResponseEntity<UserProfile> updateUserProfile(@RequestParam Long Id, @RequestBody UserProfileUpdateDto dto){
-        return ResponseEntity.ok(userService.updateprofileManager(Id,dto));
-    }
-
-
 }

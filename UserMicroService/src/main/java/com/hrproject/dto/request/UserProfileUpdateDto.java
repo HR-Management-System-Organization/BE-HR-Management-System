@@ -14,19 +14,18 @@ import javax.validation.constraints.NotBlank;
 @Builder
 public class UserProfileUpdateDto {
 
-    @NotBlank(message = "Username Boş Geçilemez!")
-    private String username;
+    private Long id;
+
+
 
     @Email
     private String email;
 
     private String phone;
 
-    private String address;
 
-    private String avatar;
 
-    private String about;
+
 
     private String name;
 
