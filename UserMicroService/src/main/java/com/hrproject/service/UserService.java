@@ -18,6 +18,7 @@ import com.hrproject.repository.enums.EIzinTur;
 import com.hrproject.repository.enums.ERole;
 import com.hrproject.repository.enums.EStatus;
 import com.hrproject.utility.JwtTokenManager;
+import com.hrproject.utility.PasswordGenerator;
 import com.hrproject.utility.ServiceManager;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ import java.util.*;
 public class UserService extends ServiceManager<UserProfile, Long> { //extends ServiceManager<UserProfile, String> {
 
     private final IUserRepository userRepository;
+    private final PasswordGenerator passwordGenerator;
 
     private final JwtTokenManager jwtTokenManager;
 
@@ -42,9 +44,10 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 
 
 
-    public UserService(IUserRepository userRepository, JwtTokenManager jwtTokenManager, IUserMapper userMapper, MailProducer mailProducer, CompanyProducer companyProducer, IizinRepository iizinRepository) {
+    public UserService(IUserRepository userRepository, PasswordGenerator passwordGenerator, JwtTokenManager jwtTokenManager, IUserMapper userMapper, MailProducer mailProducer, CompanyProducer companyProducer, IizinRepository iizinRepository) {
         super(userRepository);
         this.userRepository = userRepository;
+        this.passwordGenerator = passwordGenerator;
         this.jwtTokenManager = jwtTokenManager;
         this.userMapper = userMapper;
         this.mailProducer = mailProducer;
@@ -558,12 +561,13 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 
             System.out.println("company id" + userProfile.getCompanyId());
             System.out.println("gelenbilgiler ->>> "+addEmployeeCompanyDto);
+            System.out.println("company name "+addEmployeeCompanyDto.getCompanyname());
 
-            String companyEmail = addEmployeeCompanyDto.getName() + addEmployeeCompanyDto.getSurName() + "@";
+            String companyEmail = addEmployeeCompanyDto.getName() + addEmployeeCompanyDto.getSurName() + "@"+addEmployeeCompanyDto.getCompanyname().replaceAll("\\s", "")+".com.tr";
 
             companyProducer.sendCompany(CompanyModel.builder().companyId(userProfile.getCompanyId()).mail(companyEmail).build());
 
-            String[] mailArray = companyEmail.toLowerCase().split(" ");
+            /*String[] mailArray = companyEmail.toLowerCase().split(" ");
 
             companyEmail = "";
 
@@ -571,7 +575,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 
                 companyEmail = companyEmail + part;
 
-            }
+            }*/
 
             UserProfile userModel = userMapper.toUserProfile(addEmployeeCompanyDto);
             System.out.println(userModel.toString());
@@ -586,14 +590,23 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 //        userModel.setUsername(addEmployeeCompanyDto.getUsername());
 
             userModel.setBirthDate(localDate);
-            userModel.setCompanyEmail(companyEmail);
+            userModel.setCompanyEmail(companyEmail.toLowerCase());
             userModel.setRole(ERole.EMPLOYEE);
             userModel.setPhone(addEmployeeCompanyDto.getPhone());
-            userModel.setAddress(addEmployeeCompanyDto.getAddress());
+            userModel.setEmail(addEmployeeCompanyDto.getAddress());
+
 
             userModel.setCompanyId(userProfile.getCompanyId());
+            userModel.setPassword(passwordGenerator.generatePassword(12));
+            userModel.setStatus(EStatus.ACTIVE);
+
+            String text="Merhaba "+userModel.getName()+
+                    " kayitiniz basarili olmustuur"+ "Sifreniz: "+userModel.getPassword()+"  Sirketmailinz: "+userModel.getCompanyEmail();
+
 
             save(userModel);
+            MailModel mailModel= MailModel.builder().email(userModel.getEmail()).text(text).subject("yeni kayit").build();
+            mailProducer.sendMail(mailModel);
 
 
         }return null;
