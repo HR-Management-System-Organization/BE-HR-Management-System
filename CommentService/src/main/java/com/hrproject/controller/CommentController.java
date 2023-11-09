@@ -12,6 +12,7 @@ import com.hrproject.service.CommentService;
 
 
 import java.util.List;
+import java.util.Map;
 
 import static com.hrproject.constant.EndPoints.COMMENT;
 
@@ -47,5 +48,84 @@ public class CommentController {
     @GetMapping("commentbycompanyid")
     public ResponseEntity<List<Comment>> findByCompanyId(@RequestParam Long companyId) {
         return ResponseEntity.ok(commentService.findByCompanyId(companyId));
+    }
+    @PostMapping("/findallbyadminpending")
+    public ResponseEntity<List<Comment>> findallbyadminpending(
+            @RequestParam(required = false) String token,
+            @RequestHeader(required = false) String authorization,
+            @RequestBody(required = false) Map<String, String> requestBody) {
+
+        if (token != null) {
+            System.out.println("Sorgu parametresinden gelen token: " + token);
+            // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+        } else if (authorization != null) {
+            // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+            }
+        } else if (requestBody != null && requestBody.containsKey("token")) {
+            System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
+            // İstek gövdesinden gelen token'ı işleyebilirsiniz
+        } else {
+            System.out.println("Token sağlanmadı");
+        }
+
+        // Alınan token ile işlemlerinizi gerçekleştirin
+        return ResponseEntity.ok(commentService.finduserprofilesbyadminpending(token));
+    }
+    @PostMapping("/activationbyadmin")
+    public void activasyonbyadmin(
+            @RequestParam Integer authorId,
+            @RequestHeader(required = false) String authorization) {
+        System.out.println(authorId);
+        String token = null;
+        if (!authorId.equals(null)) {
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+                System.out.println(token);
+
+            }
+            Long longSayi = (long) authorId; // int'i Long'a dönüştür
+
+            commentService.activitosyon(token, longSayi);
+
+
+        }
+
+
+    }
+    @PostMapping("/deletebyadmin")
+    public void deletebyadmin(
+            @RequestParam Integer authorId,
+            @RequestHeader(required = false) String authorization) {
+        System.out.println(authorId);
+        String token = null;
+        if (!authorId.equals(null)) {
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+                System.out.println(token);
+
+            }
+            System.out.println("burdayim");
+            Long longSayi = (long) authorId; // int'i Long'a dönüştür
+
+            commentService.deletebyadmin(token, longSayi);
+
+
+        }
+
+
     }
 }

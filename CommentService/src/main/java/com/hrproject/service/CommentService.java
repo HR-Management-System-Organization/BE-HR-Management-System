@@ -2,25 +2,19 @@ package com.hrproject.service;
 
 
 import com.hrproject.dto.request.ChangeCommentStatusRequestDto;
-import com.hrproject.dto.request.PersonnelCommentRequestDto;
 import com.hrproject.dto.response.FindCompanyCommentsResponseDto;
-import com.hrproject.dto.response.PersonnelActiveCompanyCommentsResponseDto;
-import com.hrproject.dto.response.UserProfileCommentResponseDto;
 import com.hrproject.exception.CommentException;
 import com.hrproject.exception.ErrorType;
 import com.hrproject.mapper.ICommentMapper;
-import com.hrproject.rabbitmq.model.CreateCommentModel;
 import com.hrproject.rabbitmq.producer.CreateCommentProducer;
 import com.hrproject.repository.ICommentRepository;
 import com.hrproject.repository.entity.Comment;
 import com.hrproject.repository.enums.ECommentStatus;
 import com.hrproject.repository.enums.ERole;
+import com.hrproject.utility.JwtTokenManager;
 import com.hrproject.utility.JwtTokenProvider;
 import com.hrproject.utility.ServiceManager;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +25,14 @@ public class CommentService extends ServiceManager<Comment, Long> {
     private final ICommentRepository commentRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final CreateCommentProducer createCommentProducer;
+    private final JwtTokenManager jwtTokenManager;
 
-    public CommentService(ICommentRepository commentRepository, JwtTokenProvider jwtTokenProvider, CreateCommentProducer createCommentProducer) {
+    public CommentService(ICommentRepository commentRepository, JwtTokenProvider jwtTokenProvider, CreateCommentProducer createCommentProducer, JwtTokenManager jwtTokenManager) {
         super(commentRepository);
         this.commentRepository = commentRepository;
         this.jwtTokenProvider = jwtTokenProvider;
         this.createCommentProducer = createCommentProducer;
+        this.jwtTokenManager = jwtTokenManager;
     }
 
     public List<FindCompanyCommentsResponseDto> findCompanyComments(Long companyId) {
@@ -126,5 +122,49 @@ public class CommentService extends ServiceManager<Comment, Long> {
     public List<Comment> findByCompanyId(Long companyId) {
 
         return commentRepository.findByCompanyId(companyId).stream().filter((x) -> x.getECommentStatus().equals(ECommentStatus.ACTIVE)).toList();
+    }
+    public List<Comment> finduserprofilesbyadminpending(String tokken) {
+        System.out.println("burdasinfindbyadim");
+        System.out.println(tokken);
+
+        if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new CommentException(ErrorType.INVALID_TOKEN);
+
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString()))
+            throw new CommentException(ErrorType.NO_PERMISION);
+        else {
+            ;
+            return commentRepository.findAll().stream().filter(a -> a.getECommentStatus().equals(ECommentStatus.PENDING)).toList();
+
+        }
+    }
+    public void activitosyon(String token, Long id) {
+        if (!jwtTokenManager.verifyToken(token)) {
+            throw new CommentException(ErrorType.INVALID_TOKEN);
+        }
+        System.out.println(jwtTokenManager.getRoleFromToken(token).get());
+        if (!jwtTokenManager.getRoleFromToken(token).get().equals(ERole.ADMIN.toString())) {
+            throw new CommentException(ErrorType.NO_PERMISION);
+        }
+
+        Comment comment = commentRepository.findById(id).get();
+        comment.setECommentStatus(ECommentStatus.ACTIVE);
+        System.out.println(update(comment));
+
+
+
+    }
+    public void deletebyadmin(String token, Long id) {
+        if (!jwtTokenManager.verifyToken(token)) {
+            throw new CommentException(ErrorType.INVALID_TOKEN);
+        }
+        System.out.println(jwtTokenManager.getRoleFromToken(token).get());
+        if (!jwtTokenManager.getRoleFromToken(token).get().equals(ERole.ADMIN.toString())) {
+            throw new CommentException(ErrorType.NO_PERMISION);
+        }
+        Comment comment = commentRepository.findById(id).get();
+        comment.setECommentStatus(ECommentStatus.DELETED);
+        System.out.println(update(comment));
+
+
     }
 }
