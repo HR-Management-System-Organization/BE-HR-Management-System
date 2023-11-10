@@ -403,7 +403,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         }
 
         Izintelebi izintelebi= Izintelebi.builder().status(EStatus.PENDING).username(userProfile1.getUsername()).izinTur(izinTur1)
-                .managerid(userProfile.getId()).izinsuresi(dates.size()).izinhakki(userProfile1.getTotalAnnualLeave()).
+                .managerid(userProfile.getCompanyId()).izinsuresi(dates.size()).izinhakki(userProfile1.getTotalAnnualLeave()).
                 nedeni(neden).userid(userProfile.getId()).izinbaslangic(firstDateMillis).izinbitis(secondDateMillis).build();
 
 
@@ -426,7 +426,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             Long id=userProfile.getCompanyId();
             System.out.println(id);;
             return iizinRepository.findAll().stream().
-                    filter(a->a.getManagerid().equals(userProfile.getId())).filter(a->a.getStatus().equals(EStatus.PENDING)).toList();
+                    filter(a->a.getManagerid().equals(userProfile.getCompanyId())).filter(a->a.getStatus().equals(EStatus.PENDING)).toList();
 
         }
     }
@@ -502,7 +502,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             System.out.println(id);;
             return iizinRepository.findAll().stream()
                     .filter(a->a.getManagerid().
-                            equals(userProfile.getId())).filter(a->!a.getStatus().equals(EStatus.PENDING)).toList();
+                            equals(userProfile.getCompanyId())).filter(a->!a.getStatus().equals(EStatus.PENDING)).toList();
 
         }
     }
