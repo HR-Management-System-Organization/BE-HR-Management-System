@@ -297,7 +297,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 
 
     public UserProfile findEmployeeByAuthId(Long authId) {
-        Optional<UserProfile> employee = userRepository.findByAuthId(authId);
+        Optional<UserProfile> employee = userRepository.findById(authId);
         if (employee.isPresent())
             return employee.get();
         else
