@@ -393,5 +393,9 @@ public class CompanyService extends ServiceManager<Company, Long> {
                     .filter(a->a.getCompanyId().equals(id)).filter(a->a.getBillDate().isAfter(LocalDate.now().minusDays(1))).toList();
 
 
+    }public Expense avansexpense(Double expense1,String name,String surname,Long companyıd){
+        Expense expense=Expense.builder().
+                expenseType("Avans").amount(expense1).name(name).surname(surname).companyId(companyıd).billDate(LocalDate.now()).eExpenseStatus(EExpenseStatus.ACTIVE).build();
+        return expenseRepository.save(expense);
     }
 }

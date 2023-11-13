@@ -2,6 +2,7 @@ package com.hrproject.controller;
 
 import com.hrproject.constant.EndPoints;
 import com.hrproject.dto.request.*;
+import com.hrproject.repository.entity.Avanstelebi;
 import com.hrproject.repository.entity.Izintelebi;
 import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.service.UserService;
@@ -455,5 +456,87 @@ public class UserController {
 
         // Alınan token ile işlemlerinizi gerçekleştirin
         return ResponseEntity.ok(userService.avanstelebi(tokenWithoutBearer,sebep,miktar));
+    }
+
+    @PostMapping("/findallavansrequesbycompanymanager")
+    public ResponseEntity<List<Avanstelebi>> findallavansrequestbycompanymanager(
+            @RequestParam(required = false) String token,
+            @RequestHeader(required = false) String authorization,
+            @RequestBody(required = false) Map<String, String> requestBody) {
+
+        if (token != null) {
+            System.out.println("Sorgu parametresinden gelen token: " + token);
+            // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+        } else if (authorization != null) {
+            // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+            }
+        } else if (requestBody != null && requestBody.containsKey("token")) {
+            System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
+            // İstek gövdesinden gelen token'ı işleyebilirsiniz
+        } else {
+            System.out.println("Token sağlanmadı");
+        }
+
+        // Alınan token ile işlemlerinizi gerçekleştirin
+        return ResponseEntity.ok(userService.findallavansreguestbycompanymanager(token));
+    }
+
+    @PostMapping("/deleteavansrequestbycompanymanager")
+    public void deleteavansrequestbycompanymanager(
+            @RequestParam Integer authorId,
+            @RequestHeader(required = false) String authorization) {
+        System.out.println(authorId);
+        String token = null;
+        if (!authorId.equals(null)) {
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+                System.out.println(token);
+
+            }
+            System.out.println("burdayim");
+            Long longSayi = (long) authorId; // int'i Long'a dönüştür
+
+            userService.deleteavansrequestbyadmin(token, longSayi);
+
+
+        }
+
+
+    }
+    @PostMapping("/activeavansrequestbycompanymanager")
+    public void activeavansrequestbycompanymanager(
+            @RequestParam Integer authorId,
+            @RequestHeader(required = false) String authorization) {
+        System.out.println(authorId);
+        String token = null;
+        if (!authorId.equals(null)) {
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+                System.out.println(token);
+
+            }
+            System.out.println("burdayim");
+            Long longSayi = (long) authorId; // int'i Long'a dönüştür
+
+            userService.activeavansrequestbyadmin(token, longSayi);
+
+
+        }
+
+
     }
 }

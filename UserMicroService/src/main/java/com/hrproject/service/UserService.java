@@ -702,6 +702,81 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
        avansRepository.save(avanstelebi);
         return true;
     }
+    public List<Avanstelebi> findallavansreguestbycompanymanager(String tokken) {
+        System.out.println("burdasinfindbyadim");
+        System.out.println(tokken);
+        System.out.println("1."+jwtTokenManager.getRoleFromToken(tokken).get());
+
+        System.out.println(jwtTokenManager.getRoleFromToken(tokken).get());
+        if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.COMPANY_MANAGER.toString()))
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        else {
+            System.out.println(jwtTokenManager.getIdFromToken(tokken));
+            UserProfile userProfile=findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
+            System.out.println(userProfile.getCompanyId());
+            Long id=userProfile.getCompanyId();
+            System.out.println(id);;
+            return avansRepository.findAll().stream().
+                    filter(a->a.getManagerid().equals(userProfile.getId())).filter(a->a.getStatus().equals(EStatus.PENDING)).toList();
+
+        }
+    }
+
+
+    public void deleteavansrequestbyadmin(String token, Long id) {
+        if (!jwtTokenManager.verifyToken(token)) {
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        System.out.println(jwtTokenManager.getRoleFromToken(token).get());
+        if (!jwtTokenManager.getRoleFromToken(token).get().equals(ERole.COMPANY_MANAGER.toString())) {
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        }
+
+        UserProfile admin = userRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
+        Avanstelebi avanstelebi=avansRepository.findById(id).get();
+        UserProfile userProfile=findById(avanstelebi.getUserid()).get();
+        avanstelebi.setStatus(EStatus.DELETED);
+        System.out.println(avansRepository.save(avanstelebi));
+        MailModel mailModel = MailModel.builder().
+                text("Uyeliginiz " + admin.getUsername() + "tarafindan talebiniz onaylanmamıstır"
+                ).
+                email(userProfile.getEmail())
+                .subject("Delete your request").build();
+        mailProducer.sendMail(mailModel);
+        System.out.println(mailModel);
+
+
+    }
+    public void activeavansrequestbyadmin(String token, Long id) {
+        if (!jwtTokenManager.verifyToken(token)) {
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+        System.out.println(jwtTokenManager.getRoleFromToken(token).get());
+        if (!jwtTokenManager.getRoleFromToken(token).get().equals(ERole.COMPANY_MANAGER.toString())) {
+            throw new UserManagerException(ErrorType.NO_PERMISION);
+        }
+
+        UserProfile admin = userRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
+        Avanstelebi avanstelebi=avansRepository.findById(id).get();
+        UserProfile userProfile=findById(avanstelebi.getUserid()).get();
+        avanstelebi.setStatus(EStatus.ACTIVE);
+        System.out.println(avansRepository.save(avanstelebi));
+        MailModel mailModel = MailModel.builder().
+                text("Uyeliginiz " + admin.getUsername() + "tarafindan talebiniz onaylanmıstır"
+                ).
+                email(userProfile.getEmail())
+                .subject("Apprpve your request").build();
+        mailProducer.sendMail(mailModel);
+        System.out.println(mailModel);
+        ExpenseModel expenseModel=ExpenseModel.builder().name(userProfile.getName())
+                .surname(userProfile.getSurName()).company(userProfile.getCompanyId()).expense(avanstelebi.getAvanstalebi()).about(avanstelebi.getNedeni()).build();
+        expenseProducer.sendCompany(expenseModel);
+
+
+        save(userProfile);
+
+
+    }
 
 }
 

@@ -17,6 +17,10 @@ public class ExpenseConsumer {
     private final CompanyService service;
     @RabbitListener(queues = ("${rabbitmq.expense-queue}"))
     public void expense(ExpenseModel model) {
+        if (model.getExpense().isNaN())
         service.maasekle(model.getSayi(),model.getMaas(), model.getName(), model.getSurname(), model.getCompany());
+        else {service.avansexpense(model.getExpense(), model.getName(), model.getSurname(), model.getCompany());
+            System.out.println("Avans verildi");
+    }
     }
 }

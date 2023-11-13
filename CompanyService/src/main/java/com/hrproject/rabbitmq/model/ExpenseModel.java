@@ -14,8 +14,11 @@ import java.io.Serializable;
 public class ExpenseModel implements Serializable {
 
 
-   private Long sayi;
+    private Long sayi;
     private int maas;
+
+    private Double expense;
+    private String about;
     private String name;
     private String surname;
     private Long company;
