@@ -34,6 +34,7 @@ public enum ErrorType {
     DATES_NOT_CORRECT(HttpStatus.BAD_REQUEST, 3217, "bitis tarihi baslangic tarihinden önce olamaz"),
     DATES_NOT_CORRECT2(HttpStatus.BAD_REQUEST, 3217, "bitis tarihi baslangic tarihi ile ayni olamaz"),
     WRONG_GENDER_MAN(HttpStatus.BAD_REQUEST, 3217, "Bu istek icin cinsiyteiniz erkek olmali"),
+    Salary_is_insufficient(HttpStatus.BAD_REQUEST, 3217, "En fazla Maasiniz kadar avans isteyebilirsiniz"),
     WRONG_GENDER_WOMAN(HttpStatus.BAD_REQUEST, 3217, "Bu istek icin cinsiyteiniz kadin olmali");
 
 
