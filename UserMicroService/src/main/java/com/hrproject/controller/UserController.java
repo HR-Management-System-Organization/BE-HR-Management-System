@@ -421,4 +421,39 @@ public class UserController {
 
 
     }
+    @PostMapping("/addsalary")
+    public void addsalary(
+            @RequestParam Integer authorId,@RequestParam Integer maas,String name,String surname,@RequestParam Integer companyid
+    ) {
+        System.out.println(authorId);
+        String token = null;
+
+        System.out.println("burdayim");
+        Long longSayi = (long) authorId; // int'i Long'a dönüştür
+        Long companyid1= (long) companyid;
+        userService.maasekle(longSayi,maas,name,surname,companyid1);
+
+
+
+
+
+    }
+    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/avansal")
+    public ResponseEntity<Boolean> avanstalebi( @RequestParam(required = false) String token,
+                                               @RequestHeader(required = false) String authorization,
+                                               @RequestBody(required = false) Map<String, String> requestBody,
+                                               @RequestParam String sebep,@RequestParam Integer miktar
+                                               ) throws ParseException {
+
+        System.out.println("icerdyi<");
+        System.out.println(token);
+        String tokenWithoutBearer = token.substring(7);
+
+
+
+
+        // Alınan token ile işlemlerinizi gerçekleştirin
+        return ResponseEntity.ok(userService.avanstelebi(tokenWithoutBearer,sebep,miktar));
+    }
 }

@@ -11,6 +11,8 @@ rabbitmq:
   mail-binding-key: mail-binding-key
   company-queue: company-queue
   company-binding-key: company-binding-key
+  expense-queue: expense-queue
+  expense-binding-key: expense-binding-key
 
 spring:
   rabbitmq:
@@ -21,7 +23,7 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: root
+    password: Rx199630
     url: jdbc:postgresql://localhost:5432/UserServiceDB
   jpa:
     hibernate:

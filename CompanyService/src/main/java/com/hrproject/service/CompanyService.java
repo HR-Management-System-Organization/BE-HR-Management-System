@@ -236,7 +236,10 @@ public class CompanyService extends ServiceManager<Company, Long> {
         return findById(id).get();
     }
 
+
+
     public Expense maasekle(Long sayi,int maas,String name,String surname,Long company ){
+
         Double maas1= (double) maas;
         Double tax=null;
         if (maas<=27000)tax=0.15;
@@ -246,7 +249,15 @@ public class CompanyService extends ServiceManager<Company, Long> {
         tax=tax*maas1;
         Double brut=tax+maas1;
         LocalDate localDate=LocalDate.now();
-        Expense expense=Expense.builder().expenseType("Maas").netAmount(maas1).name(name).surname(surname).amount(brut).tax(tax).companyId(company).userId(sayi).build();
+        LocalDate sonrakiAyDorduncuGun = localDate
+                .plusMonths(1) // Bir sonraki ayı bul
+                .withDayOfMonth(4);
+        Optional<Expense> expense1=expenseRepository.findAll().stream().filter(a->a.getUserId().equals(sayi)).filter(a->a.getExpenseType().equals("Salary"))
+                .filter(a->a.getBillDate().equals(sonrakiAyDorduncuGun)).findFirst();
+        if (expense1.isPresent()){
+            expenseRepository.delete(expense1.get());
+        };
+        Expense expense=Expense.builder().expenseType("Salary").netAmount(maas1).billDate(sonrakiAyDorduncuGun).name(name).surname(surname).amount(brut).tax(tax).companyId(company).userId(sayi).build();
         expense.setEExpenseStatus(EExpenseStatus.ACTIVE);
         return expenseRepository.save(expense);
 

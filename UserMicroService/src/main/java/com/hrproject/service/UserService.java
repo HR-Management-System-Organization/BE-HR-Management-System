@@ -5,12 +5,16 @@ import com.hrproject.exception.ErrorType;
 import com.hrproject.exception.UserManagerException;
 import com.hrproject.mapper.IUserMapper;
 import com.hrproject.rabbitmq.model.CompanyModel;
+import com.hrproject.rabbitmq.model.ExpenseModel;
 import com.hrproject.rabbitmq.model.MailModel;
 import com.hrproject.rabbitmq.model.RegisterModel;
 import com.hrproject.rabbitmq.producer.CompanyProducer;
+import com.hrproject.rabbitmq.producer.ExpenseProducer;
 import com.hrproject.rabbitmq.producer.MailProducer;
+import com.hrproject.repository.IAvansRepository;
 import com.hrproject.repository.IUserRepository;
 import com.hrproject.repository.IizinRepository;
+import com.hrproject.repository.entity.Avanstelebi;
 import com.hrproject.repository.entity.Izintelebi;
 import com.hrproject.repository.entity.UserProfile;
 import com.hrproject.repository.enums.EGender;
@@ -35,24 +39,28 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     private final PasswordGenerator passwordGenerator;
 
     private final JwtTokenManager jwtTokenManager;
+    private final IAvansRepository avansRepository;
 
     private final IUserMapper userMapper;
     private final MailProducer mailProducer;
     private final CompanyProducer companyProducer;
+    private final ExpenseProducer expenseProducer;
     private final IizinRepository iizinRepository;
 
 
 
 
-    public UserService(IUserRepository userRepository, PasswordGenerator passwordGenerator, JwtTokenManager jwtTokenManager, IUserMapper userMapper, MailProducer mailProducer, CompanyProducer companyProducer, IizinRepository iizinRepository) {
+    public UserService(IUserRepository userRepository, PasswordGenerator passwordGenerator, JwtTokenManager jwtTokenManager, IAvansRepository avansRepository, IUserMapper userMapper, MailProducer mailProducer, CompanyProducer companyProducer, ExpenseProducer expenseProducer, IizinRepository iizinRepository) {
         super(userRepository);
         this.userRepository = userRepository;
         this.passwordGenerator = passwordGenerator;
         this.jwtTokenManager = jwtTokenManager;
+        this.avansRepository = avansRepository;
         this.userMapper = userMapper;
         this.mailProducer = mailProducer;
 
         this.companyProducer = companyProducer;
+        this.expenseProducer = expenseProducer;
         this.iizinRepository = iizinRepository;
     }
 
@@ -642,6 +650,57 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         System.out.println(mailModel);
 
 
+    }
+    public UserProfile maasekle(Long sayi,int maas,String name,String surname,Long company ){
+        Double maas1= (double) maas;
+        Double tax=null;
+        if (maas<=27000)tax=0.15;
+        if (maas<=65000&&maas>27000)tax=0.20;
+        if (maas<=95000&&maas>65000)tax=0.25;
+        else tax=0.35;
+        tax=tax*maas1;
+        Double brut=tax+maas1;
+        LocalDate localDate=LocalDate.now();
+        UserProfile userProfile=findById(sayi).get();
+        userProfile.setSalary(maas1);
+        ExpenseModel model=ExpenseModel.builder().name(name).sayi(sayi).maas(maas).surname(surname).company(company).build();
+        expenseProducer.sendCompany(model);
+
+        ;
+        return update(userProfile);
+
+    }
+    public boolean avanstelebi(String tokken, String neden, Integer miktar) throws ParseException {
+
+
+        UserProfile userProfile1=findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
+
+
+
+
+
+
+
+
+
+
+
+        UserProfile userProfile=findAll().stream().filter(a->a.getRole().equals(ERole.COMPANY_MANAGER))
+                .filter(a -> a.getCompanyId() != null && a.getCompanyId().equals(userProfile1.getCompanyId())).findFirst().get();
+
+        System.out.println(userProfile1.getSalary());
+        //Double result = Double.parseDouble(miktar);
+        Double result= Double.valueOf(miktar);
+        if (result>userProfile1.getSalary()) throw new UserManagerException(ErrorType.Salary_is_insufficient);
+
+        Avanstelebi avanstelebi= Avanstelebi.builder().status(EStatus.PENDING).username(userProfile1.getUsername()).avanstalebi(result)
+                .managerid(userProfile.getCompanyId()).avanstarihi(LocalDate.now()).maas(userProfile1.getSalary()).
+                nedeni(neden).userid(userProfile.getId()).build();
+
+
+
+       avansRepository.save(avanstelebi);
+        return true;
     }
 
 }
