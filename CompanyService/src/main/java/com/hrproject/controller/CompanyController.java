@@ -92,7 +92,6 @@ public class CompanyController {
 
 
 
-
     }
     @PostMapping("/addincome")
     public void addincome(
@@ -110,6 +109,18 @@ public class CompanyController {
 
 
 
+
+    }
+    @PostMapping("/addexpense")
+    public void addexpense(@RequestParam Integer companyid,@RequestParam String gelir,@RequestParam String sebep,@RequestParam String gelirtur,@RequestParam String gelirtarihi, @RequestParam Integer id,String name,String surname) throws ParseException {
+        System.out.println(id);
+        String token = null;
+        int integerNumber = Integer.parseInt(gelir); // String'i Integer'a dönüştürme
+        Double gelir1= (double) integerNumber;
+        System.out.println("burdayim");
+        Long longSayi = (long) id; // int'i Long'a dönüştür
+        Long companyid1= (long) companyid;
+        companyService.expenseEkle(gelirtur,longSayi,gelir1,companyid1,sebep,name,surname,gelirtarihi);
 
     }
 
@@ -146,6 +157,35 @@ public class CompanyController {
 
         // Alınan token ile işlemlerinizi gerçekleştirin
         return ResponseEntity.ok(companyService.findalloldreguestbycompanymanager(token));
+    }
+    @PostMapping("/findalloldrequesbycompanymanager2")
+    public ResponseEntity<List<Expense>> findalloldrequesbycompanymanager2(
+            @RequestParam(required = false) String token,
+            @RequestHeader(required = false) String authorization,
+            @RequestBody(required = false) Map<String, String> requestBody) {
+
+        if (token != null) {
+            System.out.println("Sorgu parametresinden gelen token: " + token);
+            // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+        } else if (authorization != null) {
+            // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+            }
+        } else if (requestBody != null && requestBody.containsKey("token")) {
+            System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
+            // İstek gövdesinden gelen token'ı işleyebilirsiniz
+        } else {
+            System.out.println("Token sağlanmadı");
+        }
+
+        // Alınan token ile işlemlerinizi gerçekleştirin
+        System.out.println("expense burda");
+        return ResponseEntity.ok(companyService.findallexpensebycompanymanager(token));
     }
 
 

@@ -273,7 +273,14 @@ public class CompanyService extends ServiceManager<Company, Long> {
         income.setEIncomeStatus(EExpenseStatus.ACTIVE);
         return incomeRepository.save(income);
     }
-
+    public Expense expenseEkle(String harcamaTur,Long id,Double gider,Long comapnyid,String sebep,String name,String surname,String gidertarihi) throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date firstDate = dateFormat.parse(gidertarihi);
+        LocalDate localDate = firstDate.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+        Expense expense=Expense.builder().expenseType(harcamaTur).userId(id).amount(gider).companyId(comapnyid).description(sebep).name(name).surname(surname).billDate(localDate).build();
+        expense.setEExpenseStatus(EExpenseStatus.PENDING);
+        return expenseRepository.save(expense);
+    }
     public DTOGELIRGIDER dtogelirgider(Long companyid){
         List<Income> incomes= incomeRepository.findAll().stream().filter(a->a.getCompanyId().equals(companyid)).toList();
         List<Expense> expenses= expenseRepository.findAll().stream().filter(a->a.getCompanyId().equals(companyid)).toList();
@@ -397,5 +404,24 @@ public class CompanyService extends ServiceManager<Company, Long> {
         Expense expense=Expense.builder().
                 expenseType("Avans").amount(expense1).name(name).surname(surname).companyId(companyıd).billDate(LocalDate.now()).eExpenseStatus(EExpenseStatus.ACTIVE).build();
         return expenseRepository.save(expense);
+    }
+    public List<Expense> findallexpensebycompanymanager(String tokken) {
+        System.out.println("burdasinfindbyadim");
+        System.out.println(tokken);
+        System.out.println("1."+jwtTokenManager.getRoleFromToken(tokken).get());
+
+        System.out.println(jwtTokenManager.getRoleFromToken(tokken).get());
+
+
+        System.out.println(jwtTokenManager.getIdFromToken(tokken));
+
+        Long id=expenseRepository.findAll().stream().filter(a->a.getUserId().equals(jwtTokenManager.getIdFromToken(tokken).get())).findFirst().get().getCompanyId();
+
+
+        System.out.println(id);;
+        return expenseRepository.findAll().stream()
+                .filter(a->a.getCompanyId().equals(id)).filter(a->a.getEExpenseStatus().equals(EExpenseStatus.PENDING)).toList();
+
+
     }
 }

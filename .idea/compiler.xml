@@ -12,11 +12,11 @@
         <module name="HR_Management_System.UserMicroService.main" />
         <module name="HR_Management_System.CompanyService.main" />
         <module name="HR_Management_System.ConfigServer.main" />
-        <module name="HR_Management_System.main" />
         <module name="HR_Management_System.Api_Gateway_Service.main" />
         <module name="HR_Management_System.CommentService.main" />
         <module name="HR_Management_System.Git-ConfigServer.main" />
         <module name="HR_Management_System.AuthMicroService.main" />
+        <module name="BE-HR-Management-System.HR_Management_System.main" />
         <module name="HR_Management_System.MailService.main" />
       </profile>
     </annotationProcessing>
