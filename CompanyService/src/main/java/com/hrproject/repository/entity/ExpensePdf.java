@@ -18,22 +18,13 @@ public class ExpensePdf extends Base {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
-    @Column(name = "pdf_content", columnDefinition = "bytea")
-    private byte[] pdfContent;
+    @Column(name = "file_name")
+    private String fileName;
 
-    @Column(name = "name")
-    private String name;
 
-    // Diğer özellikler eklenebilir (örneğin: açıklama, tarih, vb.)
 
-    @Override
-    public String toString() {
-        return "ExpensePdf{" +
-                "id=" + id +
-                ", pdfContent=" + Arrays.toString(pdfContent) +
-                ", name='" + name + '\'' +
-                // Diğer özellikleri ekleyin
-                '}';
-    }
+    @Column(columnDefinition = "TEXT")
+    private String fileData;
+
+
 }

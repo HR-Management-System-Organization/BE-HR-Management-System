@@ -8,9 +8,12 @@ import com.hrproject.service.CompanyService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
@@ -112,7 +115,7 @@ public class CompanyController {
 
     }
     @PostMapping("/addexpense")
-    public void addexpense(@RequestParam Integer companyid,@RequestParam String gelir,@RequestParam String sebep,@RequestParam String gelirtur,@RequestParam String gelirtarihi, @RequestParam Integer id,String name,String surname) throws ParseException {
+    public Long addexpense(@RequestParam Integer companyid,@RequestParam String gelir,@RequestParam String sebep,@RequestParam String gelirtur,@RequestParam String gelirtarihi, @RequestParam Integer id,String name,String surname) throws ParseException {
         System.out.println(id);
         String token = null;
         int integerNumber = Integer.parseInt(gelir); // String'i Integer'a dönüştürme
@@ -120,8 +123,7 @@ public class CompanyController {
         System.out.println("burdayim");
         Long longSayi = (long) id; // int'i Long'a dönüştür
         Long companyid1= (long) companyid;
-        companyService.expenseEkle(gelirtur,longSayi,gelir1,companyid1,sebep,name,surname,gelirtarihi);
-
+      return   companyService.expenseEkle(gelirtur,longSayi,gelir1,companyid1,sebep,name,surname,gelirtarihi).getExpenseId();
     }
 
 
@@ -192,6 +194,134 @@ public class CompanyController {
         // Alınan token ile işlemlerinizi gerçekleştirin
         System.out.println("expense burda");
         return ResponseEntity.ok(companyService.findallexpensebycompanymanager(token));
+    }
+
+    @PostMapping("/findalloldrequesbycompanymanager3")
+    public ResponseEntity<List<Expense>> findalloldrequesbycompanymanager3(
+            @RequestParam(required = false) String token,
+            @RequestHeader(required = false) String authorization,
+            @RequestBody(required = false) Map<String, String> requestBody) {
+
+        if (token != null) {
+            System.out.println("Sorgu parametresinden gelen token: " + token);
+            // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+            token = token.substring(7);
+        } else if (authorization != null) {
+            // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+            }
+        } else if (requestBody != null && requestBody.containsKey("token")) {
+            System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
+            String tokenWithoutBearer = requestBody.get("token").substring(7); // 7, "Bearer " prefix uzunluğudur
+            token = tokenWithoutBearer;
+            System.out.println(token);
+        } else {
+            System.out.println("Token sağlanmadı");
+        }
+
+        // Alınan token ile işlemlerinizi gerçekleştirin
+        System.out.println("expense burda");
+        return ResponseEntity.ok(companyService.findallexpensebycompanymanager2(token));
+    }
+
+    @PostMapping("/uploadpdf")
+    @ResponseBody
+    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return new ResponseEntity<>("Yüklenen dosya boş.", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+
+
+
+            // Örneğin, dosyayı bir klasöre kaydetmek veya veritabanına kaydetmek gibi.
+
+            // Örnek: Dosyayı bir klasöre kaydetme
+            // Path path = Paths.get("your-upload-directory", file.getOriginalFilename());
+            // Files.write(path, file.getBytes());
+            companyService.expensepdfupload(file);
+
+            return new ResponseEntity<>("Dosya başarıyla yüklendi.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Dosya yükleme hatası: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PostMapping("/activeexpensebycompanymanager")
+    public void activeavansrequestbycompanymanager(
+            @RequestParam Integer authorId,
+            @RequestParam(required = false) String token,
+            @RequestHeader(required = false) String authorization,
+            @RequestBody(required = false) Map<String, String> requestBody) {
+        System.out.println(authorId);
+        if (token != null) {
+
+            System.out.println("Sorgu parametresinden gelen token: " + token);
+            // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+            token = token.substring(7);
+        } else if (authorization != null) {
+            // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+            }
+        } else if (requestBody != null && requestBody.containsKey("token")) {
+            System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
+            String tokenWithoutBearer = requestBody.get("token").substring(7); // 7, "Bearer " prefix uzunluğudur
+            token = tokenWithoutBearer;
+            System.out.println(token);
+        } else {
+            System.out.println("Token sağlanmadı");
+        }
+        System.out.println("burdayim");
+        Long longSayi = (long) authorId; // int'i Long'a dönüştür
+
+        companyService.activeexpense(token, longSayi);
+
+
+    }
+    @PostMapping("/deleteexpensebycompanymanager")
+    public void deleterequestbycompanymanager(
+            @RequestParam Integer authorId,
+            @RequestParam(required = false) String token,
+            @RequestHeader(required = false) String authorization,
+            @RequestBody(required = false) Map<String, String> requestBody) {
+        System.out.println(authorId);
+        if (token != null) {
+            System.out.println("Sorgu parametresinden gelen token: " + token);
+            // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+            token = token.substring(7);
+        } else if (authorization != null) {
+            // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+            }
+        } else if (requestBody != null && requestBody.containsKey("token")) {
+            System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
+            String tokenWithoutBearer = requestBody.get("token").substring(7); // 7, "Bearer " prefix uzunluğudur
+            token = tokenWithoutBearer;
+            System.out.println(token);
+        } else {
+            System.out.println("Token sağlanmadı");
+        }
+        System.out.println("burdayim");
+        Long longSayi = (long) authorId; // int'i Long'a dönüştür
+
+        companyService.deleteexpense(token, longSayi);
+
+
     }
 
 

@@ -37,4 +37,7 @@ public class Expense extends Base {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private EExpenseStatus eExpenseStatus = EExpenseStatus.PENDING;
+
+    @Column(name = "expense_pdf_id")
+    private Long expensePdfId;
 }
