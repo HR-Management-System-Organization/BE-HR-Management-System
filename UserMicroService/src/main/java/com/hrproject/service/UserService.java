@@ -36,19 +36,22 @@ import java.util.*;
 public class UserService extends ServiceManager<UserProfile, Long> { //extends ServiceManager<UserProfile, String> {
 
     private final IUserRepository userRepository;
+
     private final PasswordGenerator passwordGenerator;
 
     private final JwtTokenManager jwtTokenManager;
+
     private final IAvansRepository avansRepository;
 
     private final IUserMapper userMapper;
+
     private final MailProducer mailProducer;
+
     private final CompanyProducer companyProducer;
+
     private final ExpenseProducer expenseProducer;
+
     private final IizinRepository iizinRepository;
-
-
-
 
     public UserService(IUserRepository userRepository, PasswordGenerator passwordGenerator, JwtTokenManager jwtTokenManager, IAvansRepository avansRepository, IUserMapper userMapper, MailProducer mailProducer, CompanyProducer companyProducer, ExpenseProducer expenseProducer, IizinRepository iizinRepository) {
         super(userRepository);
@@ -58,7 +61,6 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         this.avansRepository = avansRepository;
         this.userMapper = userMapper;
         this.mailProducer = mailProducer;
-
         this.companyProducer = companyProducer;
         this.expenseProducer = expenseProducer;
         this.iizinRepository = iizinRepository;
@@ -200,11 +202,11 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         }
         UserProfile userProfile = userRepository.findByUsername(jwtTokenManager.getUsername(tokken).get()).get();
 
-
         return userProfile;
     }
 
     public List<UserProfile> finduserprofilesbyadmin(String tokken) {
+
         System.out.println("burdasinfindbyadim");
         System.out.println(tokken);
 
@@ -216,6 +218,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     }
 
     public List<UserProfile> finduserprofilesbyadminpending(String tokken) {
+
         System.out.println("burdasinfindbyadim");
         System.out.println(tokken);
 
@@ -224,12 +227,12 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.ADMIN.toString()))
             throw new UserManagerException(ErrorType.NO_PERMISION);
         else {
-            ;
             return userRepository.findAll().stream().filter(a -> a.getRole().equals(ERole.COMPANY_MANAGER)).filter(a -> a.getStatus().equals(EStatus.PENDING)).toList();
-
         }
     }
+
     public List<UserProfile> findallguestbycompanymanager(String tokken) {
+
         System.out.println("burdasinfindbyadim");
         System.out.println(tokken);
         System.out.println("1."+jwtTokenManager.getRoleFromToken(tokken).get());
@@ -249,6 +252,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     }
 
     public void activitosyon(String token, Long id) {
+
         if (!jwtTokenManager.verifyToken(token)) {
             throw new UserManagerException(ErrorType.INVALID_TOKEN);
         }
@@ -268,9 +272,9 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         mailProducer.sendMail(mailModel);
         System.out.println(mailModel);
 
-
     }
     public void deletebyadmin(String token, Long id) {
+
         if (!jwtTokenManager.verifyToken(token)) {
             throw new UserManagerException(ErrorType.INVALID_TOKEN);
         }
@@ -289,22 +293,18 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
                 .subject("Delete your account").build();
         mailProducer.sendMail(mailModel);
         System.out.println(mailModel);
-
-
     }
 
     public UserProfile userProfilefindbidwithtokken(String tokken) {
+
         if (jwtTokenManager.verifyToken(tokken).equals(false)) throw new UserManagerException(ErrorType.INVALID_TOKEN);
         if (jwtTokenManager.getIdFromToken(tokken).isEmpty()) throw new UserManagerException(ErrorType.USER_NOT_FOUND);
         UserProfile userProfile = userRepository.findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
-
-
         return userProfile;
-
     }
 
-
     public UserProfile findEmployeeByAuthId(Long authId) {
+
         Optional<UserProfile> employee = userRepository.findById(authId);
         if (employee.isPresent())
             return employee.get();
@@ -322,16 +322,19 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 //            List<User> employeeList = userRepository.findByCompanyId(companyId);
 //            return employeeList.size();
     }
+
     public UserProfile updateprofile(Long id, UserProfileUpdateRequestDto dto){
+
         UserProfile userProfile=findById(id).get();
         userProfile.setName(dto.getName());
         userProfile.setEmail(dto.getEmail());
         userProfile.setSurName(dto.getSurName());
         update(userProfile);
         return userProfile;
-
     }
+
     public ArrayList<Long>resmitattiler() throws ParseException {
+
         ArrayList<Long> resmitattiller2=new ArrayList<>();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
@@ -344,11 +347,11 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             System.out.println("Tarih: " + tarihStr + " -> Unix Zaman Damgası: " + zamanDamgasi);
             resmitattiller2.add(zamanDamgasi);
         }
-
         return resmitattiller2;
     }
 
     public boolean izintelebi(String tokken, String neden, String tarihler,String izitur) throws ParseException {
+
         System.out.println("x--izintur->"+izitur);
 
         UserProfile userProfile1=findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
@@ -362,11 +365,8 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-
-
         Date firstDate = dateFormat.parse(firstDateStr);
         Date secondDate = dateFormat.parse(secondDateStr);long firstDateMillis = firstDate.getTime();
-
 
         long secondDateMillis = secondDate.getTime();
         if (firstDateMillis>secondDateMillis) throw new UserManagerException(ErrorType.DATES_NOT_CORRECT);
@@ -395,9 +395,6 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             }
         }
 
-
-
-
         UserProfile userProfile=findAll().stream().filter(a->a.getRole().equals(ERole.COMPANY_MANAGER))
                 .filter(a -> a.getCompanyId() != null && a.getCompanyId().equals(userProfile1.getCompanyId())).findFirst().get();
 
@@ -414,12 +411,11 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
                 .managerid(userProfile.getCompanyId()).izinsuresi(dates.size()).izinhakki(userProfile1.getTotalAnnualLeave()).
                 nedeni(neden).userid(userProfile.getId()).izinbaslangic(firstDateMillis).izinbitis(secondDateMillis).build();
 
-
-
         iizinRepository.save(izintelebi);
         return true;
     }
     public List<Izintelebi> findallreguestbycompanymanager(String tokken) {
+
         System.out.println("burdasinfindbyadim");
         System.out.println(tokken);
         System.out.println("1."+jwtTokenManager.getRoleFromToken(tokken).get());
@@ -435,10 +431,10 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             System.out.println(id);;
             return iizinRepository.findAll().stream().
                     filter(a->a.getManagerid().equals(userProfile.getCompanyId())).filter(a->a.getStatus().equals(EStatus.PENDING)).toList();
-
         }
     }
     public void deleterequestbyadmin(String token, Long id) {
+
         if (!jwtTokenManager.verifyToken(token)) {
             throw new UserManagerException(ErrorType.INVALID_TOKEN);
         }
@@ -459,10 +455,10 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
                 .subject("Delete your request").build();
         mailProducer.sendMail(mailModel);
         System.out.println(mailModel);
-
-
     }
+
     public void activerequestbyadmin(String token, Long id) {
+
         if (!jwtTokenManager.verifyToken(token)) {
             throw new UserManagerException(ErrorType.INVALID_TOKEN);
         }
@@ -491,10 +487,10 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             userProfile.setParentalLeave(userProfile.getParentalLeave()- izintelebi.getIzinsuresi());
 
         save(userProfile);
-
-
     }
+
     public List<Izintelebi> findalloldreguestbycompanymanager(String tokken) {
+
         System.out.println("burdasinfindbyadim");
         System.out.println(tokken);
         System.out.println("1."+jwtTokenManager.getRoleFromToken(tokken).get());
@@ -515,23 +511,18 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         }
     }
 
-
-    public void addEmployee(Long id,AddEmployeeDto addEmployeeCompanyDto) {
+    public void addEmployee(Long id, AddEmployeeDto addEmployeeCompanyDto) {
 
         Optional<UserProfile> userProfile= userRepository.findById(id);
-
 
         //  UserProfile getCompanyId = new UserProfile();
 
         // getCompanyId.setCompanyId(addEmployeeCompanyDto.getCompanyId());
 
 
-
-
         String companyEmail = addEmployeeCompanyDto.getName() + addEmployeeCompanyDto.getSurName() + "@";
 
         companyProducer.sendCompany(CompanyModel.builder().companyId(userProfile.get().getCompanyId()).mail(companyEmail).build());
-
 
         String[] mailArray = companyEmail.toLowerCase().split(" ");
 
@@ -540,7 +531,6 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         for (String part : mailArray) {
 
             companyEmail = companyEmail + part;
-
         }
 
         UserProfile userModel = new UserProfile();
@@ -551,21 +541,20 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         userModel.setCompanyEmail(companyEmail);
         userModel.setRole(ERole.EMPLOYEE);
         userModel.setPhone(addEmployeeCompanyDto.getPhone());
-        userModel.setAddress(addEmployeeCompanyDto.getAddress());
         userModel.setPassword(addEmployeeCompanyDto.getPassword());
         userModel.setCompanyId(userProfile.get().getCompanyId());
+        userModel.setGender(addEmployeeCompanyDto.getGender());
 
         save(userModel);
-
     }
+
     public Boolean addEmployee(String tokken,AddEmployeeCompanyDto addEmployeeCompanyDto) throws ParseException {
+
         if (!jwtTokenManager.getRoleFromToken(tokken).get().equals(ERole.COMPANY_MANAGER.toString()))
             throw new UserManagerException(ErrorType.NO_PERMISION);
         else {
             System.out.println(jwtTokenManager.getIdFromToken(tokken));
             UserProfile userProfile=findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
-
-
 
             System.out.println("company id" + userProfile.getCompanyId());
             System.out.println("gelenbilgiler ->>> "+addEmployeeCompanyDto);
@@ -589,10 +578,9 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             System.out.println(userModel.toString());
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-
-
             Date firstDate = dateFormat.parse(addEmployeeCompanyDto.getBirthday());
             LocalDate localDate = firstDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
 //        userModel.setName(addEmployeeCompanyDto.getName());
 //        userModel.setSurName(addEmployeeCompanyDto.getSurname());
 //        userModel.setUsername(addEmployeeCompanyDto.getUsername());
@@ -602,23 +590,20 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             userModel.setRole(ERole.EMPLOYEE);
             userModel.setPhone(addEmployeeCompanyDto.getPhone());
             userModel.setEmail(addEmployeeCompanyDto.getAddress());
-
-
             userModel.setCompanyId(userProfile.getCompanyId());
             userModel.setPassword(passwordGenerator.generatePassword(12));
             userModel.setStatus(EStatus.ACTIVE);
 
             String text="Merhaba "+userModel.getName()+
-                    " kayitiniz basarili olmustuur"+ "Sifreniz: "+userModel.getPassword()+"  Sirketmailinz: "+userModel.getCompanyEmail();
-
+                    " Kayıt Başarılı Olmuştur. Şifreniz: "+userModel.getPassword()+"  Şirket Mailiniz: "+userModel.getCompanyEmail();
 
             save(userModel);
             MailModel mailModel= MailModel.builder().email(userModel.getEmail()).text(text).subject("yeni kayit").build();
             mailProducer.sendMail(mailModel);
 
-
         }return null;
     }
+
     public UserProfile updateprofileManager( UserProfileUpdateDto dto){
         UserProfile userProfile=findById(dto.getId()).get();
         userProfile.setName(dto.getName());
@@ -627,9 +612,10 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         userProfile.setPhone(dto.getPhone());
         update(userProfile);
         return userProfile;
-
     }
+
     public void deleteprofilebycompanymanager(String token, Long id) {
+
         if (!jwtTokenManager.verifyToken(token)) {
             throw new UserManagerException(ErrorType.INVALID_TOKEN);
         }
@@ -648,9 +634,8 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
                 .subject("Delete your account").build();
         mailProducer.sendMail(mailModel);
         System.out.println(mailModel);
-
-
     }
+
     public UserProfile maasekle(Long sayi,int maas,String name,String surname,Long company ){
         Double maas1= (double) maas;
         Double tax=null;
@@ -665,25 +650,12 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         userProfile.setSalary(maas1);
         ExpenseModel model=ExpenseModel.builder().name(name).sayi(sayi).maas(maas).surname(surname).company(company).build();
         expenseProducer.sendCompany(model);
-
-        ;
         return update(userProfile);
-
     }
+
     public boolean avanstelebi(String tokken, String neden, Integer miktar) throws ParseException {
 
-
         UserProfile userProfile1=findById(jwtTokenManager.getIdFromToken(tokken).get()).get();
-
-
-
-
-
-
-
-
-
-
 
         UserProfile userProfile=findAll().stream().filter(a->a.getRole().equals(ERole.COMPANY_MANAGER))
                 .filter(a -> a.getCompanyId() != null && a.getCompanyId().equals(userProfile1.getCompanyId())).findFirst().get();
@@ -702,7 +674,9 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
        avansRepository.save(avanstelebi);
         return true;
     }
+
     public List<Avanstelebi> findallavansreguestbycompanymanager(String tokken) {
+
         System.out.println("burdasinfindbyadim");
         System.out.println(tokken);
         System.out.println("1."+jwtTokenManager.getRoleFromToken(tokken).get());
@@ -722,8 +696,8 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         }
     }
 
-
     public void deleteavansrequestbyadmin(String token, Long id) {
+
         if (!jwtTokenManager.verifyToken(token)) {
             throw new UserManagerException(ErrorType.INVALID_TOKEN);
         }
@@ -744,10 +718,10 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
                 .subject("Delete your request").build();
         mailProducer.sendMail(mailModel);
         System.out.println(mailModel);
-
-
     }
+
     public void activeavansrequestbyadmin(String token, Long id) {
+
         if (!jwtTokenManager.verifyToken(token)) {
             throw new UserManagerException(ErrorType.INVALID_TOKEN);
         }
@@ -771,15 +745,6 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         ExpenseModel expenseModel=ExpenseModel.builder().name(userProfile.getName()).sayi(userProfile.getId())
                 .surname(userProfile.getSurName()).company(userProfile.getCompanyId()).expense(avanstelebi.getAvanstalebi()).about(avanstelebi.getNedeni()).build();
         expenseProducer.sendCompany(expenseModel);
-
-
         save(userProfile);
-
-
     }
-
 }
-
-
-
-

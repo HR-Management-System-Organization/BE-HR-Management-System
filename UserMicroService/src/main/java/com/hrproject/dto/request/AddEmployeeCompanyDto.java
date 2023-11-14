@@ -48,8 +48,11 @@ public class AddEmployeeCompanyDto {
 
     private String avatar;
 
-
     @NotEmpty(message = "Birthday cannot be empty" )
     private String birthday;
+
     private String companyname;
+
+    @NotEmpty(message = "Gender cannot be empty")
+    private String gender;
 }
