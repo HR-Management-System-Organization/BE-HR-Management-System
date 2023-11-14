@@ -1,0 +1,324 @@
+
+g	java:S112y"FDefine and throw a dedicated exception instead of using a generic one.(Ò‚Òéüÿÿÿÿ8…¬êì¼1
+o
+java:S1192Œ"LDefine a constant instead of duplicating this literal "Uyeliginiz " 7 times.(»ëØüÿÿÿÿ8¬êì¼1
+q
+java:S1192Ò"SDefine a constant instead of duplicating this literal "burdasinfindbyadim" 6 times.(úó‚8¬êì¼1
+
+java:S1319Ğ"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(ºƒ¾•8¶¬êì¼1
+?
+java:S1643•"Use a StringBuilder instead.(¶Ÿıæşÿÿÿÿ8Ã¬êì¼1
+†
+java:S1488Ë"cImmediately return this expression instead of assigning it to the temporary variable "userProfile".(®å£ùÿÿÿÿ8Å¬êì¼1
+†
+java:S1488®"cImmediately return this expression instead of assigning it to the temporary variable "userProfile".(®É³Úüÿÿÿÿ8Å¬êì¼1
+E
+java:S5411€"(Use a primitive boolean expression here.(×Ûy8Ó¬êì¼1
+E
+java:S5411–"(Use a primitive boolean expression here.(×Ûy8×¬êì¼1
+E
+java:S5411¶"(Use a primitive boolean expression here.(×Ûy8Ù¬êì¼1
+E
+java:S5411Î"(Use a primitive boolean expression here.(×Ûy8š­êì¼1
+E
+java:S5411ğ"(Use a primitive boolean expression here.(×Ûy8›­êì¼1
+E
+java:S5411Â"(Use a primitive boolean expression here.(×Ûy8œ­êì¼1
+E
+java:S5411Ú"(Use a primitive boolean expression here.(×Ûy8­êì¼1
+_
+java:S4973¾"<Strings and Boxed types should be compared using "equals()".(¿ûü›üÿÿÿÿ8¨­êì¼1
+s
+java:S3655™"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ìÄ´¼úÿÿÿÿ8ÍÊêì¼1
+s
+java:S3655¶"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÏŠı¼ÿÿÿÿÿ8‰Ëêì¼1
+s
+java:S3655Ê"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8ƒËêì¼1
+n
+java:S3655®"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(æó’‰8‰Ëêì¼1
+s
+java:S3655Ë"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(®å£ùÿÿÿÿ8ÛÊêì¼1
+m
+java:S3655—"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(‘”¢8…Ëêì¼1
+s
+java:S3655¾"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8ˆËêì¼1
+s
+java:S3655ã"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(öµĞ†ûÿÿÿÿ8İÊêì¼1
+m
+java:S3655Y"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Œ§Å’8‡Ëêì¼1
+s
+java:S3655õ"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÏŠı¼ÿÿÿÿÿ8ıÊêì¼1
+s
+java:S3655"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8„Ëêì¼1
+s
+java:S3655Ê"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8ÌÊêì¼1
+s
+java:S3655È"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(‡øúÕşÿÿÿÿ8ˆËêì¼1
+n
+java:S3655¯"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(¬ÿ›ÿ8ŞÊêì¼1
+n
+java:S3655"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(©ŞÂİ8ÔÊêì¼1
+s
+java:S3655¶"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÏŠı¼ÿÿÿÿÿ8ÍÊêì¼1
+s
+java:S3655ƒ"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Û¿‹øÿÿÿÿ8áÊêì¼1
+s
+java:S3655Ñ"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Û¿‹øÿÿÿÿ8ÍÊêì¼1
+s
+java:S3655Ì"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ã¤ã‰øÿÿÿÿ8ŞÊêì¼1
+s
+java:S3655Ë"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(®å£ùÿÿÿÿ8ÔÊêì¼1
+n
+java:S3655½"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ˆÿÿì8ÜÊêì¼1
+s
+java:S3655õ"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÏŠı¼ÿÿÿÿÿ8ÜÊêì¼1
+s
+java:S3655Å"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Û¿‹øÿÿÿÿ8šËêì¼1
+n
+java:S3655²"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(æó’‰8ÎÊêì¼1
+s
+java:S3655¾"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8ˆËêì¼1
+s
+java:S3655ä"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ã¤ã‰øÿÿÿÿ8šËêì¼1
+s
+java:S3655®"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(®É³Úüÿÿÿÿ8úÊêì¼1
+s
+java:S3655‡"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8ıÊêì¼1
+s
+java:S3655²"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÏŠı¼ÿÿÿÿÿ8áÊêì¼1
+s
+java:S3655™"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Û¿‹øÿÿÿÿ8ıÊêì¼1
+s
+java:S3655¹"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Û¿‹øÿÿÿÿ8€Ëêì¼1
+s
+java:S3655Ö"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8ÕÊêì¼1
+n
+java:S3655§"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Õÿ»ê8üÊêì¼1
+n
+java:S3655"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ØµŞÂ8ÍÊêì¼1
+s
+java:S3655Ö"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8ÜÊêì¼1
+s
+java:S3655Ë"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(öµĞ†ûÿÿÿÿ8ÌÊêì¼1
+s
+java:S3655İ"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Û¿‹øÿÿÿÿ8ıÊêì¼1
+s
+java:S3655ó"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Û¿‹øÿÿÿÿ8âÊêì¼1
+n
+java:S3655¥"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(¬ÿ›ÿ8ıÊêì¼1
+s
+java:S3655×"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÕÉ¶¸ùÿÿÿÿ8ÖÊêì¼1
+n
+java:S3655ó"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(æó’‰8ƒËêì¼1
+s
+java:S3655ø"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8İÊêì¼1
+s
+java:S3655"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8ƒËêì¼1
+s
+java:S3655â"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8›Ëêì¼1
+s
+java:S3655ø"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8ÓÊêì¼1
+s
+java:S3655¬"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÏŠı¼ÿÿÿÿÿ8ÍÊêì¼1
+n
+java:S3655ˆ"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(©ŞÂİ8ƒËêì¼1
+s
+java:S3655¿"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÕÉ¶¸ùÿÿÿÿ8ˆËêì¼1
+s
+java:S3655÷"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÏŠı¼ÿÿÿÿÿ8İÊêì¼1
+s
+java:S3655÷"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÏŠı¼ÿÿÿÿÿ8„Ëêì¼1
+s
+java:S3655²"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÏŠı¼ÿÿÿÿÿ8šËêì¼1
+s
+java:S3655å"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(áîëşÿÿÿÿ8âÊêì¼1
+m
+java:S3655c"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ˆÿÿì8âÊêì¼1
+n
+java:S3655‚"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ì×‚¯8âÊêì¼1
+n
+java:S3655ª"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ˆÿÿì8İÊêì¼1
+s
+java:S3655ã"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Ô†Õ·úÿÿÿÿ8„Ëêì¼1
+s
+java:S3655Ş"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÑÅ¦½ÿÿÿÿÿ8ÜÊêì¼1
+s
+java:S3655Æ"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÑÅ¦½ÿÿÿÿÿ8âÊêì¼1
+r
+java:S3655]"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ä„Ëïşÿÿÿÿ8›Ëêì¼1
+s
+java:S3655À"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(‹ÁÁ˜ûÿÿÿÿ8ÌÊêì¼1
+t
+java:S3655"VCall "userProfile.isPresent()" or "!userProfile.isEmpty()" before accessing the value.(È†‘½8ùóîì¼1
+m
+java:S3655å"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(‘”¢8ıÊêì¼1
+s
+java:S3655ô"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÑÅ¦½ÿÿÿÿÿ8ÜÊêì¼1
+s
+java:S3655Ø"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(‹ÁÁ˜ûÿÿÿÿ8‚Ëêì¼1
+s
+java:S3655×"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Ô†Õ·úÿÿÿÿ8ŞÊêì¼1
+m
+java:S3655—"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(‘”¢8ŞÊêì¼1
+n
+java:S3655ğ"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Õÿ»ê8šËêì¼1
+n
+java:S3655î"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(¬ÿ›ÿ8İÊêì¼1
+n
+java:S3655ñ"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(æó’‰8âÊêì¼1
+n
+java:S3655‹"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ˆÿÿì8ŞÊêì¼1
+s
+java:S3655š"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(•›ëµøÿÿÿÿ8ÎÊêì¼1
+n
+java:S3655ğ"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(¬ÿ›ÿ8üÊêì¼1
+s
+java:S3655÷"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(‡øúÕşÿÿÿÿ8ÌÊêì¼1
+n
+java:S3655±"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Õÿ»ê8ˆËêì¼1
+s
+java:S3655®"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(®É³Úüÿÿÿÿ8ƒËêì¼1
+m
+java:S3655å"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(‘”¢8ŠËêì¼1
+s
+java:S3655„"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(•›ëµøÿÿÿÿ8İÊêì¼1
+s
+java:S3655‡"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8ÍÊêì¼1
+s
+java:S3655Ò"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÑÅ¦½ÿÿÿÿÿ8áÊêì¼1
+s
+java:S3655"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ìÄ´¼úÿÿÿÿ8ˆËêì¼1
+n
+java:S3655¨"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(æó’‰8ÌÊêì¼1
+r
+java:S3655g"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ä„Ëïşÿÿÿÿ8ˆËêì¼1
+s
+java:S3655â"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(óîÑøÿÿÿÿ8ÓÊêì¼1
+n
+java:S3655ò"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(Õÿ»ê8ƒËêì¼1
+s
+java:S3655º"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÑÅ¦½ÿÿÿÿÿ8üÊêì¼1
+s
+java:S3655¬"PCall "Optional#isPresent()" or "!Optional#isEmpty()" before accessing the value.(ÏŠı¼ÿÿÿÿÿ8ıÊêì¼1
+X	java:S125$"<This block of commented-out lines of code should be removed.(çÈ—8ĞËêì¼1
+L	java:S106V"+Replace this use of System.out by a logger.(Óğ“ üÿÿÿÿ8àËêì¼1
+G	java:S106\"+Replace this use of System.out by a logger.(òÖØÕ8éËêì¼1
+G	java:S106f"+Replace this use of System.out by a logger.(òÖØÕ8ñËêì¼1
+M	java:S106"+Replace this use of System.out by a logger.(ùÏçáúÿÿÿÿ8¢Ìêì¼1
+H	java:S106“"+Replace this use of System.out by a logger.(÷¤›Ü8¤Ìêì¼1
+M	java:S106˜"+Replace this use of System.out by a logger.(¯²ÙÒıÿÿÿÿ8¥Ìêì¼1
+M	java:S106›"+Replace this use of System.out by a logger.(†Êú…øÿÿÿÿ8§Ìêì¼1
+M	java:S106"+Replace this use of System.out by a logger.(«œÒôşÿÿÿÿ8¨Ìêì¼1
+H	java:S106®"+Replace this use of System.out by a logger.(üÉÂ”8¯Ìêì¼1
+M	java:S106±"+Replace this use of System.out by a logger.(¾ºåÿıÿÿÿÿ8±Ìêì¼1
+|
+java:S2142È"^Either re-interrupt this method or rethrow the "InterruptedException" that can be caught here.(ä ¹€8·Ìêì¼1
+H	java:S106Ò"+Replace this use of System.out by a logger.(úó‚8»Ìêì¼1
+M	java:S106Ó"+Replace this use of System.out by a logger.(•òÒåÿÿÿÿÿ8¼Ìêì¼1
+H	java:S106Ş"+Replace this use of System.out by a logger.(úó‚8ÅÌêì¼1
+M	java:S106ß"+Replace this use of System.out by a logger.(•òÒåÿÿÿÿÿ8ÇÌêì¼1
+H	java:S106ì"+Replace this use of System.out by a logger.(úó‚8ÒÌêì¼1
+M	java:S106í"+Replace this use of System.out by a logger.(•òÒåÿÿÿÿÿ8ÒÌêì¼1
+H	java:S106î"+Replace this use of System.out by a logger.(¬ÿ›ÿ8ÔÌêì¼1
+H	java:S106ğ"+Replace this use of System.out by a logger.(Õÿ»ê8ÖÌêì¼1
+H	java:S106ô"+Replace this use of System.out by a logger.(½á½÷8ØÌêì¼1
+M	java:S106ö"+Replace this use of System.out by a logger.(‡Ìî™ùÿÿÿÿ8ÚÌêì¼1
+M	java:S106ø"+Replace this use of System.out by a logger.(é¿áÜùÿÿÿÿ8ÛÌêì¼1
+?
+java:S1116ø"Remove this empty statement.(é¿áÜùÿÿÿÿ8ÛÌêì¼1
+M	java:S106ƒ"+Replace this use of System.out by a logger.(Û¿‹øÿÿÿÿ8áÌêì¼1
+M	java:S106Š"+Replace this use of System.out by a logger.(Ö„ÿÿÿÿÿ8æÌêì¼1
+M	java:S106‘"+Replace this use of System.out by a logger.(††ìäúÿÿÿÿ8íÌêì¼1
+M	java:S106™"+Replace this use of System.out by a logger.(Û¿‹øÿÿÿÿ8ğÌêì¼1
+M	java:S106 "+Replace this use of System.out by a logger.(Ö„ÿÿÿÿÿ8öÌêì¼1
+M	java:S106§"+Replace this use of System.out by a logger.(††ìäúÿÿÿÿ8úÌêì¼1
+^	java:S125¿"<This block of commented-out lines of code should be removed.(ÛŞßşÿÿÿÿ8’Íêì¼1
+H	java:S106Û"+Replace this use of System.out by a logger.(×óÂ¹8°Íêì¼1
+d
+java:S1854û"ARemove this useless assignment to local variable "resmitattiler".(ĞéÁüüÿÿÿÿ8³Íêì¼1
+_
+java:S1854÷"ARemove this useless assignment to local variable "dayOfWeekDate".(ƒãÅ¢8³Íêì¼1
+P
+java:S1659ñ"-Declare "firstDateMillis" on a separate line.(°äµıÿÿÿÿ8¹Íêì¼1
+H	java:S106ã"+Replace this use of System.out by a logger.(Öëæ¶8ºÍêì¼1
+H	java:S106ı"+Replace this use of System.out by a logger.(ûß²Ô8ÅÍêì¼1
+M	java:S106ÿ"+Replace this use of System.out by a logger.(† ¾›ùÿÿÿÿ8ÇÍêì¼1
+M	java:S106…"+Replace this use of System.out by a logger.(´‹¹öşÿÿÿÿ8ÉÍêì¼1
+]
+java:S4034‰":Replace this negation and "anyMatch()" with "noneMatch()".(ıó”Âûÿÿÿÿ8ÊÍêì¼1
+H	java:S106‘"+Replace this use of System.out by a logger.(ºÖ—8ÓÍêì¼1
+H	java:S106£"+Replace this use of System.out by a logger.(úó‚8ŞÍêì¼1
+M	java:S106¤"+Replace this use of System.out by a logger.(•òÒåÿÿÿÿÿ8ßÍêì¼1
+H	java:S106¥"+Replace this use of System.out by a logger.(¬ÿ›ÿ8âÍêì¼1
+H	java:S106§"+Replace this use of System.out by a logger.(Õÿ»ê8äÍêì¼1
+H	java:S106«"+Replace this use of System.out by a logger.(½á½÷8èÍêì¼1
+M	java:S106­"+Replace this use of System.out by a logger.(‡Ìî™ùÿÿÿÿ8ìÍêì¼1
+M	java:S106¯"+Replace this use of System.out by a logger.(é¿áÜùÿÿÿÿ8ñÍêì¼1
+?
+java:S1116¯"Remove this empty statement.(é¿áÜùÿÿÿÿ8óÍêì¼1
+M	java:S106¹"+Replace this use of System.out by a logger.(Û¿‹øÿÿÿÿ8€Îêì¼1
+M	java:S106Â"+Replace this use of System.out by a logger.(³İïıÿÿÿÿ8Îêì¼1
+M	java:S106É"+Replace this use of System.out by a logger.(††ìäúÿÿÿÿ8šÎêì¼1
+M	java:S106Ñ"+Replace this use of System.out by a logger.(Û¿‹øÿÿÿÿ8£Îêì¼1
+M	java:S106Ú"+Replace this use of System.out by a logger.(³İïıÿÿÿÿ8µÎêì¼1
+M	java:S106á"+Replace this use of System.out by a logger.(††ìäúÿÿÿÿ8üÎêì¼1
+H	java:S106î"+Replace this use of System.out by a logger.(úó‚8Ïêì¼1
+M	java:S106ï"+Replace this use of System.out by a logger.(•òÒåÿÿÿÿÿ8 Ïêì¼1
+H	java:S106ğ"+Replace this use of System.out by a logger.(¬ÿ›ÿ8¢Ïêì¼1
+H	java:S106ò"+Replace this use of System.out by a logger.(Õÿ»ê8¥Ïêì¼1
+H	java:S106ö"+Replace this use of System.out by a logger.(½á½÷8®Ïêì¼1
+M	java:S106ø"+Replace this use of System.out by a logger.(‡Ìî™ùÿÿÿÿ8²Ïêì¼1
+M	java:S106ú"+Replace this use of System.out by a logger.(é¿áÜùÿÿÿÿ8´Ïêì¼1
+?
+java:S1116ú"Remove this empty statement.(é¿áÜùÿÿÿÿ8´Ïêì¼1
+^	java:S125†"<This block of commented-out lines of code should be removed.(°¦ÜÂşÿÿÿÿ8ÂÏêì¼1
+Y	java:S125ˆ"<This block of commented-out lines of code should be removed.(¦Øšİ8ÄÏêì¼1
+t
+java:S2159¢"VRemove this call to "equals"; comparisons between unrelated types always return false.(öŠÄ8ŞÏêì¼1
+y
+java:S2159¥"VRemove this call to "equals"; comparisons between unrelated types always return false.(¥ÖØ¬ùÿÿÿÿ8Ÿúîì¼1
+K
+java:S2447á"-Null is returned but a "Boolean" is expected.(ö±²Ñ8âÏêì¼1
+H	java:S106±"+Replace this use of System.out by a logger.(½á½÷8èÏêì¼1
+H	java:S106´"+Replace this use of System.out by a logger.(”‘ö8îÏêì¼1
+H	java:S106µ"+Replace this use of System.out by a logger.(Ã°ÇŸ8‘Ğêì¼1
+M	java:S106¶"+Replace this use of System.out by a logger.(¼ıŠşÿÿÿÿ8’Ğêì¼1
+Y	java:S125¼"<This block of commented-out lines of code should be removed.(É¤¦Å8¡Ğêì¼1
+M	java:S106Ç"+Replace this use of System.out by a logger.(¸Ïö®úÿÿÿÿ8¤Ğêì¼1
+Y	java:S125Í"<This block of commented-out lines of code should be removed.(Ã÷¯ú8ªĞêì¼1
+S
+java:S2209×"5Change this instance-reference to a static reference.(Ğ’ä™8°Ğêì¼1
+M	java:S106ó"+Replace this use of System.out by a logger.(Û¿‹øÿÿÿÿ8¿Ğêì¼1
+M	java:S106ú"+Replace this use of System.out by a logger.(Ãó³Ÿùÿÿÿÿ8ÔĞêì¼1
+M	java:S106"+Replace this use of System.out by a logger.(††ìäúÿÿÿÿ8ÖĞêì¼1
+Z
+java:S1854‡"7Remove this useless assignment to local variable "tax".(ø ›Õøÿÿÿÿ8×Ğêì¼1
+U
+java:S1854ˆ"7Remove this useless assignment to local variable "tax".(íÀ¸8×Ğêì¼1
+[
+java:S1854"=Remove this useless assignment to local variable "localDate".(«¿ëÄ8ØĞêì¼1
+V
+java:S1854Œ"8Remove this useless assignment to local variable "brut".(–õïÒ8ÙĞêì¼1
+G
+java:S1481Œ")Remove this unused "brut" local variable.(–õïÒ8ÛĞêì¼1
+L
+java:S1481".Remove this unused "localDate" local variable.(«¿ëÄ8ßĞêì¼1
+
+java:S1130•"qRemove the declaration of thrown exception 'java.text.ParseException', as it cannot be thrown from method's body.(şÈËî8ãĞêì¼1
+H	java:S106œ"+Replace this use of System.out by a logger.(Ì¿ÆÇ8éĞêì¼1
+^	java:S125"<This block of commented-out lines of code should be removed.(öÙ‘¾üÿÿÿÿ8ëĞêì¼1
+H	java:S106­"+Replace this use of System.out by a logger.(úó‚8øĞêì¼1
+M	java:S106®"+Replace this use of System.out by a logger.(•òÒåÿÿÿÿÿ8ùĞêì¼1
+H	java:S106¯"+Replace this use of System.out by a logger.(¬ÿ›ÿ8úĞêì¼1
+H	java:S106±"+Replace this use of System.out by a logger.(Õÿ»ê8ıĞêì¼1
+H	java:S106µ"+Replace this use of System.out by a logger.(½á½÷8€Ñêì¼1
+M	java:S106·"+Replace this use of System.out by a logger.(‡Ìî™ùÿÿÿÿ8ƒÑêì¼1
+M	java:S106¹"+Replace this use of System.out by a logger.(é¿áÜùÿÿÿÿ8ˆÑêì¼1
+?
+java:S1116¹"Remove this empty statement.(é¿áÜùÿÿÿÿ8‰Ñêì¼1
+M	java:S106Å"+Replace this use of System.out by a logger.(Û¿‹øÿÿÿÿ8Ñêì¼1
+G	java:S106Î"+Replace this use of System.out by a logger.(ãÿ‚8–Ñêì¼1
+M	java:S106Õ"+Replace this use of System.out by a logger.(††ìäúÿÿÿÿ8œÑêì¼1
+M	java:S106İ"+Replace this use of System.out by a logger.(Û¿‹øÿÿÿÿ8ŸÑêì¼1
+G	java:S106æ"+Replace this use of System.out by a logger.(ãÿ‚8§Ñêì¼1
+M	java:S106í"+Replace this use of System.out by a logger.(††ìäúÿÿÿÿ8¬Ñêì¼1

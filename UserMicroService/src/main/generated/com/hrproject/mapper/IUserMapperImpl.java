@@ -7,13 +7,14 @@ import com.hrproject.dto.response.UserProfileFindAllResponseDto;
 import com.hrproject.rabbitmq.model.RegisterElasticModel;
 import com.hrproject.rabbitmq.model.RegisterModel;
 import com.hrproject.repository.entity.UserProfile;
+import com.hrproject.repository.enums.EGender;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-13T18:30:01+0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.8 (Amazon.com Inc.)"
+    date = "2023-11-14T13:04:59+0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.9 (Amazon.com Inc.)"
 )
 @Component
 public class IUserMapperImpl implements IUserMapper {
@@ -65,6 +66,9 @@ public class IUserMapperImpl implements IUserMapper {
         userProfile.username( model.getUsername() );
         userProfile.password( model.getPassword() );
         userProfile.phone( model.getPhone() );
+        if ( model.getGender() != null ) {
+            userProfile.gender( Enum.valueOf( EGender.class, model.getGender() ) );
+        }
         userProfile.address( model.getAddress() );
         userProfile.avatar( model.getAvatar() );
         userProfile.name( model.getName() );
