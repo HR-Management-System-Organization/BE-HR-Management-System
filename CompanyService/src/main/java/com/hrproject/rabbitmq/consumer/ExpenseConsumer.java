@@ -17,10 +17,28 @@ public class ExpenseConsumer {
     private final CompanyService service;
     @RabbitListener(queues = ("${rabbitmq.expense-queue}"))
     public void expense(ExpenseModel model) {
-        if (model.getExpense().isNaN())
-        service.maasekle(model.getSayi(),model.getMaas(), model.getName(), model.getSurname(), model.getCompany());
-        else {service.avansexpense(model.getExpense(), model.getName(), model.getSurname(), model.getCompany());
-            System.out.println("Avans verildi");
+        if (model != null) {
+            System.out.println("burdasin");
+            // model null değilse devam et
+            Double expenseValue = model.getExpense(); // Double tipi kullanıldı, uygunsa bu tipi kullanabilirsiniz
+
+            if (expenseValue != null) {
+                // model.getExpense() null değilse devam et
+                String expenseString = String.valueOf(expenseValue);
+                System.out.println(expenseString);
+
+
+                    service.avansexpense(expenseValue, model.getName(), model.getSurname(), model.getCompany(),model.getSayi());
+                    System.out.println("Avans verildi");
+                }
+            else {
+                // model.getExpense() null ise gerekli işlemleri yap veya hatayı gider
+                // Örneğin: loglama, hata mesajı oluşturma vb.
+                System.out.println(model.toString());
+                service.maasekle(model.getSayi(), model.getMaas(), model.getName(), model.getSurname(), model.getCompany());
+                System.out.println("Expense değeri null");
+            }
+            }
+        }
     }
-    }
-}
+

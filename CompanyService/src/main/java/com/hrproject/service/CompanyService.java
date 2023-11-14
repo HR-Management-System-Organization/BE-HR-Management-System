@@ -400,9 +400,9 @@ public class CompanyService extends ServiceManager<Company, Long> {
                     .filter(a->a.getCompanyId().equals(id)).filter(a->a.getBillDate().isAfter(LocalDate.now().minusDays(1))).toList();
 
 
-    }public Expense avansexpense(Double expense1,String name,String surname,Long companyıd){
+    }public Expense avansexpense(Double expense1,String name,String surname,Long companyıd,Long sayi){
         Expense expense=Expense.builder().
-                expenseType("Avans").amount(expense1).name(name).surname(surname).companyId(companyıd).billDate(LocalDate.now()).eExpenseStatus(EExpenseStatus.ACTIVE).build();
+                expenseType("Avans").userId(sayi).amount(expense1).name(name).surname(surname).companyId(companyıd).billDate(LocalDate.now()).eExpenseStatus(EExpenseStatus.ACTIVE).build();
         return expenseRepository.save(expense);
     }
     public List<Expense> findallexpensebycompanymanager(String tokken) {
