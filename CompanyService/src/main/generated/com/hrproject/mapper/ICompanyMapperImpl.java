@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-13T18:29:36+0300",
-    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.8 (Amazon.com Inc.)"
+    date = "2023-11-14T13:57:03+0300",
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.9 (Amazon.com Inc.)"
 )
 @Component
 public class ICompanyMapperImpl implements ICompanyMapper {

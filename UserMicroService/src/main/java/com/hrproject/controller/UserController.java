@@ -62,14 +62,6 @@ public class UserController {
 //        return ResponseEntity.ok(employeeList);
 //    }
 
-
-
-
-
-
-
-
-
     @GetMapping(EndPoints.FIND_BY_ID + "/{authId}")
     public ResponseEntity<UserProfile> findByAuthId(@PathVariable Long authId) {
         return ResponseEntity.ok(userService.findEmployeeByAuthId(authId));
@@ -90,6 +82,7 @@ public class UserController {
 
         return ResponseEntity.ok("Kayıt oldu");
     }
+
     @PostMapping("/findallbyadmin")
     public ResponseEntity<List<UserProfile>> findallbyadmin(
             @RequestParam(required = false) String token,

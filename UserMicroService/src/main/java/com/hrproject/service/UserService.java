@@ -543,7 +543,12 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         userModel.setPhone(addEmployeeCompanyDto.getPhone());
         userModel.setPassword(addEmployeeCompanyDto.getPassword());
         userModel.setCompanyId(userProfile.get().getCompanyId());
-        userModel.setGender(addEmployeeCompanyDto.getGender());
+        if (addEmployeeCompanyDto.getGender().equals("MALE")) {
+            userModel.setGender(EGender.MALE);
+        }
+        if (addEmployeeCompanyDto.getGender().equals("FEMALE")) {
+            userModel.setGender(EGender.FEMALE);
+        }
 
         save(userModel);
     }

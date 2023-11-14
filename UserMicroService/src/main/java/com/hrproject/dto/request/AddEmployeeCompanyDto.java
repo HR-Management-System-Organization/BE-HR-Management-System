@@ -1,5 +1,6 @@
 package com.hrproject.dto.request;
 
+import com.hrproject.repository.enums.EGender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
