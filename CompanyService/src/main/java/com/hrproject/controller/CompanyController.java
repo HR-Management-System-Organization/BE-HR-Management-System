@@ -170,6 +170,7 @@ public class CompanyController {
         if (token != null) {
             System.out.println("Sorgu parametresinden gelen token: " + token);
             // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+            token = token.substring(7);
         } else if (authorization != null) {
             // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
             if (authorization.startsWith("Bearer ")) {
@@ -181,7 +182,9 @@ public class CompanyController {
             }
         } else if (requestBody != null && requestBody.containsKey("token")) {
             System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
-            // İstek gövdesinden gelen token'ı işleyebilirsiniz
+            String tokenWithoutBearer = requestBody.get("token").substring(7); // 7, "Bearer " prefix uzunluğudur
+            token = tokenWithoutBearer;
+            System.out.println(token);
         } else {
             System.out.println("Token sağlanmadı");
         }
