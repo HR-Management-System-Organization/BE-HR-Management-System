@@ -58,6 +58,7 @@ public class CommentController {
         if (token != null) {
             System.out.println("Sorgu parametresinden gelen token: " + token);
             // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+            token = token.substring(7);
         } else if (authorization != null) {
             // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
             if (authorization.startsWith("Bearer ")) {
@@ -69,7 +70,9 @@ public class CommentController {
             }
         } else if (requestBody != null && requestBody.containsKey("token")) {
             System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
-            // İstek gövdesinden gelen token'ı işleyebilirsiniz
+            String tokenWithoutBearer = requestBody.get("token").substring(7); // 7, "Bearer " prefix uzunluğudur
+            token = tokenWithoutBearer;
+            System.out.println(token);
         } else {
             System.out.println("Token sağlanmadı");
         }
@@ -80,18 +83,32 @@ public class CommentController {
     @PostMapping("/activationbyadmin")
     public void activasyonbyadmin(
             @RequestParam Integer authorId,
-            @RequestHeader(required = false) String authorization) {
+            @RequestParam(required = false) String token,
+            @RequestHeader(required = false) String authorization,
+            @RequestBody(required = false) Map<String, String> requestBody) {
         System.out.println(authorId);
-        String token = null;
+
         if (!authorId.equals(null)) {
-            if (authorization.startsWith("Bearer ")) {
-                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
-                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
-                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
-                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+            if (token != null) {
+                System.out.println("Sorgu parametresinden gelen token: " + token);
+                // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+                token = token.substring(7);
+            } else if (authorization != null) {
+                // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
+                if (authorization.startsWith("Bearer ")) {
+                    String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                    System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                    // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                    // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                    token = tokenWithoutBearer;
+                }
+            } else if (requestBody != null && requestBody.containsKey("token")) {
+                System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
+                String tokenWithoutBearer = requestBody.get("token").substring(7); // 7, "Bearer " prefix uzunluğudur
                 token = tokenWithoutBearer;
                 System.out.println(token);
-
+            } else {
+                System.out.println("Token sağlanmadı");
             }
             Long longSayi = (long) authorId; // int'i Long'a dönüştür
 
@@ -105,18 +122,32 @@ public class CommentController {
     @PostMapping("/deletebyadmin")
     public void deletebyadmin(
             @RequestParam Integer authorId,
-            @RequestHeader(required = false) String authorization) {
+            @RequestParam(required = false) String token,
+            @RequestHeader(required = false) String authorization,
+            @RequestBody(required = false) Map<String, String> requestBody) {
         System.out.println(authorId);
-        String token = null;
+
         if (!authorId.equals(null)) {
-            if (authorization.startsWith("Bearer ")) {
-                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
-                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
-                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
-                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+            if (token != null) {
+                System.out.println("Sorgu parametresinden gelen token: " + token);
+                // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+                token = token.substring(7);
+            } else if (authorization != null) {
+                // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
+                if (authorization.startsWith("Bearer ")) {
+                    String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                    System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                    // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                    // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                    token = tokenWithoutBearer;
+                }
+            } else if (requestBody != null && requestBody.containsKey("token")) {
+                System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
+                String tokenWithoutBearer = requestBody.get("token").substring(7); // 7, "Bearer " prefix uzunluğudur
                 token = tokenWithoutBearer;
                 System.out.println(token);
-
+            } else {
+                System.out.println("Token sağlanmadı");
             }
             System.out.println("burdayim");
             Long longSayi = (long) authorId; // int'i Long'a dönüştür
