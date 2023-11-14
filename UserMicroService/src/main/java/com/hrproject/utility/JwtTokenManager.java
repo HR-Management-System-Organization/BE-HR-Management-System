@@ -47,7 +47,7 @@ public class JwtTokenManager {
 
         String token = null;
 
-        Date date = new Date(System.currentTimeMillis() + (1000 * 60 * 5));
+        Date date = new Date(System.currentTimeMillis() + (1000 * 60 * 50));
 
         try {
 

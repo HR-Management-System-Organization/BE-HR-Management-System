@@ -479,11 +479,14 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
                 .subject("Apprpve your request").build();
         mailProducer.sendMail(mailModel);
         System.out.println(mailModel);
-        if (izintelebi.getIzinTur().equals(EIzinTur.Yillikizin))
+        System.out.println(izintelebi.getIzinTur().toString()+"frrwr");
+        if (izintelebi.getIzinTur().toString().equals(EIzinTur.Yillikizin.toString()))
+            System.out.println("burdayiz");
             userProfile.setTotalAnnualLeave(userProfile.getTotalAnnualLeave()- izintelebi.getIzinsuresi());
-        if (izintelebi.getIzinTur().equals(EIzinTur.Annelikizini))
+        System.out.println(userProfile.getTotalAnnualLeave());
+        if (izintelebi.getIzinTur().toString().equals(EIzinTur.Annelikizini.toString()))
             userProfile.setParentalLeave(userProfile.getParentalLeave()- izintelebi.getIzinsuresi());
-        if (izintelebi.getIzinTur().equals(EIzinTur.Babalikizini))
+        if (izintelebi.getIzinTur().toString().equals(EIzinTur.Babalikizini.toString()))
             userProfile.setParentalLeave(userProfile.getParentalLeave()- izintelebi.getIzinsuresi());
 
         save(userProfile);
@@ -564,7 +567,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             System.out.println("company id" + userProfile.getCompanyId());
             System.out.println("gelenbilgiler ->>> "+addEmployeeCompanyDto);
             System.out.println("company name "+addEmployeeCompanyDto.getCompanyname());
-
+            if (!addEmployeeCompanyDto.getGender().equals("MALE")||!addEmployeeCompanyDto.getGender().equals("FEMALE")) throw new UserManagerException(ErrorType.GENDER);
             String companyEmail = addEmployeeCompanyDto.getName() + addEmployeeCompanyDto.getSurName() + "@"+addEmployeeCompanyDto.getCompanyname().replaceAll("\\s", "")+".com.tr";
 
             companyProducer.sendCompany(CompanyModel.builder().companyId(userProfile.getCompanyId()).mail(companyEmail).build());
