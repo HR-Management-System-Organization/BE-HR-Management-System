@@ -32,4 +32,6 @@ public class MailService {
     public void rabbitMessage(MailModel mailModel) {
         sendEmail(mailModel.getEmail(), mailModel.getSubject(), mailModel.getText());
     }
+
+
 }

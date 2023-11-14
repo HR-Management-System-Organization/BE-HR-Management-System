@@ -20,12 +20,10 @@ import com.hrproject.repository.enums.EStatus;
 import com.hrproject.utility.CodeGenerator;
 import com.hrproject.utility.JwtTokenManager;
 import com.hrproject.utility.ServiceManager;
-import org.apache.catalina.connector.Response;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +39,9 @@ public class AuthService extends ServiceManager<Auth, Long> {
     private final ActivationProducer activationProducer;
 
     private final MailProducer mailProducer;
+    private final Htmlmail htmlmail;
 
-    public AuthService(IAuthRepository authRepository, JwtTokenManager jwtTokenManager, RegisterProducer registerProducer, ActivationProducer activationProducer, MailProducer mailProducer) {
+    public AuthService(IAuthRepository authRepository, JwtTokenManager jwtTokenManager, RegisterProducer registerProducer, ActivationProducer activationProducer, MailProducer mailProducer, Htmlmail htmlmail) {
 
         super(authRepository);
 
@@ -55,6 +54,7 @@ public class AuthService extends ServiceManager<Auth, Long> {
         this.activationProducer = activationProducer;
 
         this.mailProducer = mailProducer;
+        this.htmlmail = htmlmail;
     }
 
     @Transactional
@@ -106,14 +106,14 @@ public class AuthService extends ServiceManager<Auth, Long> {
                 .orElseThrow(() -> new AuthManagerException(ErrorType.INVALID_TOKEN));
 
         responseDto.setToken(token);
-
+        String mail1=htmlmail.html(token);
         String link = "http://localhost:7071/api/v1/auth/activation?token=" + token;
 
         // mail atma işlemi için mail servis ile haberleşilecek
         MailModel mailModel = MailModel.builder()
                 .email(dto.getEmail())
                 .subject("Aktivasyon Linki")
-                .text("Aktivasyon kodu ->   " + link)
+                .text(mail1)
                 .build();
 
         mailProducer.sendMail(mailModel);
