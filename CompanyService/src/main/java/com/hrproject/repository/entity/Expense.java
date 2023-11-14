@@ -33,6 +33,7 @@ public class Expense extends Base {
     private String taxZone;
     private String description;
     private String billPhoto;
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private EExpenseStatus eExpenseStatus = EExpenseStatus.PENDING;

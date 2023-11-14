@@ -768,7 +768,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
                 .subject("Apprpve your request").build();
         mailProducer.sendMail(mailModel);
         System.out.println(mailModel);
-        ExpenseModel expenseModel=ExpenseModel.builder().name(userProfile.getName())
+        ExpenseModel expenseModel=ExpenseModel.builder().name(userProfile.getName()).sayi(userProfile.getId())
                 .surname(userProfile.getSurName()).company(userProfile.getCompanyId()).expense(avanstelebi.getAvanstalebi()).about(avanstelebi.getNedeni()).build();
         expenseProducer.sendCompany(expenseModel);
 
