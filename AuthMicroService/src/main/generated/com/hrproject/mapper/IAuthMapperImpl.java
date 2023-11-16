@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-11-14T13:00:00+0300",
+    date = "2023-11-16T14:46:07+0300",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 17.0.9 (Amazon.com Inc.)"
 )
 @Component
@@ -97,6 +97,7 @@ public class IAuthMapperImpl implements IAuthMapper {
         registerModel.gender( auth.getGender() );
         registerModel.role( auth.getRole() );
         registerModel.status( auth.getStatus() );
+        registerModel.activationDate( auth.getActivationDate() );
 
         return registerModel.build();
     }

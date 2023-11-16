@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,6 +35,7 @@ public class Auth extends BaseEntity {
     private String activationCode;
 
     private String companyName;
+    private LocalDate activationDate;
 
     @Enumerated(EnumType.STRING)
     @Builder.Default

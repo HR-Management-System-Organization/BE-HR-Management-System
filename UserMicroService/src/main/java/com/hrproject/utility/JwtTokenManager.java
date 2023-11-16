@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hrproject.exception.ErrorType;
 import com.hrproject.exception.UserManagerException;
 import com.hrproject.repository.enums.ERole;
+import com.hrproject.repository.enums.EStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -43,7 +44,7 @@ public class JwtTokenManager {
         return Optional.ofNullable(token);
     }
 
-    public Optional<String> createToken(Long id, ERole role) {
+    public Optional<String> createToken(Long id, ERole role, EStatus status) {
 
         String token = null;
 
@@ -55,6 +56,7 @@ public class JwtTokenManager {
                     .withIssuer(issuer)
                     .withClaim("myId", id)
                     .withClaim("role", role.toString())
+                    .withClaim("status", status.toString())
                     .withIssuedAt(new Date())
                     .withExpiresAt(date)
                     .sign(Algorithm.HMAC512(secretKey));

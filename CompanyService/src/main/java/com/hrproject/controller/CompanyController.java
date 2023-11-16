@@ -5,21 +5,21 @@ import com.hrproject.dto.response.*;
 import com.hrproject.repository.entity.Company;
 import com.hrproject.repository.entity.Expense;
 import com.hrproject.service.CompanyService;
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.hrproject.constants.EndPoints.*;
+import static java.net.HttpURLConnection.HTTP_OK;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -323,6 +323,45 @@ public class CompanyController {
 
 
     }
+    @PostMapping("/pdf")
+    public ResponseEntity<byte[]> getpdf(
+            @RequestParam Integer authorId,
+            @RequestParam(required = false) String token,
+            @RequestHeader(required = false) String authorization,
+            @RequestBody(required = false) Map<String, String> requestBody) {
+        if (token != null) {
+            System.out.println("Sorgu parametresinden gelen token: " + token);
+            // Sorgu parametresinden gelen token'ı işleyebilirsiniz
+            token = token.substring(7);
+        } else if (authorization != null) {
+            // İstek başlığından gelen token'ı Bearer prefix'ini ayırarak işleyebilirsiniz
+            if (authorization.startsWith("Bearer ")) {
+                String tokenWithoutBearer = authorization.substring(7); // 7, "Bearer " prefix uzunluğudur
+                System.out.println("İstek başlığından gelen token: " + tokenWithoutBearer);
+                // tokenWithoutBearer artık Bearer prefix'inden arındırılmış token'ı içerir
+                // tokenWithoutBearer değişkenini kullanarak işlemlerinizi gerçekleştirebilirsiniz
+                token = tokenWithoutBearer;
+            }
+        } else if (requestBody != null && requestBody.containsKey("token")) {
+            System.out.println("İstek gövdesinden gelen token: " + requestBody.get("token"));
+            String tokenWithoutBearer = requestBody.get("token").substring(7); // 7, "Bearer " prefix uzunluğudur
+            token = tokenWithoutBearer;
+            System.out.println(token);
+        } else {
+            System.out.println("Token sağlanmadı");
+        }
+        System.out.println("burdayim");
+        Long longSayi = (long) authorId; // int'i Long'a dönüştür
+        HttpHeaders headers=new HttpHeaders();
+        headers.add("Content-type", MediaType.ALL_VALUE);
+        headers.add("Content-Disposition", "attachment; filename="+"filename");
 
 
+
+       return ResponseEntity.status(HTTP_OK).headers(headers).body(companyService.getpdf(token, longSayi));
+
+
+
+
+}
 }

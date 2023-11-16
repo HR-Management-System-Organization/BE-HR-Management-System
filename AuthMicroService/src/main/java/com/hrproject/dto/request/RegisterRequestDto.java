@@ -25,6 +25,8 @@ public class RegisterRequestDto {
 
     private EGender gender;
 
+    private String activationdate1;
+
     @NotBlank(message = "Şifre Boş Geçilemez!")
     @Size(min = 8, max = 32, message = "Şifre Uzunluğu En Az 8 Karakter, En Fazla 32 Karakter Olabilir!")
     private String password;

@@ -12,20 +12,17 @@ import com.hrproject.repository.IExpenseRepository;
 import com.hrproject.repository.IIncomeRepository;
 import com.hrproject.repository.entity.Company;
 import com.hrproject.repository.entity.Expense;
-import com.hrproject.repository.entity.ExpensePdf;
 import com.hrproject.repository.entity.Income;
 import com.hrproject.repository.enums.EExpenseStatus;
 import com.hrproject.repository.enums.ERole;
 import com.hrproject.utility.JwtTokenManager;
 import com.hrproject.utility.JwtTokenProvider;
 import com.hrproject.utility.ServiceManager;
-import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -42,8 +39,10 @@ public class CompanyService extends ServiceManager<Company, Long> {
     private final IIncomeRepository incomeRepository;
     private final IExpensePdfRepository iExpensePdfRepository;
 
+    private final StorageService storageService;
 
-    private CompanyService(ICompanyRepository companyRepository, JwtTokenProvider jwtTokenProvider, JwtTokenManager jwtTokenManager, IExpenseRepository expenseRepository, IIncomeRepository incomeRepository, IExpensePdfRepository iExpensePdfRepository) {
+
+    private CompanyService(ICompanyRepository companyRepository, JwtTokenProvider jwtTokenProvider, JwtTokenManager jwtTokenManager, IExpenseRepository expenseRepository, IIncomeRepository incomeRepository, IExpensePdfRepository iExpensePdfRepository, StorageService storageService) {
         super(companyRepository);
         this.companyRepository = companyRepository;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -52,6 +51,7 @@ public class CompanyService extends ServiceManager<Company, Long> {
         this.expenseRepository = expenseRepository;
         this.incomeRepository = incomeRepository;
         this.iExpensePdfRepository = iExpensePdfRepository;
+        this.storageService = storageService;
     }
 
     public Long save(SaveCompanyRequestDto dto) {
@@ -456,7 +456,7 @@ public class CompanyService extends ServiceManager<Company, Long> {
         System.out.println("dosyaburda ->>"+file);
 
 
-        String name= file.getName();
+        /*String name= file.getName();
         String type=file.getContentType();
         String orginalname=file.getOriginalFilename();
         String bu=new String(file.getBytes());
@@ -464,9 +464,7 @@ public class CompanyService extends ServiceManager<Company, Long> {
         System.out.println("Dosya name: " + name);
         System.out.println("Dosya orgname: " + orginalname);
         System.out.println("Dosya type: " + type);
-        Expense maxExpense = expenseRepository.findAll().stream()
-                .max(Comparator.comparingLong(Expense::getExpenseId))
-                .orElse(null);
+
 
         ExpensePdf pdfFile = new ExpensePdf();
         pdfFile.setFileName(file.getOriginalFilename());
@@ -476,7 +474,15 @@ public class CompanyService extends ServiceManager<Company, Long> {
 
 
         maxExpense.setExpensePdfId(iExpensePdfRepository.save(pdfFile).getId());
+        expenseRepository.save(maxExpense);*/
+        Expense maxExpense = expenseRepository.findAll().stream()
+                .max(Comparator.comparingLong(Expense::getExpenseId))
+                .orElse(null);
+
+
+        maxExpense.setPdffilename(storageService.uploadFile(file));
         expenseRepository.save(maxExpense);
+
 
 
         return true;
@@ -503,6 +509,17 @@ public class CompanyService extends ServiceManager<Company, Long> {
 
 
         System.out.println(expenseRepository.save(expense));
+
+    }
+    public byte[] getpdf(String token, Long sayi){
+        System.out.println(expenseRepository.findById(sayi).get().getPdffilename());
+           return storageService.downloadFile(expenseRepository.findById(sayi).get().getPdffilename());
+
+
+
+
+
+
 
     }
 

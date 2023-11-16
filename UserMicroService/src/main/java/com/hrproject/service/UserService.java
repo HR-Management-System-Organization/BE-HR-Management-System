@@ -69,6 +69,8 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     public void createNewUserWithRabbitmq(RegisterModel model) {
 
         UserProfile userProfile = userMapper.toUserProfile(model);
+        System.out.println((model.getActivationDate()));
+        userProfile.setActivationDate(model.getActivationDate());
 
         save(userProfile);
 
@@ -90,18 +92,58 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
                 if (!userProfile.getStatus().equals(EStatus.ACTIVE))
                     throw new UserManagerException(ErrorType.ACCOUNT_NOT_ACTIVE);
                 System.out.println(userProfile.toString());
-                return String.valueOf(jwtTokenManager.createToken(userProfile.getId(), userProfile.getRole()).get());
+                return String.valueOf(jwtTokenManager.createToken(userProfile.getId(), userProfile.getRole(),userProfile.getStatus()).get());
             }
 
             throw new UserManagerException(ErrorType.DOLOGIN_USERNAMEORPASSWORD_NOTEXISTS);
         } else {
 
             UserProfile userProfile = userRepository.findOptionalByUsernameAndPassword(dto.getUsername(), dto.getPassword()).get();
-            if (!userProfile.getStatus().equals(EStatus.ACTIVE))
+            LocalDate activationDate = userProfile.getActivationDate();
+
+            if (activationDate != null && activationDate.isBefore(LocalDate.now())) {
+                inactiveyap(userProfile.getId());
+            };
+            if (!userProfile.getStatus().equals(EStatus.ACTIVE)&&!userProfile.getStatus().equals(EStatus.INACTIVE))
                 throw new UserManagerException(ErrorType.ACCOUNT_NOT_ACTIVE);
             System.out.println(userProfile.toString());
-            return String.valueOf(jwtTokenManager.createToken(userProfile.getId(), userProfile.getRole()).get());
+            return String.valueOf(jwtTokenManager.createToken(userProfile.getId(), userProfile.getRole(),userProfile.getStatus()).get());
         }
+
+    }
+
+    public void inactiveyap(Long id){
+        List<UserProfile> companyUsers = userRepository.findAll()
+                .stream()
+                .filter(a -> {
+                    Long companyId = a.getCompanyId();
+                    Long targetCompanyId = userRepository.findById(id).orElse(new UserProfile()).getCompanyId();
+                    return companyId != null && companyId.equals(targetCompanyId);
+                })
+                .toList();
+        companyUsers.stream().forEach(a->a.setStatus(EStatus.INACTIVE));
+        userRepository.saveAll(companyUsers);
+
+    }
+
+    public void uyeliksatinal(Long id,int day){
+        UserProfile userProfile=userRepository.findById(id).get();
+        LocalDate activationDate = userProfile.getActivationDate();
+        if (activationDate == null || activationDate.isBefore(LocalDate.now())){
+            userProfile.setActivationDate(LocalDate.now().plusDays(day));
+            userProfile.setStatus(EStatus.ACTIVE);
+        }else userProfile.setActivationDate(userProfile.getActivationDate().plusDays(day));
+        List<UserProfile> companyusers = userRepository.findAll()
+                .stream()
+                .filter(a -> {
+                    Long companyId = a.getCompanyId();
+                    Long targetCompanyId = userRepository.findById(id).orElse(new UserProfile()).getCompanyId();
+                    return companyId != null && companyId.equals(targetCompanyId);
+                })
+                .toList();
+        companyusers.stream().forEach(a-> a.setActivationDate(userProfile.getActivationDate()));
+        companyusers.stream().forEach(a-> a.setStatus(EStatus.ACTIVE));
+        userRepository.saveAll(companyusers);
 
     }
 
@@ -293,6 +335,21 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
                 .subject("Delete your account").build();
         mailProducer.sendMail(mailModel);
         System.out.println(mailModel);
+    }
+
+
+    public void activedate(String token, int sec) {
+
+        if (!jwtTokenManager.verifyToken(token)) {
+            throw new UserManagerException(ErrorType.INVALID_TOKEN);
+        }
+
+
+        UserProfile admin = userRepository.findById(jwtTokenManager.getIdFromToken(token).get()).get();
+        if (sec==1)uyeliksatinal(admin.getId(),30);
+        if (sec==2)uyeliksatinal(admin.getId(),60);
+        if (sec==3)uyeliksatinal(admin.getId(),90);
+
     }
 
     public UserProfile userProfilefindbidwithtokken(String tokken) {
@@ -567,7 +624,7 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
             System.out.println("company id" + userProfile.getCompanyId());
             System.out.println("gelenbilgiler ->>> "+addEmployeeCompanyDto);
             System.out.println("company name "+addEmployeeCompanyDto.getCompanyname());
-            if (!addEmployeeCompanyDto.getGender().equals("MALE")||!addEmployeeCompanyDto.getGender().equals("FEMALE")) throw new UserManagerException(ErrorType.GENDER);
+            if (addEmployeeCompanyDto.getGender().isEmpty()) throw new UserManagerException(ErrorType.GENDER);
             String companyEmail = addEmployeeCompanyDto.getName() + addEmployeeCompanyDto.getSurName() + "@"+addEmployeeCompanyDto.getCompanyname().replaceAll("\\s", "")+".com.tr";
 
             companyProducer.sendCompany(CompanyModel.builder().companyId(userProfile.getCompanyId()).mail(companyEmail).build());

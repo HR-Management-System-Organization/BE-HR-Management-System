@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,12 +69,16 @@ public class AuthService extends ServiceManager<Auth, Long> {
         if (!(dto.getPassword().equals(dto.getRePassword()))){throw new AuthManagerException(ErrorType.PASSWORDSnotsame);}
         Auth auth = IAuthMapper.INSTANCE.toAuth(dto);
         auth.setRole(ERole.COMPANY_MANAGER);
+        if (dto.getActivationdate1().equals("30"))auth.setActivationDate(LocalDate.now().plusDays(30));
+        if (dto.getActivationdate1().equals("60"))auth.setActivationDate(LocalDate.now().plusDays(60));
+        if (dto.getActivationdate1().equals("90"))auth.setActivationDate(LocalDate.now().plusDays(90));
 
 
         save(auth);
-
+        RegisterModel registerModel=IAuthMapper.INSTANCE.toRegisterModel(auth);
+        registerModel.setActivationDate(auth.getActivationDate());
         // rabbitmq ile haberleştireceğiz
-        registerProducer.sendNewUser(IAuthMapper.INSTANCE.toRegisterModel(auth));
+        registerProducer.sendNewUser(registerModel);
 
         RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);
 

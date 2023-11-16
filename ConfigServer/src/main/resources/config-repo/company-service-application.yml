@@ -1,6 +1,18 @@
 server:
   port: 7073
+cloud:
+  aws:
+    credentials:
+      access-key: AKIAUDUM6GSLAFHR2RFS
+      secret-key: 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
+    region:
+      static: eu-north-1
+    stack:
+      auto: false
 
+application:
+  bucket:
+    name: springboot3hrmanagement
 spring:
   rabbitmq:
     host: localhost
@@ -11,7 +23,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: ${POSTGREPW}
-    url: jdbc:postgresql://localhost:5432/CompanyServiceDB
+    url: jdbc:postgresql://localhost:5433/CompanyServiceDB
   jpa:
     hibernate:
       ddl-auto: update

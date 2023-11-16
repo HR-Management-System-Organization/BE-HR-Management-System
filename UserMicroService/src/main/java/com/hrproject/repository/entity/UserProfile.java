@@ -58,6 +58,8 @@ public class UserProfile extends BaseEntity {
     private String surName;
     private Double salary;
 
+    private LocalDate activationDate;
+
 
     private LocalDate birthDate;
 
