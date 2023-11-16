@@ -74,10 +74,12 @@ public class AuthService extends ServiceManager<Auth, Long> {
         if (dto.getActivationdate1().equals("90"))auth.setActivationDate(LocalDate.now().plusDays(90));
 
 
+
         save(auth);
         RegisterModel registerModel=IAuthMapper.INSTANCE.toRegisterModel(auth);
         registerModel.setActivationDate(auth.getActivationDate());
         // rabbitmq ile haberleştireceğiz
+        registerModel.setCompanyName(dto.getCompanyName());
         registerProducer.sendNewUser(registerModel);
 
         RegisterResponseDto responseDto = IAuthMapper.INSTANCE.toRegisterResponseDto(auth);

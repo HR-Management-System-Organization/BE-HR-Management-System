@@ -1,5 +1,8 @@
 package com.hrproject.rabbitmq.consumer;
 
+import com.hrproject.rabbitmq.model.Company2Model;
+import com.hrproject.rabbitmq.model.Company3Model;
+
 import com.hrproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,15 +12,15 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ActivationConsumer {
+public class Company3Consumer {
 
     private final UserService userService;
 
-    @RabbitListener(queues = ("${rabbitmq.activation-queue}"))
-    public void activateStatus(String token) {
+    @RabbitListener(queues = ("${rabbitmq.company-queue3}"))
+    public void companysearc(Company3Model model) {
+        userService.companyidgirrabit(model);
 
-        log.info("token=> {}", token);
 
-        userService.activation(token);
+        }
     }
-}
+

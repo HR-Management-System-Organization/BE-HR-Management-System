@@ -31,4 +31,5 @@ public class RegisterModel implements Serializable {
 
     private EStatus status = EStatus.PENDING;
     private LocalDate activationDate;
+    private String companyName;
 }

@@ -6,6 +6,9 @@ import com.hrproject.dto.response.*;
 import com.hrproject.exception.CompanyManagerException;
 import com.hrproject.exception.ErrorType;
 import com.hrproject.mapper.ICompanyMapper;
+import com.hrproject.rabbitmq.model.Company2Model;
+import com.hrproject.rabbitmq.model.Company3Model;
+import com.hrproject.rabbitmq.producer.Company3Producer;
 import com.hrproject.repository.ICompanyRepository;
 import com.hrproject.repository.IExpensePdfRepository;
 import com.hrproject.repository.IExpenseRepository;
@@ -41,8 +44,10 @@ public class CompanyService extends ServiceManager<Company, Long> {
 
     private final StorageService storageService;
 
+    private final Company3Producer company3Producer;
 
-    private CompanyService(ICompanyRepository companyRepository, JwtTokenProvider jwtTokenProvider, JwtTokenManager jwtTokenManager, IExpenseRepository expenseRepository, IIncomeRepository incomeRepository, IExpensePdfRepository iExpensePdfRepository, StorageService storageService) {
+
+    private CompanyService(ICompanyRepository companyRepository, JwtTokenProvider jwtTokenProvider, JwtTokenManager jwtTokenManager, IExpenseRepository expenseRepository, IIncomeRepository incomeRepository, IExpensePdfRepository iExpensePdfRepository, StorageService storageService, Company3Producer company3Producer) {
         super(companyRepository);
         this.companyRepository = companyRepository;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -52,6 +57,7 @@ public class CompanyService extends ServiceManager<Company, Long> {
         this.incomeRepository = incomeRepository;
         this.iExpensePdfRepository = iExpensePdfRepository;
         this.storageService = storageService;
+        this.company3Producer = company3Producer;
     }
 
     public Long save(SaveCompanyRequestDto dto) {
@@ -521,6 +527,25 @@ public class CompanyService extends ServiceManager<Company, Long> {
 
 
 
+    }
+
+
+    public void companycreate(Company2Model model){
+
+        if (companyRepository.existsByCompanyNameIgnoreCase(model.getCompanyName())){
+            Company company=companyRepository.findByCompanyName(model.getCompanyName()).get();
+            Company3Model company3Model=Company3Model.builder().companyName(company.getCompanyName()).
+                    companyid(company.getCompanyId()).username(model.getUsername()).build();
+            company3Producer.sendCompany(company3Model);
+
+        } else {
+            Company company=Company.builder().companyName(model.getCompanyName()).build();
+            company=save(company);
+            Company3Model company3Model=Company3Model.builder().companyName(company.getCompanyName()).
+                    companyid(company.getCompanyId()).username(model.getUsername()).build();
+            company3Producer.sendCompany(company3Model);
+
+    }
     }
 
 }

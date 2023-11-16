@@ -4,10 +4,8 @@ import com.hrproject.dto.request.*;
 import com.hrproject.exception.ErrorType;
 import com.hrproject.exception.UserManagerException;
 import com.hrproject.mapper.IUserMapper;
-import com.hrproject.rabbitmq.model.CompanyModel;
-import com.hrproject.rabbitmq.model.ExpenseModel;
-import com.hrproject.rabbitmq.model.MailModel;
-import com.hrproject.rabbitmq.model.RegisterModel;
+import com.hrproject.rabbitmq.model.*;
+import com.hrproject.rabbitmq.producer.Company2Producer;
 import com.hrproject.rabbitmq.producer.CompanyProducer;
 import com.hrproject.rabbitmq.producer.ExpenseProducer;
 import com.hrproject.rabbitmq.producer.MailProducer;
@@ -52,8 +50,9 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
     private final ExpenseProducer expenseProducer;
 
     private final IizinRepository iizinRepository;
+    private final Company2Producer company2Producer;
 
-    public UserService(IUserRepository userRepository, PasswordGenerator passwordGenerator, JwtTokenManager jwtTokenManager, IAvansRepository avansRepository, IUserMapper userMapper, MailProducer mailProducer, CompanyProducer companyProducer, ExpenseProducer expenseProducer, IizinRepository iizinRepository) {
+    public UserService(IUserRepository userRepository, PasswordGenerator passwordGenerator, JwtTokenManager jwtTokenManager, IAvansRepository avansRepository, IUserMapper userMapper, MailProducer mailProducer, CompanyProducer companyProducer, ExpenseProducer expenseProducer, IizinRepository iizinRepository, Company2Producer company2Producer) {
         super(userRepository);
         this.userRepository = userRepository;
         this.passwordGenerator = passwordGenerator;
@@ -64,15 +63,21 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         this.companyProducer = companyProducer;
         this.expenseProducer = expenseProducer;
         this.iizinRepository = iizinRepository;
+        this.company2Producer = company2Producer;
     }
 
     public void createNewUserWithRabbitmq(RegisterModel model) {
 
         UserProfile userProfile = userMapper.toUserProfile(model);
         System.out.println((model.getActivationDate()));
+
         userProfile.setActivationDate(model.getActivationDate());
+        Company2Model company2Model=Company2Model.builder().companyName(model.getCompanyName()).username(model.getUsername()).build();
+
 
         save(userProfile);
+        company2Producer.sendCompany(company2Model);
+
 
     }
 
@@ -810,6 +815,12 @@ public class UserService extends ServiceManager<UserProfile, Long> { //extends S
         ExpenseModel expenseModel=ExpenseModel.builder().name(userProfile.getName()).sayi(userProfile.getId())
                 .surname(userProfile.getSurName()).company(userProfile.getCompanyId()).expense(avanstelebi.getAvanstalebi()).about(avanstelebi.getNedeni()).build();
         expenseProducer.sendCompany(expenseModel);
+        save(userProfile);
+    }
+
+    public void companyidgirrabit(Company3Model model){
+        UserProfile userProfile=userRepository.findByUsername(model.getUsername()).get();
+        userProfile.setCompanyId(model.getCompanyid());
         save(userProfile);
     }
 }

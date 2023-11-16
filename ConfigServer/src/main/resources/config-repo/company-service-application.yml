@@ -39,5 +39,9 @@ rabbitmq:
   mail-binding-key: mail-binding-key
   company-queue: company-queue
   company-binding-key: company-binding-key
+  company-queue2: company-queue2
+  company-binding-key2: company-binding-key2
+  company-queue3: company-queue2
+  company-binding-key3: company-binding-key2
   expense-queue: expense-queue
   expense-binding-key: expense-binding-key

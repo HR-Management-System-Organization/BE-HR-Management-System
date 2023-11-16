@@ -9,6 +9,14 @@ rabbitmq:
   activation-queue: queue-activation
   mail-queue: mail-queue
   mail-binding-key: mail-binding-key
+  company-queue: company-queue
+  company-binding-key: company-binding-key
+  company-queue2: company-queue2
+  company-binding-key2: company-binding-key2
+  company-queue3: company-queue2
+  company-binding-key3: company-binding-key2
+  expense-queue: expense-queue
+  expense-binding-key: expense-binding-key
 
 spring:
   rabbitmq:
@@ -20,7 +28,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: postgres
     password: ${POSTGREPW}
-    url: jdbc:postgresql://localhost:5432/AuthServiceDB
+    url: jdbc:postgresql://localhost:5433/AuthServiceDB
   jpa:
     hibernate:
       ddl-auto: update
